@@ -8,6 +8,15 @@ NeoKEX-FCA is an advanced Facebook Chat API library for Node.js that enables dev
 
 ## Recent Changes (November 2025)
 
+### Latest Bug Fixes (November 9, 2025)
+- **MQTT Binary Data Handling Fix:**
+  - Fixed JSON parsing errors when MQTT receives binary/non-JSON payloads
+  - Added Buffer-to-string conversion with UTF-8 encoding
+  - Added whitespace trimming to handle BOM and leading/trailing spaces
+  - Gracefully skips non-JSON binary messages instead of crashing
+  - Added intelligent error logging (warns for JSON-like parse failures, silent for binary data)
+  - Sanitized error previews to prevent garbage output in logs
+
 ### Version 2.1.0 - Production-Ready Release
 - **8 New API Methods Added:**
   - `getTheme()` - Retrieve detailed theme information for threads
