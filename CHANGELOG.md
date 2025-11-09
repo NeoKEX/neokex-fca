@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.0] - 2025-11-09
+
+### Fixed
+- **Critical Bug**: Fixed `jar.getCookies(...).concat is not a function` error
+  - Replaced async `getCookies()` with synchronous `getCookiesSync()` in 3 files
+  - Affected files: `src/utils.js`, `src/core.js`, `src/listenMqtt.js`
+  - Root cause: tough-cookie v4+ returns Promise from `getCookies()`, not an array
+
+### Changed
+- **Updated all dependencies to latest compatible versions**:
+  - axios: ^1.9.0 → ^1.13.2
+  - axios-cookiejar-support: ^4.0.7 → ^6.0.4
+  - chalk: ^3.0.0 → ^4.1.2 (kept at v4 for CommonJS compatibility)
+  - cheerio: ^0.22.0 → ^1.1.2
+  - form-data: ^4.0.3 → ^4.0.4
+  - https-proxy-agent: ^4.0.0 → ^7.0.6
+  - mqtt: ^3.0.0 → ^5.14.1
+  - node-cron: ^3.0.3 → ^4.2.1
+  - tough-cookie: ^4.1.4 → ^5.1.2
+  - websocket-stream: ^5.5.0 → ^5.5.2
+
+### Security
+- **All security vulnerabilities resolved** (0 vulnerabilities)
+- Added package override for `ws` to fix DoS vulnerability
+- Updated all dependencies to latest secure versions
+
+### Documentation
+- Added comprehensive npm publishing guide to README.md
+- Added development setup and contributing guidelines
+- Created `.npmignore` for clean npm packages
+- Created `.gitignore` for development files
+- Enhanced code documentation
+
+### Infrastructure
+- Package now ready for npm publishing
+- Proper file exclusions configured
+- TypeScript definitions verified and complete
+
 ## [2.2.0] - 2025-11-09
 
 ### Added
