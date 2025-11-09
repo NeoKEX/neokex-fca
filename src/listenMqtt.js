@@ -96,10 +96,18 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
   function stopListening() {
     if (mqttClient) {
       const clientToClose = mqttClient;
-      mqttClient.unsubscribe("/webrtc");
-      mqttClient.unsubscribe("/rtc_multi");
-      mqttClient.unsubscribe("/onevc");
-      mqttClient.publish("/browser_close", "{}");
+      try {
+        mqttClient.unsubscribe("/webrtc");
+      } catch (e) {}
+      try {
+        mqttClient.unsubscribe("/rtc_multi");
+      } catch (e) {}
+      try {
+        mqttClient.unsubscribe("/onevc");
+      } catch (e) {}
+      try {
+        mqttClient.publish("/browser_close", "{}");
+      } catch (e) {}
       mqttClient.end(false, function(...data) {
         if (ctx.mqttClient === clientToClose) {
           ctx.mqttClient = null;
@@ -108,14 +116,21 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
       });
     }
   }
+  var isHandlingError = false;
   mqttClient.on('error', function(err) {
+    if (isHandlingError) {
+      return;
+    }
+    isHandlingError = true;
     utils.error("MQTT connection error:", err.message || err);
     const shouldReconnect = ctx.globalOptions.autoReconnect;
+    mqttClient.removeAllListeners('error');
     stopListening();
     if (shouldReconnect) {
       utils.warn("Connection lost. Attempting to reconnect...");
       setTimeout(() => {
         try {
+          isHandlingError = false;
           listenMqtt(defaultFuncs, api, ctx, globalCallback);
         } catch (reconnectErr) {
           utils.error("Reconnection failed:", reconnectErr);
