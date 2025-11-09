@@ -1,6 +1,6 @@
 {
   "name": "neokex-fca",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Advanced Facebook Chat API for Node.js - Build powerful Messenger bots with AI theme generation, automated behavior bypass, real-time messaging, webhooks, and enterprise-grade reliability",
   "main": "index.js",
   "types": "lib/types/types/index.d.ts",

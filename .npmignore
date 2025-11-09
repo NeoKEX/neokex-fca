@@ -1,0 +1,43 @@
+# Development files
+test/
+examples/
+docs/
+.replit
+replit.nix
+.gitignore
+.git/
+
+# Documentation (keep README.md in package)
+replit.md
+CHANGELOG.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+
+# Environment
+.env
+.env.*
+
+# Temporary files
+*.tmp
+*.temp
+tmp/
+temp/

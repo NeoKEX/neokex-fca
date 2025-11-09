@@ -1,6 +1,13 @@
 # NeoKEX-FCA
 
+[![npm version](https://img.shields.io/npm/v/neokex-fca.svg)](https://www.npmjs.com/package/neokex-fca)
+[![npm downloads](https://img.shields.io/npm/dm/neokex-fca.svg)](https://www.npmjs.com/package/neokex-fca)
+[![license](https://img.shields.io/npm/l/neokex-fca.svg)](https://github.com/NeoKEX/neokex-fca/blob/main/LICENSE)
+[![node version](https://img.shields.io/node/v/neokex-fca.svg)](https://nodejs.org)
+
 Advanced Facebook Chat API library for Node.js. Build powerful Messenger bots with real-time messaging, comprehensive features, and enterprise-grade reliability.
+
+**Version 2.5.0** - Latest bug fixes and improvements ✨
 
 ---
 
@@ -77,6 +84,13 @@ Advanced Facebook Chat API library for Node.js. Build powerful Messenger bots wi
 - ⚡ **Request Randomization** - Dynamic user agents, timing jitter, and header variability
 - 🔄 **Auto Keep-Alive** - Periodic session maintenance to prevent logouts
 - 🔐 **Session Guardian** - Automatic checkpoint detection and recovery
+
+### Latest Updates (v2.5.0)
+- 🐛 **MQTT Binary Data Fix** - Resolved JSON parsing errors when receiving binary/non-JSON payloads
+- 🛡️ **Enhanced Error Handling** - Gracefully skips non-JSON binary messages instead of crashing
+- 📊 **Smart Logging** - Intelligent error logging with sanitized previews for binary data
+- ⚡ **Improved Stability** - Better handling of Buffer-to-string conversion with UTF-8 encoding
+- 🎯 **BOM Support** - Proper whitespace and BOM trimming for JSON messages
 
 ---
 
