@@ -7,9 +7,8 @@ replit.nix
 .gitignore
 .git/
 
-# Documentation (keep README.md in package)
+# Documentation (keep README.md and CHANGELOG.md in package)
 replit.md
-CHANGELOG.md
 
 # CI/CD
 .github/

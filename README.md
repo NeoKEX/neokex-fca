@@ -7,7 +7,7 @@
 
 Advanced Facebook Chat API library for Node.js. Build powerful Messenger bots with real-time messaging, comprehensive features, and enterprise-grade reliability.
 
-**Version 2.5.0** - Latest bug fixes and improvements ✨
+**Version 2.5.1** - Critical stability improvements and bug fixes ✨
 
 ---
 
@@ -85,7 +85,14 @@ Advanced Facebook Chat API library for Node.js. Build powerful Messenger bots wi
 - 🔄 **Auto Keep-Alive** - Periodic session maintenance to prevent logouts
 - 🔐 **Session Guardian** - Automatic checkpoint detection and recovery
 
-### Latest Updates (v2.5.0)
+### Latest Updates (v2.5.1)
+- 🔥 **Critical Bug Fix** - Eliminated infinite loop crash in MQTT error handler that caused "Maximum call stack size exceeded"
+- 🛡️ **Enhanced Error Recovery** - Properly removes only internal error listeners, preserving external listener functionality
+- 🔄 **Improved Reconnection Logic** - Fixed error handler re-entry prevention with guard flags
+- ⚡ **Stability Improvements** - All cleanup operations (unsubscribe/publish) now wrapped in try-catch to prevent cascading failures
+- 🎯 **Production Ready** - Auto-reconnect now works reliably without triggering infinite error loops
+
+### Previous Updates (v2.5.0)
 - 🐛 **MQTT Binary Data Fix** - Resolved JSON parsing errors when receiving binary/non-JSON payloads
 - 🛡️ **Enhanced Error Handling** - Gracefully skips non-JSON binary messages instead of crashing
 - 📊 **Smart Logging** - Intelligent error logging with sanitized previews for binary data

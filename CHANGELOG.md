@@ -5,6 +5,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] - 2025-11-09
+
+### Fixed
+- **Critical Bug**: Eliminated infinite loop crash in MQTT error handler
+  - Root cause: Error handler triggered `stopListening()` → `unsubscribe()` → new error → infinite recursion
+  - Result: "RangeError: Maximum call stack size exceeded" crash
+  - Solution: Added re-entry guard flag and proper listener cleanup
+- **Error Handler**: Fixed listener removal to preserve external error listeners
+  - Changed from `removeAllListeners('error')` to `removeListener('error', errorHandler)`
+  - Maintains API compatibility by not removing user-registered error handlers
+- **Cleanup Operations**: Wrapped all unsubscribe/publish calls in try-catch blocks
+  - Prevents cascading failures during error recovery
+  - Ensures graceful degradation when MQTT client is in error state
+
+### Changed
+- Improved auto-reconnect stability with guard flags to prevent re-entrant error handling
+- Enhanced error recovery process for malformed MQTT messages
+- Better production reliability for long-running bots with auto-reconnect enabled
+
+### Technical Details
+This critical fix resolves a production-impacting infinite loop that occurred when:
+1. MQTT connection error triggered the error handler at line 112
+2. Error handler called `stopListening()` at line 114
+3. `stopListening()` called `unsubscribe()` at line 99
+4. `unsubscribe()` on errored client triggered another error event
+5. Process repeated infinitely causing stack overflow
+
+The fix ensures enterprise-grade stability for production deployments.
+
+## [2.5.0] - 2025-11-08
+
+### Added
+- MQTT binary data handling improvements
+- Smart logging with sanitized previews for binary data
+- BOM (Byte Order Mark) support for JSON message parsing
+
+### Fixed
+- JSON parsing errors when receiving binary/non-JSON MQTT payloads
+- Buffer-to-string conversion now properly uses UTF-8 encoding
+
+### Changed
+- Enhanced error handling to gracefully skip non-JSON binary messages
+- Improved message validation before JSON parsing
+
 ## [2.4.0] - 2025-11-09
 
 ### Fixed
@@ -112,6 +156,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Performance metrics tracking
 - Exponential backoff for reconnections
 
+[2.5.1]: https://github.com/NeoKEX/neokex-fca/compare/v2.5.0...v2.5.1
+[2.5.0]: https://github.com/NeoKEX/neokex-fca/compare/v2.4.0...v2.5.0
+[2.4.0]: https://github.com/NeoKEX/neokex-fca/compare/v2.2.0...v2.4.0
 [2.2.0]: https://github.com/NeoKEX/neokex-fca/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/NeoKEX/neokex-fca/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/NeoKEX/neokex-fca/releases/tag/v2.0.0
