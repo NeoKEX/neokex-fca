@@ -117,14 +117,14 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
     }
   }
   var isHandlingError = false;
-  mqttClient.on('error', function(err) {
+  var errorHandler = function(err) {
     if (isHandlingError) {
       return;
     }
     isHandlingError = true;
     utils.error("MQTT connection error:", err.message || err);
     const shouldReconnect = ctx.globalOptions.autoReconnect;
-    mqttClient.removeAllListeners('error');
+    mqttClient.removeListener('error', errorHandler);
     stopListening();
     if (shouldReconnect) {
       utils.warn("Connection lost. Attempting to reconnect...");
@@ -140,7 +140,8 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
     } else {
       globalCallback({ type: "stop_listen", error: "Connection refused: Server unavailable" }, null);
     }
-  });
+  };
+  mqttClient.on('error', errorHandler);
 
   mqttClient.on('connect', () => {
     topics.forEach(topicsub => mqttClient.subscribe(topicsub));
