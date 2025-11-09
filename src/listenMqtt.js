@@ -165,10 +165,40 @@ function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
   });
 
   mqttClient.on('message', (topic, message, _packet) => {
+    let messageStr;
+    let trimmed = '';
     try {
-      var jsonMessage = JSON.parse(message);
+      if (Buffer.isBuffer(message)) {
+        messageStr = message.toString('utf8');
+      } else {
+        messageStr = message;
+      }
+      
+      if (!messageStr || typeof messageStr !== 'string') {
+        return;
+      }
+      
+      trimmed = messageStr.trim();
+      if (trimmed.length === 0) {
+        return;
+      }
+      
+      if (trimmed[0] !== '{' && trimmed[0] !== '[') {
+        return;
+      }
+      
+      var jsonMessage = JSON.parse(messageStr);
     } catch (ex) {
-      return utils.error("listenMqtt", ex);
+      const preview = messageStr ? messageStr.substring(0, 50).replace(/[\x00-\x1F\x7F-\x9F]/g, '.') : 'empty';
+      if (ctx.globalOptions.logLevel === 'silly' || ctx.globalOptions.logLevel === 'verbose') {
+        utils.error("LISTEN MQTT: JSON parse error on topic " + topic, {
+          error: ex.message,
+          preview: preview
+        });
+      } else if (trimmed && (trimmed[0] === '{' || trimmed[0] === '[')) {
+        utils.warn("MQTT message parse failed on topic " + topic + ": " + ex.message);
+      }
+      return;
     }
     if (topic === "/t_ms") {
       if (ctx.tmsWait && typeof ctx.tmsWait == "function") ctx.tmsWait();
