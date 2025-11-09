@@ -1,0 +1,75 @@
+{
+  "name": "neokex-fca",
+  "version": "2.4.0",
+  "description": "Advanced Facebook Chat API for Node.js - Build powerful Messenger bots with AI theme generation, automated behavior bypass, real-time messaging, webhooks, and enterprise-grade reliability",
+  "main": "index.js",
+  "types": "lib/types/types/index.d.ts",
+  "scripts": {
+    "test": "node test/smoke-test.js",
+    "prepublishOnly": "npm test"
+  },
+  "files": [
+    "index.js",
+    "utils.js",
+    "lib/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NeoKEX/neokex-fca.git"
+  },
+  "author": "NeoKEX (https://github.com/NeoKEX)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NeoKEX/neokex-fca/issues"
+  },
+  "homepage": "https://github.com/NeoKEX/neokex-fca#readme",
+  "keywords": [
+    "facebook",
+    "messenger",
+    "chat",
+    "api",
+    "bot",
+    "neokex",
+    "neokex-fca",
+    "facebook-chat-api",
+    "messenger-bot",
+    "automation",
+    "mqtt",
+    "webhook",
+    "real-time",
+    "facebook-api",
+    "messenger-api",
+    "ai-theme",
+    "theme-generator",
+    "bypass-detection",
+    "anti-detection",
+    "chatbot",
+    "facebook-automation",
+    "messenger-automation",
+    "facebook-bot",
+    "secure"
+  ],
+  "dependencies": {
+    "axios": "^1.13.2",
+    "axios-cookiejar-support": "^6.0.4",
+    "chalk": "^4.1.2",
+    "cheerio": "^1.1.2",
+    "form-data": "^4.0.4",
+    "gradient-string": "^3.0.0",
+    "https-proxy-agent": "^7.0.6",
+    "lodash": "^4.17.21",
+    "mqtt": "^5.14.1",
+    "node-cron": "^4.2.1",
+    "tough-cookie": "^5.1.2",
+    "websocket-stream": "^5.5.2"
+  },
+  "overrides": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": ">=18.x"
+  }
+}
