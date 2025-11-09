@@ -1,0 +1,52 @@
+# Test files
+test/
+*.test.js
+*.spec.js
+
+# Documentation
+docs/
+examples/
+*.md
+!README.md
+
+# Development files
+.git/
+.github/
+.vscode/
+.idea/
+*.log
+.DS_Store
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+coverage/
+.nyc_output/
+dist/
+build/
+
+# Config files
+.eslintrc*
+.prettierrc*
+.editorconfig
+tsconfig.json
+nodemon.json
+
+# Temporary files
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# CI/CD
+.travis.yml
+.gitlab-ci.yml
+.circleci/
+azure-pipelines.yml
+
+# Other
+fb_dtsg_data.json
+appstate.json
+*.cookie

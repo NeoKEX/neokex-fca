@@ -544,7 +544,143 @@ Check the `examples/` directory for complete working examples:
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please follow these guidelines:
+
+### Development Setup
+
+1. **Clone the repository**
+```bash
+git clone https://github.com/NeoKEX/neokex-fca.git
+cd neokex-fca
+```
+
+2. **Install dependencies**
+```bash
+npm install
+```
+
+3. **Run tests**
+```bash
+npm test
+```
+
+### Code Style
+
+- Use meaningful variable names
+- Add JSDoc comments for functions
+- Follow existing code patterns
+- Keep functions focused and small
+
+### Testing
+
+Before submitting a PR:
+
+```bash
+# Run smoke tests
+npm test
+
+# Check for vulnerabilities
+npm audit
+
+# Verify package integrity
+npm pack --dry-run
+```
+
+### Submitting Changes
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📦 Publishing to npm
+
+### For Maintainers
+
+This library is published to npm. Follow these steps for publishing:
+
+### Pre-Publishing Checklist
+
+1. **Update version in package.json**
+```bash
+npm version patch  # for bug fixes
+npm version minor  # for new features
+npm version major  # for breaking changes
+```
+
+2. **Update CHANGELOG.md**
+   - Document all changes
+   - Follow semantic versioning
+   - Include migration guide for breaking changes
+
+3. **Run comprehensive tests**
+```bash
+# Run all tests
+npm test
+
+# Check for security vulnerabilities
+npm audit
+
+# Fix auto-fixable vulnerabilities
+npm audit fix
+
+# Verify package contents
+npm pack --dry-run
+```
+
+4. **Test package locally**
+```bash
+# Create tarball
+npm pack
+
+# Test in another project
+npm install /path/to/neokex-fca-2.3.0.tgz
+```
+
+### Publishing Process
+
+1. **Login to npm** (first time only)
+```bash
+npm login
+```
+
+2. **Publish to npm**
+```bash
+# For public package
+npm publish
+
+# For scoped package
+npm publish --access public
+```
+
+3. **Verify publication**
+```bash
+npm view neokex-fca
+```
+
+4. **Tag release on GitHub**
+```bash
+git tag v2.3.0
+git push origin v2.3.0
+```
+
+### Package Configuration
+
+The package is configured with:
+
+- **Main entry**: `index.js`
+- **TypeScript definitions**: `lib/types/types/index.d.ts`
+- **Files included**: `index.js`, `utils.js`, `lib/`, `src/`, `README.md`, `LICENSE`
+- **Ignored files**: See `.npmignore`
+
+### Post-Publishing
+
+1. Update GitHub release notes
+2. Announce on social media/forums
+3. Update documentation website (if any)
 
 ---
 
