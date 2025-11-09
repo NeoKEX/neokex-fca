@@ -4,7 +4,7 @@
 
 NeoKEX-FCA is an advanced Facebook Chat API library for Node.js that enables developers to build powerful Messenger bots. The library provides comprehensive real-time messaging capabilities through MQTT protocol, rich media support, thread management, and extensive social features. It's designed as an enterprise-grade solution with built-in performance optimization, connection management, plugin extensibility, and webhook integration.
 
-**Status:** Version 2.1.0 - Enhanced with 8 new powerful features ✅
+**Status:** Version 2.5.0 - Ready for npm publishing ✅
 
 ## Recent Changes (November 2025)
 
