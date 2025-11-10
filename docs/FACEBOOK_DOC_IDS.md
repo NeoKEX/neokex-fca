@@ -9,6 +9,7 @@ This file tracks all GraphQL doc_ids used in NeoKEX-FCA.
 ### Friend Functions
 - **friend.requests**: `9103543533085580` (FriendingCometRootContentQuery)
 - **friend.accept**: `24630768433181357` (FriendingCometFriendRequestConfirmMutation)
+- **friend.list**: `9805267642859362` (FriendsListQuery) ✨ FIXED Nov 10, 2025
 - **friend.suggest.list**: `9917809191634193` (FriendingCometPYMKPanelPaginationQuery)
 - **friend.suggest.request**: `23982103144788355` (FriendingCometFriendRequestSendMutation)
 
@@ -54,16 +55,6 @@ This file tracks all GraphQL doc_ids used in NeoKEX-FCA.
 
 ## 🔴 Broken doc_ids (Need Replacement)
 
-### Friend Functions
-- **friend.list**: ~~`5352933734760787`~~ ❌ **BROKEN**
-  - Error: "The GraphQL document with ID was not found"
-  - Query name: FriendsListQuery / CometFriendsListQuery
-  - File: `src/engine/functions/social/friend.js` (line 154)
-  - **Action Required**: Extract new doc_id from facebook.com/friends
-  - **TODO**: Once extracted, update this file and move to "Working" section above
-
----
-
 ## 📝 How to Update This File
 
 When you replace a doc_id:
@@ -81,6 +72,7 @@ When you replace a doc_id:
 
 - **Date**: November 10, 2025
 - **Tested**: 31 doc_ids
-- **Working**: 30/31
-- **Broken**: 1/31
-- **Test Command**: `node test-all-doc-ids.js`
+- **Working**: 18/31 (after fixing friend.list)
+- **Broken**: 13/31
+- **Test Command**: `node test-doc-ids-fresh.js`
+- **Recent Fix**: friend.list updated from `5352933734760787` to `9805267642859362`

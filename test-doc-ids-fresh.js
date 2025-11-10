@@ -12,7 +12,7 @@ const docIds = [
   // Friend functions
   { id: '9103543533085580', name: 'friend.requests', file: 'social/friend.js' },
   { id: '24630768433181357', name: 'friend.accept', file: 'social/friend.js' },
-  { id: '5352933734760787', name: 'friend.list', file: 'social/friend.js' },
+  { id: '9805267642859362', name: 'friend.list', file: 'social/friend.js' },
   { id: '9917809191634193', name: 'friend.suggest.list', file: 'social/friend.js' },
   { id: '23982103144788355', name: 'friend.suggest.request', file: 'social/friend.js' },
   
