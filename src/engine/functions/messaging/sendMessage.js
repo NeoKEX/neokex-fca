@@ -89,6 +89,10 @@ module.exports = (defaultFuncs, api, ctx) => {
     if (resData.error) {
       if (resData.error === 1545012) {
         utils.warn("sendMessage", "Got error 1545012. This might mean that you're not part of the conversation " + threadID);
+        const err = new Error(`Cannot send message to thread ${threadID}: You are not a participant in this conversation. This can happen if:\n  - You were removed from the group chat\n  - You left the conversation\n  - You are blocked by the recipient\n  - The thread ID is invalid or the conversation was deleted\n  - The recipient's account was deactivated\n\nTip: Verify the thread ID and ensure you have an active conversation with this user/group.`);
+        err.errorCode = 1545012;
+        err.threadID = threadID;
+        throw err;
       }
       throw new Error(`Send message failed: ${JSON.stringify(resData.error)}`);
     }

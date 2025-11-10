@@ -20,7 +20,52 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
         if (appState) {
             let cookieStrings = [];
             if (Array.isArray(appState)) {
-                cookieStrings = appState.map(c => [c.name || c.key, c.value].join('='));
+                // Check if array contains full cookie objects (with domain, secure, etc.) or simple key-value
+                if (appState.length > 0 && typeof appState[0] === 'object' && appState[0].domain) {
+                    // Full cookie format (from browser extensions like EditThisCookie, Cookie-Editor)
+                    appState.forEach(cookie => {
+                        try {
+                            const name = cookie.name || cookie.key;
+                            const value = cookie.value;
+                            const domain = cookie.domain || ".facebook.com";
+                            const path = cookie.path || "/";
+                            const secure = cookie.secure !== undefined ? cookie.secure : true;
+                            const httpOnly = cookie.httpOnly !== undefined ? cookie.httpOnly : false;
+                            const sameSite = cookie.sameSite || "no_restriction";
+                            
+                            let expires;
+                            if (cookie.expirationDate) {
+                                // Convert Unix timestamp (seconds) to milliseconds
+                                expires = cookie.expirationDate * 1000;
+                            } else if (cookie.expires) {
+                                expires = new Date(cookie.expires).getTime();
+                            } else {
+                                // Default to 1 year from now
+                                expires = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+                            }
+                            
+                            // Build cookie string with all properties
+                            let cookieStr = `${name}=${value}`;
+                            cookieStr += `; expires=${new Date(expires).toUTCString()}`;
+                            cookieStr += `; domain=${domain}`;
+                            cookieStr += `; path=${path}`;
+                            if (secure) cookieStr += '; secure';
+                            if (httpOnly) cookieStr += '; httponly';
+                            if (sameSite && sameSite !== 'no_restriction') {
+                                cookieStr += `; samesite=${sameSite}`;
+                            }
+                            
+                            jar.setCookie(cookieStr, `https://${domain.startsWith('.') ? domain.substring(1) : domain}`);
+                            utils.log("Cookie set:", name);
+                        } catch (e) {
+                            utils.warn("loginHelper", `Failed to set cookie ${cookie.name || cookie.key}: ${e.message}`);
+                        }
+                    });
+                    return;
+                } else {
+                    // Simple key-value format
+                    cookieStrings = appState.map(c => [c.name || c.key, c.value].join('='));
+                }
             } else if (typeof appState === 'string') {
                 if (appState.includes(';')) {
                     cookieStrings = appState.split(';').map(s => s.trim()).filter(Boolean);
@@ -32,7 +77,9 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                     try {
                         const parsed = JSON.parse(appState);
                         if (Array.isArray(parsed)) {
-                            cookieStrings = parsed.map(c => [c.name || c.key, c.value].join('='));
+                            // Recursively call with parsed array
+                            credentials.appState = parsed;
+                            return loginHelper(credentials, globalOptions, callback, setOptionsFunc, buildAPIFunc, initialApi, fbLinkFunc, errorRetrievingMsg);
                         } else if (typeof parsed === 'object') {
                             cookieStrings = Object.entries(parsed).map(([key, value]) => `${key}=${value}`);
                         }
@@ -48,6 +95,7 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                 throw new Error("Invalid appState format. Supported formats: array, string (semicolon/comma/newline-separated), JSON string, or object.");
             }
 
+            // Set simple cookie strings
             cookieStrings.forEach(cookieString => {
                 const domain = ".facebook.com";
                 const expires = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
