@@ -71,9 +71,9 @@ module.exports = (defaultFuncs, api, ctx) => {
       uri: url
     }).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
     if (!resData || resData.error || !resData.payload){
-        throw new Error(`URL attachment failed: ${JSON.stringify(resData?.error || 'Invalid response')}`);
+        throw new Error(`URL attachment failed: ${JSON.stringify(resData?.error || resData || 'Invalid response')}`);
     }
-    return resData.payload;
+    return resData.payload.share_data.share_params;
   }
 
   async function sendContent(form, threadID, isSingleUser, messageAndOTID, callback) {
@@ -184,7 +184,7 @@ module.exports = (defaultFuncs, api, ctx) => {
     let messageIDType = utils.getType(replyToMessage);
     if (msgType !== "String" && msgType !== "Object") throw new Error("Message should be of type string or object and not " + msgType + ".");
     if (threadIDType !== "Array" && threadIDType !== "Number" && threadIDType !== "String") throw new Error("ThreadID should be of type number, string, or array and not " + threadIDType + ".");
-    if (replyToMessage && messageIDType !== 'String' && messageIDType !== 'Undefined') throw new Error("MessageID should be of type string and not " + messageIDType + ".");
+    if (replyToMessage && messageIDType !== 'String') throw new Error("MessageID should be of type string and not " + messageIDType + ".");
     if (msgType === "String") {
       msg = { body: msg };
     }

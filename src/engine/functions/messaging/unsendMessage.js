@@ -10,7 +10,7 @@ module.exports = function (defaultFuncs, api, ctx) {
     })
     const resData = await utils.parseAndCheckLogin(ctx, defaultFuncs)(defData);
     if (resData.error) {
-      throw new Error(resData);
+      throw new Error(`Unsend message failed: ${JSON.stringify(resData.error)}`);
     }
     return resData;
   };
