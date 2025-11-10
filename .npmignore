@@ -3,14 +3,20 @@ test-*.js
 *test*.js
 final-demo.js
 example.js
+demo.js
 
 # Sensitive files
 cookies.json
+appstate.json
 *.log
+attached_assets/
 
 # Development documentation
 replit.md
 FIXES_APPLIED.md
+NPM_PUBLISHING_GUIDE.md
+PUBLISH_SUMMARY.md
+.replit
 
 # Test assets
 test-image.png
