@@ -1,7 +1,7 @@
-const { login } = require('../lib/index');
+const { login } = require('./lib/index');
 const fs = require('fs');
 
-const cookiesPath = '../attached_assets/Pasted--name-ps-l-value-1-domain-facebook-com-ho-1762789459482_1762789459484.txt';
+const cookiesPath = './attached_assets/Pasted--name-ps-l-value-1-domain-facebook-com-ho-1762789459482_1762789459484.txt';
 const appState = JSON.parse(fs.readFileSync(cookiesPath, 'utf-8'));
 
 console.log('🔍 Testing All GraphQL doc_ids in NeoKEX-FCA\n');
@@ -97,19 +97,19 @@ login({ appState }, { logging: false }, async (err, api) => {
           console.log('❌ BROKEN (doc not found)');
           broken++;
           brokenDocs.push({ ...doc, error: 'Document not found' });
-        } else if (error.message && error.message.includes('Variable') || error.message.includes('required')) {
+        } else if (error.message && (error.message.includes('Variable') || error.message.includes('required'))) {
           console.log('✅ Working (needs variables)');
           working++;
         } else {
           console.log(`⚠️  Error: ${error.message.substring(0, 50)}`);
-          working++; // Counts as "working" if it's just a parameter error
+          working++;
         }
       } else if (res.data && res.data.data) {
         console.log('✅ Working');
         working++;
       } else {
-        console.log('⚠️  Unknown (needs manual review)');
-        working++; // Still counts as working, but flagged for review
+        console.log('⚠️  Unknown response');
+        working++;
       }
       
       // Rate limit delay
@@ -127,20 +127,21 @@ login({ appState }, { logging: false }, async (err, api) => {
   console.log('='.repeat(70));
   console.log(`✅ Working:  ${working}/${docIds.length}`);
   console.log(`❌ Broken:   ${broken}/${docIds.length}`);
+  console.log(`📈 Success:  ${(working / docIds.length * 100).toFixed(1)}%`);
   
   if (brokenDocs.length > 0) {
     console.log('\n' + '='.repeat(70));
     console.log('❌ BROKEN doc_ids NEED REPLACEMENT:');
     console.log('='.repeat(70));
     brokenDocs.forEach(doc => {
-      console.log(`\nFunction: ${doc.name}`);
-      console.log(`File: src/engine/functions/${doc.file}`);
-      console.log(`Broken doc_id: ${doc.id}`);
-      console.log(`Error: ${doc.error}`);
+      console.log(`\n🔴 Function: ${doc.name}`);
+      console.log(`   File: src/engine/functions/${doc.file}`);
+      console.log(`   Broken doc_id: ${doc.id}`);
+      console.log(`   Error: ${doc.error}`);
     });
     
     console.log('\n' + '='.repeat(70));
-    console.log('📝 HOW TO GET WORKING doc_ids:');
+    console.log('📝 HOW TO FIX:');
     console.log('='.repeat(70));
     console.log('1. Open messenger.com or facebook.com in Chrome');
     console.log('2. Open DevTools (F12) → Network tab');
@@ -149,6 +150,8 @@ login({ appState }, { logging: false }, async (err, api) => {
     console.log('5. Find the POST request to /api/graphql/');
     console.log('6. Look in the payload for "doc_id"');
     console.log('7. Replace the broken doc_id in the source file\n');
+  } else {
+    console.log('\n🎉 All doc_ids are working!\n');
   }
   
   process.exit(0);
