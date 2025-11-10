@@ -1,6 +1,6 @@
 {
   "name": "neokex-fca",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "An advanced, next-generation Facebook Chat API library with enhanced features, multi-format cookie support, and comprehensive messaging capabilities. Built for modern Node.js applications.",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
