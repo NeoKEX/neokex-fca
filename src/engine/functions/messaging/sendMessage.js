@@ -84,7 +84,10 @@ module.exports = (defaultFuncs, api, ctx) => {
 
     const resData = await defaultFuncs.post("https://www.facebook.com/messaging/send/", ctx.jar, form).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
     if (!resData) {
-      throw new Error("Send message failed.");
+      const err = new Error("Send message failed: No response from server.");
+      err.errorCode = 'NO_RESPONSE';
+      err.threadID = threadID;
+      throw err;
     }
     if (resData.error) {
       if (resData.error === 1545012) {
@@ -94,7 +97,19 @@ module.exports = (defaultFuncs, api, ctx) => {
         err.threadID = threadID;
         throw err;
       }
-      throw new Error(`Send message failed: ${JSON.stringify(resData.error)}`);
+      const err = new Error(`Send message failed: ${JSON.stringify(resData.error)}`);
+      err.errorCode = resData.error;
+      err.threadID = threadID;
+      err.errorSummary = resData.errorSummary;
+      err.errorDescription = resData.errorDescription;
+      throw err;
+    }
+    if (!resData.payload || !resData.payload.actions || resData.payload.actions.length === 0) {
+      const err = new Error("Send message failed: Invalid response payload.");
+      err.errorCode = 'INVALID_PAYLOAD';
+      err.threadID = threadID;
+      err.response = resData;
+      throw err;
     }
     const messageInfo = resData.payload.actions.reduce((p, v) => {
         return { threadID: v.thread_fbid, messageID: v.message_id, timestamp: v.timestamp } || p;

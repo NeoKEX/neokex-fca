@@ -23,7 +23,7 @@ login({ appState }, options, (err, api) => {
   console.log('✅ Logged in successfully!');
   console.log('User ID:', api.getCurrentUserID());
 
-  console.log('\\nNeoKEX-FCA v3.0.0 - Advanced Facebook Chat API');
+  console.log('\\nNeoKEX-FCA v3.0.2 - Advanced Facebook Chat API');
   console.log('============================================');
   console.log('\\nAvailable Features:');
   console.log('- Multi-format cookie support (array, string, object, JSON)');

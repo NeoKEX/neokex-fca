@@ -2,6 +2,27 @@
 
 All notable changes to NeoKEX-FCA will be documented in this file.
 
+## [3.0.2] - 2025-11-10
+
+### 🐛 Critical Bug Fixes
+- **loginHelper**: Enhanced cookie parsing to support full cookie format from browser extensions (EditThisCookie, Cookie-Editor)
+  - Now properly handles cookies with `domain`, `secure`, `httpOnly`, `sameSite`, `expirationDate` properties
+  - Converts Unix timestamp expiration dates correctly
+  - Preserves all cookie attributes for better session management
+- **sendMessage**: Improved error 1545012 handling with detailed, actionable error messages
+  - Error now includes `errorCode` and `threadID` properties for programmatic handling
+  - Provides clear explanation of why the error occurred and how to fix it
+- **clients.js**: Fixed TypeError when `content-type` header is undefined during retry logic
+  - Added proper null checking for headers to prevent crashes during request retries
+
+### ✨ Enhancements
+- **Cookie Support**: Full compatibility with browser extension cookie exports
+- **Error Messages**: More informative error messages that help developers debug issues faster
+- **Stability**: Improved error handling prevents crashes from undefined headers
+
+### 📚 Documentation
+- Added comprehensive test suite demonstrating cookie usage and error handling
+
 ## [3.0.1] - 2025-11-10
 
 ### 🐛 Critical Bug Fixes

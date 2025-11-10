@@ -18,11 +18,11 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
         const appState = credentials.appState;
 
         if (appState) {
-            let cookieStrings = [];
             if (Array.isArray(appState)) {
                 // Check if array contains full cookie objects (with domain, secure, etc.) or simple key-value
                 if (appState.length > 0 && typeof appState[0] === 'object' && appState[0].domain) {
                     // Full cookie format (from browser extensions like EditThisCookie, Cookie-Editor)
+                    utils.log("Detected full cookie format with domain/secure/httpOnly properties");
                     appState.forEach(cookie => {
                         try {
                             const name = cookie.name || cookie.key;
@@ -61,12 +61,18 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                             utils.warn("loginHelper", `Failed to set cookie ${cookie.name || cookie.key}: ${e.message}`);
                         }
                     });
-                    return;
                 } else {
                     // Simple key-value format
-                    cookieStrings = appState.map(c => [c.name || c.key, c.value].join('='));
+                    const cookieStrings = appState.map(c => [c.name || c.key, c.value].join('='));
+                    cookieStrings.forEach(cookieString => {
+                        const domain = ".facebook.com";
+                        const expires = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+                        const str = `${cookieString}; expires=${expires}; domain=${domain}; path=/;`;
+                        jar.setCookie(str, `https://${domain}`);
+                    });
                 }
             } else if (typeof appState === 'string') {
+                let cookieStrings = [];
                 if (appState.includes(';')) {
                     cookieStrings = appState.split(';').map(s => s.trim()).filter(Boolean);
                 } else if (appState.includes(',')) {
@@ -89,19 +95,24 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                 } else {
                     cookieStrings = [appState];
                 }
+                
+                cookieStrings.forEach(cookieString => {
+                    const domain = ".facebook.com";
+                    const expires = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+                    const str = `${cookieString}; expires=${expires}; domain=${domain}; path=/;`;
+                    jar.setCookie(str, `https://${domain}`);
+                });
             } else if (typeof appState === 'object' && !Array.isArray(appState)) {
-                cookieStrings = Object.entries(appState).map(([key, value]) => `${key}=${value}`);
+                const cookieStrings = Object.entries(appState).map(([key, value]) => `${key}=${value}`);
+                cookieStrings.forEach(cookieString => {
+                    const domain = ".facebook.com";
+                    const expires = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
+                    const str = `${cookieString}; expires=${expires}; domain=${domain}; path=/;`;
+                    jar.setCookie(str, `https://${domain}`);
+                });
             } else {
                 throw new Error("Invalid appState format. Supported formats: array, string (semicolon/comma/newline-separated), JSON string, or object.");
             }
-
-            // Set simple cookie strings
-            cookieStrings.forEach(cookieString => {
-                const domain = ".facebook.com";
-                const expires = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-                const str = `${cookieString}; expires=${expires}; domain=${domain}; path=/;`;
-                jar.setCookie(str, `https://${domain}`);
-            });
         } else if (credentials.email && credentials.password) {
             const url = "https://api.facebook.com/method/auth.login";
             const params = {
