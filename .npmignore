@@ -4,6 +4,7 @@ test-*.js
 final-demo.js
 example.js
 demo.js
+index.js
 
 # Sensitive files
 cookies.json
