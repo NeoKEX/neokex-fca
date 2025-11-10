@@ -1,7 +1,7 @@
 # NeoKEX-FCA API Fixes Applied
 
 ## Summary
-All critical bugs have been fixed. **10 out of 11 tests passing (91% success rate)**.
+All critical bugs have been fixed and **verified by architect review**. **10 out of 11 tests passing (91% success rate)**. All callback/promise contracts properly implemented following Node.js conventions.
 
 ## Issues Fixed
 
@@ -38,14 +38,23 @@ All critical bugs have been fixed. **10 out of 11 tests passing (91% success rat
   - Fixed parameter validation
 - **Impact:** setMessageReaction works reliably with callbacks
 
-### 5. ✅ editMessage Error Handling
+### 5. ✅ editMessage Proper Callback/Promise Dual Support
 **File:** `src/engine/functions/messaging/editMessage.js`
-- **Issue:** Threw errors without callback support, unclear error message
+- **Issue:** Function returned promises that rejected even when callback was provided, causing unhandled promise rejections
 - **Fix:**
-  - Added callback support
-  - Improved error messages to clearly state MQTT requirement
-  - Re-enabled callback registration for MQTT responses
-- **Impact:** Clear error messaging, proper callback handling
+  - Returns promise that always resolves when callback is provided (prevents unhandled rejection)
+  - Returns promise that properly rejects only in promise mode (when no callback)
+  - Proper MQTT response handling via ctx.reqCallbacks
+- **Impact:** editMessage works with both callbacks and promises without unhandled rejections, follows Node.js conventions
+
+### 6. ✅ getBotInitialData Error Handling & Import Path
+**File:** `src/engine/functions/auth/getBotInitialData.js`
+- **Issue:** Module import path incorrect (`../../../utils` instead of `../../../helpers`), threw errors inside async callback instead of using callback pathway
+- **Fix:** 
+  - Corrected import path to `../../../helpers`
+  - All errors now properly passed via callback
+  - Added try-catch for JSON parsing errors
+- **Impact:** MQTT connection and login work reliably without process crashes, editMessage functional
 
 ## Test Results
 
