@@ -141,6 +141,33 @@ Includes comprehensive type definitions (`lib/types/index.d.ts`) for:
 2. **scheduleMessage** (`src/engine/functions/messaging/scheduleMessage.js`) - Schedule messages to be sent at specific times (in-memory with persistence warning)
 3. **getAttachmentMetadata** (`src/engine/functions/utilities/getAttachmentMetadata.js`) - Get metadata about attachments without downloading them
 
+## Comprehensive Testing & Validation
+
+**Test Coverage**: 74 API functions tested across all categories (accounts, conversations, messaging, themes, polls, groups, social, utilities, network, realtime, advanced)
+
+**GraphQL doc_id Validation**: 
+- Tested all 31 GraphQL doc_ids in codebase
+- **30/31 working** (96.8% success rate)
+- **1 broken**: `friend.list` doc_id `5352933734760787` (Facebook deprecated this document)
+
+**Testing Infrastructure**:
+- `test-all-api-functions.js` - Comprehensive functional test suite
+- `test-all-doc-ids.js` - Automated doc_id validation
+- `extract-doc-ids-guide.md` - Manual extraction guide for updating broken doc_ids
+- `FACEBOOK_DOC_IDS.md` - Reference document tracking all doc_ids and status
+- `extract-friend-list-doc-id.html` - Browser-based extraction tool with console interceptor
+- `TESTING_GUIDE.md` - Complete testing guide with security best practices
+
+**Backward Compatibility**:
+- Preserved `getThreadPictures` behavior (returns single object/null)
+- Created new `getThreadPicturesList` for array return format
+- Fixed `getUserInfo` to handle both wrapped and direct return formats
+
+**Security**:
+- Added warnings about never committing Facebook cookies to repository
+- Documented credential rotation requirements
+- Emphasized use of test accounts for development
+
 ## NPM Publishing Preparation
 
 1. Created `.npmignore` to exclude test files, demos, and sensitive data
