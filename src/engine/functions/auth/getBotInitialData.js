@@ -28,7 +28,7 @@ module.exports = (defaultFuncs, api, ctx) => {
         return callback(err);
       }
       
-      const profileMatch = data.match(/"CurrentUserInitialData",\[\],\{(.*?)\},(.*?)\]/);
+      const profileMatch = data.body.match(/"CurrentUserInitialData",\[\],\{(.*?)\},(.*?)\]/);
       if (profileMatch && profileMatch[1]){
         try {
           const accountJson = JSON.parse(`{${profileMatch[1]}}`);
