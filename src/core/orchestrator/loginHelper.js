@@ -22,7 +22,6 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                 // Check if array contains full cookie objects (with domain, secure, etc.) or simple key-value
                 if (appState.length > 0 && typeof appState[0] === 'object' && appState[0].domain) {
                     // Full cookie format (from browser extensions like EditThisCookie, Cookie-Editor)
-                    utils.log("Detected full cookie format with domain/secure/httpOnly properties");
                     appState.forEach(cookie => {
                         try {
                             const name = cookie.name || cookie.key;
@@ -56,7 +55,6 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                             }
                             
                             jar.setCookie(cookieStr, `https://${domain.startsWith('.') ? domain.substring(1) : domain}`);
-                            utils.log("Cookie set:", name);
                         } catch (e) {
                             utils.warn("loginHelper", `Failed to set cookie ${cookie.name || cookie.key}: ${e.message}`);
                         }
