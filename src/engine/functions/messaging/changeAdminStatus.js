@@ -24,26 +24,28 @@ module.exports = function (defaultFuncs, api, ctx) {
       const makeAdmin = adminStatus !== false;
 
       const form = {
-        fb_api_caller_class: "RelayModern",
-        fb_api_req_friendly_name: makeAdmin ? "MessengerThreadAddAdminMutation" : "MessengerThreadRemoveAdminMutation",
-        variables: JSON.stringify({
-          input: {
-            client_mutation_id: utils.getGUID(),
-            actor_id: ctx.userID,
-            thread_key: threadID,
-            admin_ids: adminIDsArray
-          }
-        }),
-        server_timestamps: true,
-        doc_id: makeAdmin ? "2504913949542429" : "2504913949542430",
+        thread_fbid: threadID
       };
 
+      let i = 0;
+      for (const adminID of adminIDsArray) {
+        form[`admin_ids[${i++}]`] = adminID;
+      }
+      form["add"] = makeAdmin;
+
       const resData = await defaultFuncs
-        .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
+        .post("https://www.facebook.com/messaging/save_admins/?dpr=1", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (resData.errors) {
-        throw new Error(JSON.stringify(resData.errors));
+      if (resData.error) {
+        switch (resData.error) {
+          case 1976004:
+            throw new Error("Cannot alter admin status: you are not an admin.");
+          case 1357031:
+            throw new Error("Cannot alter admin status: this thread is not a group chat.");
+          default:
+            throw new Error("Cannot alter admin status: unknown error.");
+        }
       }
 
       cb(null, {

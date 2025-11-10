@@ -19,26 +19,21 @@ module.exports = function (defaultFuncs, api, ctx) {
     try {
       if (!threadID) throw new Error("threadID is required");
 
+      const threadArray = Array.isArray(threadID) ? threadID : [threadID];
       const form = {
-        fb_api_caller_class: "RelayModern",
-        fb_api_req_friendly_name: "MessagingThreadDeleteMutation",
-        variables: JSON.stringify({
-          input: {
-            client_mutation_id: utils.getGUID(),
-            actor_id: ctx.userID,
-            thread_id: threadID
-          }
-        }),
-        server_timestamps: true,
-        doc_id: "3495917127177638"
+        client: "mercury"
       };
 
+      for (let i = 0; i < threadArray.length; i++) {
+        form[`ids[${i}]`] = threadArray[i];
+      }
+
       const resData = await defaultFuncs
-        .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
+        .post("https://www.facebook.com/ajax/mercury/delete_thread.php", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (resData.errors) {
-        throw new Error(JSON.stringify(resData.errors));
+      if (resData.error) {
+        throw new Error(JSON.stringify(resData.error));
       }
 
       cb(null, { threadID: threadID });

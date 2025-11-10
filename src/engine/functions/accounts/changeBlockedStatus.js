@@ -25,27 +25,21 @@ module.exports = function (defaultFuncs, api, ctx) {
       if (!userID) throw new Error("userID is required");
 
       const shouldBlock = block !== false;
+      const endpoint = shouldBlock 
+        ? "https://www.facebook.com/messaging/block_messages/" 
+        : "https://www.facebook.com/messaging/unblock_messages/";
       
       const form = {
-        fb_api_caller_class: "RelayModern",
-        fb_api_req_friendly_name: shouldBlock ? "FriendingCometBlockUserMutation" : "FriendingCometUnblockUserMutation",
-        variables: JSON.stringify({
-          input: {
-            client_mutation_id: utils.getGUID(),
-            actor_id: ctx.userID,
-            user_id: userID
-          }
-        }),
-        server_timestamps: true,
-        doc_id: shouldBlock ? "4707600215949898" : "4707600216049898"
+        fbid: userID
       };
 
       const resData = await defaultFuncs
-        .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
+        .post(endpoint, ctx.jar, form)
+        .then(utils.saveCookies(ctx.jar))
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (resData.errors) {
-        throw new Error(JSON.stringify(resData.errors));
+      if (resData.error) {
+        throw resData;
       }
 
       cb(null, {

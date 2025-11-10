@@ -31,46 +31,40 @@ module.exports = function (defaultFuncs, api, ctx) {
     try {
       if (!threadID) throw new Error("threadID is required");
 
-      const form = {
-        fb_api_caller_class: "RelayModern",
-        fb_api_req_friendly_name: "MessengerThreadMediaQuery",
-        variables: JSON.stringify({
-          thread_key: threadID,
-          limit: limit,
-          offset: offset
-        }),
-        server_timestamps: true,
-        doc_id: "4855856897800288"
+      let form = {
+        thread_id: threadID,
+        offset: offset,
+        limit: limit
       };
 
-      try {
-        const resData = await defaultFuncs
-          .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
+      const resData = await defaultFuncs
+        .post("https://www.facebook.com/ajax/messaging/attachments/sharedphotos.php", ctx.jar, form)
+        .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
+
+      if (resData.error) {
+        throw resData;
+      }
+
+      const imagePromises = resData.payload.imagesData.map(async (image) => {
+        const imageForm = {
+          thread_id: threadID,
+          image_id: image.fbid
+        };
+        const imageRes = await defaultFuncs
+          .post("https://www.facebook.com/ajax/messaging/attachments/sharedphotos.php", ctx.jar, imageForm)
           .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-        const pictures = [];
-        
-        if (resData && resData.data && resData.data.message_thread) {
-          const attachments = resData.data.message_thread.all_attachment || [];
-          attachments.forEach(attachment => {
-            if (attachment.__typename === "Photo" || attachment.photo) {
-              const photo = attachment.photo || attachment;
-              pictures.push({
-                id: photo.id || photo.fbid,
-                url: photo.image?.uri || photo.uri,
-                width: photo.image?.width || photo.width,
-                height: photo.image?.height || photo.height
-              });
-            }
-          });
+        if (imageRes.error) {
+          throw imageRes;
         }
-        
-        const result = pictures.length > 0 ? pictures[0] : null;
-        cb(null, result);
-      } catch (apiErr) {
-        utils.warn("getThreadPictures", "Facebook API endpoint may have changed, returning null");
-        cb(null, null);
-      }
+
+        const queryThreadID = imageRes.jsmods.require[0][3][1].query_metadata.query_path[0].message_thread;
+        const imageData = imageRes.jsmods.require[0][3][1].query_results[queryThreadID].message_images.edges[0].node.image2;
+        return imageData;
+      });
+
+      const images = await Promise.all(imagePromises);
+      cb(null, images);
     } catch (err) {
       utils.error("getThreadPictures", err.message || err);
       cb(err);

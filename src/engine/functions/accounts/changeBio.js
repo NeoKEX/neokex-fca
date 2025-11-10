@@ -36,7 +36,7 @@ module.exports = function (defaultFuncs, api, ctx) {
           }
         }),
         server_timestamps: true,
-        doc_id: "4969988563035816"
+        doc_id: "2725043627607610"
       };
 
       const resData = await defaultFuncs

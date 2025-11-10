@@ -129,58 +129,57 @@ module.exports = function (defaultFuncs, api, ctx) {
     },
 
     /**
-     * Fetches the friend list for a given user ID.
+     * Fetches the friend list for the currently logged-in user.
+     * Uses the stable Ajax endpoint /chat/user_info_all instead of fragile GraphQL doc_id.
      * @async
-     * @param {string} [userID=ctx.userID] The ID of the user whose friend list to fetch. Defaults to the logged-in user.
      * @returns {Promise<Array<Object>>} A promise that resolves to an array of formatted friend objects.
      * @throws {Error} If the API request fails.
      */
-    list: async function(userID = ctx.userID) {
+    list: async function() {
         try {
-            const form = {
-                av: ctx.userID,
-                __user: ctx.userID,
-                __a: "1",
-                fb_dtsg: ctx.fb_dtsg,
-                jazoest: ctx.jazoest,
-                fb_api_caller_class: "RelayModern",
-                fb_api_req_friendly_name: "FriendsListQuery",
-                variables: JSON.stringify({
-                    userID: userID,
-                    count: 100,
-                    cursor: null,
-                    scale: 2
-                }),
-                doc_id: "9805267642859362"
-            };
-            if (ctx.lsd) form.lsd = ctx.lsd;
+            const res = await defaultFuncs.postFormData(
+                "https://www.facebook.com/chat/user_info_all",
+                ctx.jar,
+                {},
+                { viewer: ctx.userID }
+            );
             
-            const res = await defaultFuncs.post("https://www.facebook.com/api/graphql/", ctx.jar, form, {});
+            if (!res.data || !res.data.payload) {
+                throw new Error('friend.list: Empty or invalid response from Facebook');
+            }
             
+            if (res.data.error) {
+                throw new Error(`friend.list: ${JSON.stringify(res.data.error)}`);
+            }
+            
+            const payload = res.data.payload;
             const friends = [];
             
-            try {
-                if (res.data && res.data.data && res.data.data.user && res.data.data.user.friends) {
-                    const edges = res.data.data.user.friends.edges || [];
-                    edges.forEach(edge => {
-                        if (edge.node) {
-                            friends.push({
-                                userID: edge.node.id,
-                                name: edge.node.name,
-                                profilePicture: edge.node.profile_picture?.uri,
-                                url: `https://www.facebook.com/${edge.node.id}`
-                            });
-                        }
-                    });
+            for (const userId in payload) {
+                if (payload.hasOwnProperty(userId)) {
+                    const user = payload[userId];
+                    const isFriend = user.is_friend != null && user.is_friend;
+                    
+                    if (isFriend) {
+                        friends.push({
+                            userID: utils.formatID(user.id.toString()),
+                            name: user.name,
+                            firstName: user.firstName,
+                            alternateName: user.alternateName,
+                            profilePicture: user.thumbSrc,
+                            gender: user.gender,
+                            type: user.type,
+                            url: user.uri,
+                            vanity: user.vanity,
+                            isBirthday: !!user.is_birthday
+                        });
+                    }
                 }
-            } catch (parseErr) {
-                console.warn('friend.list: Could not parse response, Facebook may have changed the API');
             }
             
             return friends;
         } catch(err) {
-            console.warn('friend.list: Facebook GraphQL endpoint may be deprecated, returning empty list');
-            return [];
+            throw new Error(`friend.list failed: ${err.message || err}`);
         }
     },
 

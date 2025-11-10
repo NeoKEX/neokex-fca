@@ -20,25 +20,18 @@ module.exports = function (defaultFuncs, api, ctx) {
       if (!userID) throw new Error("userID is required");
 
       const form = {
-        fb_api_caller_class: "RelayModern",
-        fb_api_req_friendly_name: "FriendingCometUnfriendMutation",
-        variables: JSON.stringify({
-          input: {
-            client_mutation_id: utils.getGUID(),
-            actor_id: ctx.userID,
-            friend_id: userID
-          }
-        }),
-        server_timestamps: true,
-        doc_id: "5000603053365986"
+        uid: userID,
+        unref: "bd_friends_tab",
+        floc: "friends_tab",
+        "nctr[_mod]": `pagelet_timeline_app_collection_${ctx.userID}:2356318349:2`
       };
 
       const resData = await defaultFuncs
-        .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
+        .post("https://www.facebook.com/ajax/profile/removefriendconfirm.php", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (resData.errors) {
-        throw new Error(JSON.stringify(resData.errors));
+      if (resData.error) {
+        throw resData;
       }
 
       cb(null, { userID: userID });

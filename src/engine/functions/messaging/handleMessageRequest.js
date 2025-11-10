@@ -25,27 +25,23 @@ module.exports = function (defaultFuncs, api, ctx) {
       if (!threadID) throw new Error("threadID is required");
 
       const shouldAccept = accept !== false;
+      const threadArray = Array.isArray(threadID) ? threadID : [threadID];
       
       const form = {
-        fb_api_caller_class: "RelayModern",
-        fb_api_req_friendly_name: shouldAccept ? "MessengerThreadlistAcceptThreadMutation" : "MessengerThreadlistDeleteThreadMutation",
-        variables: JSON.stringify({
-          input: {
-            client_mutation_id: utils.getGUID(),
-            actor_id: ctx.userID,
-            thread_id: threadID
-          }
-        }),
-        server_timestamps: true,
-        doc_id: shouldAccept ? "3055967771174472" : "3055967771274472"
+        client: "mercury"
       };
 
+      const messageBox = shouldAccept ? "inbox" : "other";
+      for (let i = 0; i < threadArray.length; i++) {
+        form[`${messageBox}[${i}]`] = threadArray[i];
+      }
+
       const resData = await defaultFuncs
-        .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
+        .post("https://www.facebook.com/ajax/mercury/move_thread.php", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (resData.errors) {
-        throw new Error(JSON.stringify(resData.errors));
+      if (resData.error) {
+        throw resData;
       }
 
       cb(null, {
