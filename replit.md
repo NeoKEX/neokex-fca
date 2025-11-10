@@ -4,7 +4,7 @@ NeoKEX-FCA is an advanced Facebook Chat API library for Node.js that provides co
 
 The project is designed as a modern, TypeScript-supported alternative to traditional Facebook Chat API implementations, with enhanced features including multi-format cookie support, MQTT-based real-time messaging, advanced thread management, and social media operations.
 
-**Current Status (November 10, 2025):** v3.0.0 - Production ready. All critical bugs fixed and verified by architect review. 10/11 core functions passing (91% success rate). Proper callback/promise dual support implemented across all messaging and auth functions.
+**Current Status (November 10, 2025):** v3.0.1 - Ready for npm publication. All critical bugs fixed and verified by architect review. New API functions added (getUnreadCount, scheduleMessage, getAttachmentMetadata). Singleton state eliminated, proper error handling implemented. Package properly configured with .npmignore, files field, and comprehensive documentation.
 
 # User Preferences
 
@@ -127,18 +127,28 @@ Includes comprehensive type definitions (`lib/types/index.d.ts`) for:
 
 **Rationale**: Facebook's APIs can be unreliable. Robust error handling prevents bot crashes and provides useful debugging information.
 
-# Recent Bug Fixes (November 10, 2025)
+# Recent Changes (v3.0.1 - November 10, 2025)
 
-## Issues Resolved
+## Critical Bug Fixes
 
-1. **Module Import Paths** - Fixed incorrect relative paths in `deltas/value.js` and `getBotInitialData.js` that prevented MQTT connections
-2. **sendMessage Validation** - Corrected parameter type checking error message
-3. **markAsRead Dual Support** - Added HTTP fallback and proper callback/promise dual support with correct error propagation
-4. **setMessageReaction** - Implemented proper callback/promise dual support
-5. **editMessage** - Fixed callback/promise contract to prevent unhandled rejections in callback mode
-6. **getBotInitialData** - Fixed error handling to use callback pathway instead of throwing
+1. **sendMessage.js** - Fixed ReferenceError when attachment upload fails (resData undefined in error handling)
+2. **sendMessage.js** - Fixed missing return value in getUrl function for URL attachments
+3. **client.js** - Eliminated singleton state to prevent cross-user session leakage in concurrent logins
 
-All functions now follow Node.js conventions: callbacks receive errors, promises reject on errors, but never both simultaneously.
+## New API Functions
+
+1. **getUnreadCount** (`src/engine/functions/conversations/getUnreadCount.js`) - Get unread message counts for specific threads or all threads
+2. **scheduleMessage** (`src/engine/functions/messaging/scheduleMessage.js`) - Schedule messages to be sent at specific times (in-memory with persistence warning)
+3. **getAttachmentMetadata** (`src/engine/functions/utilities/getAttachmentMetadata.js`) - Get metadata about attachments without downloading them
+
+## NPM Publishing Preparation
+
+1. Created `.npmignore` to exclude test files, demos, and sensitive data
+2. Added `files` field to package.json for explicit package content control
+3. Removed test files and sensitive data (cookies.json, test-*.js, final-demo.js - 1471 lines deleted)
+4. Enhanced TypeScript definitions for new API functions
+5. Updated README with comprehensive documentation and examples
+6. Updated CHANGELOG to reflect all changes in v3.0.1
 
 # External Dependencies
 
