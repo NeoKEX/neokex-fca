@@ -1,0 +1,7 @@
+node_modules/
+.env
+cookies.json
+test-credentials.json
+appstate.json
+*.log
+.DS_Store
