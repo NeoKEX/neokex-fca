@@ -9,32 +9,50 @@ module.exports = (defaultFuncs, api, ctx) => {
     }
 
     const form = {
-      query: query,
-      snippetSize: 100,
-      limit: limit,
-      ...(threadID && { threadID: threadID })
+      fb_api_caller_class: "RelayModern",
+      fb_api_req_friendly_name: "MWChatMessageSearchQuery",
+      variables: JSON.stringify({
+        query: query,
+        threadID: threadID || null,
+        limit: limit
+      }),
+      server_timestamps: true,
+      doc_id: "6894232070618411"
     };
 
     try {
       const resData = await defaultFuncs.post(
-        "https://www.facebook.com/ajax/mercury/search_snippets.php",
+        "https://www.facebook.com/api/graphql/",
         ctx.jar,
-        form
+        form,
+        null,
+        {
+          "x-fb-friendly-name": "MWChatMessageSearchQuery",
+          "x-fb-lsd": ctx.lsd
+        }
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (!resData || resData.error) {
-        throw new Error(resData ? resData.error : 'Search failed');
+      if (!resData || resData.error || resData.errors) {
+        const errorMsg = resData ? (resData.error || JSON.stringify(resData.errors)) : 'Search failed';
+        if (errorMsg.includes('document') && errorMsg.includes('not found')) {
+          utils.warn('searchMessages', 'GraphQL doc_id outdated. Facebook frequently changes internal API identifiers.');
+          return [];
+        }
+        throw new Error(errorMsg);
       }
 
-      const results = resData.payload?.search_snippets || [];
-      return results.map(snippet => ({
-        messageID: snippet.message_id,
-        threadID: snippet.thread_id,
-        authorID: snippet.author_id,
-        body: snippet.snippet,
-        timestamp: snippet.timestamp,
-        attachments: snippet.attachments || []
-      }));
+      const edges = resData.data?.message_search?.search_results?.edges || [];
+      return edges.map(edge => {
+        const node = edge.node;
+        return {
+          messageID: node.message_id,
+          threadID: node.thread_key,
+          authorID: node.message_sender?.id,
+          body: node.snippet || node.message?.text,
+          timestamp: node.timestamp_ms,
+          attachments: []
+        };
+      });
     } catch (error) {
       utils.error('searchMessages', error);
       throw error;

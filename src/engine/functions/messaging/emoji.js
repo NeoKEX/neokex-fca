@@ -63,14 +63,17 @@ module.exports = function (defaultFuncs, api, ctx) {
     threadID = threadID || ctx.threadID;
 
     if (!threadID) {
-      return _callback(new Error("threadID is required to set an emoji."));
+      _callback(new Error("threadID is required to set an emoji."));
+      return returnPromise;
     }
     if (!emoji) {
-      return _callback(new Error("An emoji character is required."));
+      _callback(new Error("An emoji character is required."));
+      return returnPromise;
     }
 
     if (!ctx.mqttClient) {
-      return _callback(new Error("Not connected to MQTT"));
+      _callback(new Error("Not connected to MQTT"));
+      return returnPromise;
     }
 
     ctx.wsReqNumber += 1;

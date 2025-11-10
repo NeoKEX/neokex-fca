@@ -2,7 +2,7 @@
 
 module.exports = function (defaultFuncs, api, ctx) {
   return function threadColors() {
-    return {
+    const colorsMap = {
       defaultBlue: "196241301102133",
       hotPink: "169463077092846",
       aquaBlue: "2442142322678320",
@@ -16,5 +16,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       teal: "539927563794799",
       red: "2136755023228447"
     };
+    
+    return Object.entries(colorsMap).map(([name, id]) => ({ name, id }));
   };
 };

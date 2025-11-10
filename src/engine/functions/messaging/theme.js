@@ -60,10 +60,6 @@ module.exports = function (defaultFuncs, api, ctx) {
       return _callback(new Error("themeName (or 'list') is required."));
     }
 
-    if (!ctx.mqttClient) {
-      return _callback(new Error("Not connected to MQTT"));
-    }
-
     const fetchThemes = async () => {
       const form = {
         fb_api_caller_class: 'RelayModern',
@@ -199,6 +195,10 @@ module.exports = function (defaultFuncs, api, ctx) {
         const themes = await fetchThemes();
         _callback(null, themes);
       } else {
+        if (!ctx.mqttClient) {
+          return _callback(new Error("Not connected to MQTT. Setting themes requires MQTT connection."));
+        }
+        
         const themes = await fetchThemes();
         const normalizedThemeName = themeName.toLowerCase();
 

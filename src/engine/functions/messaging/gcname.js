@@ -63,14 +63,17 @@ module.exports = function (defaultFuncs, api, ctx) {
     threadID = threadID || ctx.threadID;
 
     if (!threadID) {
-      return _callback(new Error("threadID is required to change the group chat name."));
+      _callback(new Error("threadID is required to change the group chat name."));
+      return returnPromise;
     }
     if (typeof newName !== 'string') {
-      return _callback(new Error("newName must be a string."));
+      _callback(new Error("newName must be a string."));
+      return returnPromise;
     }
 
     if (!ctx.mqttClient) {
-      return _callback(new Error("Not connected to MQTT"));
+      _callback(new Error("Not connected to MQTT"));
+      return returnPromise;
     }
 
     ctx.wsReqNumber += 1;

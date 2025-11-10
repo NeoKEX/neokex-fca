@@ -70,14 +70,17 @@ module.exports = function (defaultFuncs, api, ctx) {
     participantID = participantID || ctx.userID;
 
     if (!threadID) {
-      return _callback(new Error("threadID is required to set a nickname."));
+      _callback(new Error("threadID is required to set a nickname."));
+      return returnPromise;
     }
     if (typeof nickname !== 'string') {
-      return _callback(new Error("nickname must be a string."));
+      _callback(new Error("nickname must be a string."));
+      return returnPromise;
     }
 
     if (!ctx.mqttClient) {
-      return _callback(new Error("Not connected to MQTT"));
+      _callback(new Error("Not connected to MQTT"));
+      return returnPromise;
     }
 
     ctx.wsReqNumber += 1;

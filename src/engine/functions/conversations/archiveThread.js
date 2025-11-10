@@ -9,19 +9,38 @@ module.exports = (defaultFuncs, api, ctx) => {
     }
 
     const form = {
-      ids: [threadID],
-      archive: archive ? 1 : 0
+      fb_api_caller_class: "RelayModern",
+      fb_api_req_friendly_name: "MWChatArchiveStatusChangeMutation",
+      variables: JSON.stringify({
+        data: {
+          actor_id: ctx.userID,
+          thread_ids: [threadID],
+          folder: archive ? "ARCHIVED" : "INBOX"
+        }
+      }),
+      server_timestamps: true,
+      doc_id: "4785156694883915"
     };
 
     try {
       const resData = await defaultFuncs.post(
-        "https://www.facebook.com/ajax/mercury/change_archived_status.php",
+        "https://www.facebook.com/api/graphql/",
         ctx.jar,
-        form
+        form,
+        null,
+        {
+          "x-fb-friendly-name": "MWChatArchiveStatusChangeMutation",
+          "x-fb-lsd": ctx.lsd
+        }
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (!resData || resData.error) {
-        throw new Error(resData ? resData.error : 'Archive operation failed');
+      if (!resData || resData.error || resData.errors) {
+        const errorMsg = resData ? (resData.error || JSON.stringify(resData.errors)) : 'Archive operation failed';
+        if (errorMsg.includes('document') && errorMsg.includes('not found')) {
+          utils.warn('archiveThread', 'GraphQL doc_id outdated. Archive operation unavailable due to Facebook API changes.');
+          return { success: false, threadID, archived: archive, error: 'API temporarily unavailable' };
+        }
+        throw new Error(errorMsg);
       }
 
       return {
