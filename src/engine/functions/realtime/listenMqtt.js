@@ -85,8 +85,6 @@ async function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
         host = `${domain}?sid=${sessionID}&cid=${cid}`;
     }
 
-    utils.log("Connecting to MQTT with new IDs...", host);
-
     const options = {
         clientId: 'mqttwsclient',
         protocolId: 'MQIsdp',
@@ -145,9 +143,6 @@ async function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
             queue.initial_titan_sequence_id = ctx.lastSeqId;
             queue.device_params = null;
         }
-        utils.log(`Successfully connected to MQTT.`);
-        const { name: botName = "Facebook User", uid = ctx.userID } = await api.getBotInitialData();
-        utils.log(`Hello, ${botName} (${uid})`);
         mqttClient.publish(topic, JSON.stringify(queue), { qos: 1, retain: false });
     });
 
@@ -266,9 +261,7 @@ module.exports = (defaultFuncs, api, ctx) => {
 
         async function scheduleReconnect() {
             const time = getRandomReconnectTime();
-            utils.log(`Scheduled reconnect in ${Math.floor(time / 60000)} minutes...`);
             reconnectInterval = setTimeout(() => {
-                utils.log(`Reconnecting MQTT with new clientID...`);
                 if (ctx.mqttClient) ctx.mqttClient.end(true);
                 ctx.clientID = generateUUID();
                 listenMqtt(defaultFuncs, api, ctx, globalCallback);

@@ -147,7 +147,6 @@ module.exports = function(defaultFuncs, api, ctx) {
          * @returns {Promise<Array<Object>>}
          */
         getStorePacks: async function() {
-            utils.log("Starting to fetch all sticker packs from store...");
             let allPacks = [];
 
             const initialForm = {
@@ -159,11 +158,8 @@ module.exports = function(defaultFuncs, api, ctx) {
             let res = await makeRequest(initialForm);
             let { packs, page_info, store_id } = formatPackList(res);
             allPacks.push(...packs);
-            utils.log(`Fetched first page with ${packs.length} packs.`);
 
             while (page_info && page_info.has_next_page) {
-                utils.log("Fetching next page with cursor:", page_info.end_cursor);
-
                 const paginatedForm = {
                     fb_api_caller_class: 'RelayModern',
                     fb_api_req_friendly_name: 'CometStickersStorePackListPaginationQuery',
@@ -178,10 +174,8 @@ module.exports = function(defaultFuncs, api, ctx) {
                 let paginatedResult = formatPackList(res);
                 allPacks.push(...paginatedResult.packs);
                 page_info = paginatedResult.page_info;
-                utils.log(`Fetched ${paginatedResult.packs.length} more packs. Total now: ${allPacks.length}`);
             }
 
-            utils.log(`Finished fetching. Total unique packs found: ${allPacks.length}`);
             return allPacks;
         },
 

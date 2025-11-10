@@ -13,7 +13,6 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
 
     try {
         const jar = utils.getJar();
-        utils.log("Initializing NeoKEX-FCA...");
 
         const appState = credentials.appState;
 
@@ -221,9 +220,7 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
             utils.warn("loginHelper", "fb_dtsg not found during initial extraction. Attempting to refresh...");
             try {
                 const refreshResult = await api.refreshFb_dtsg();
-                if (refreshResult && refreshResult.fb_dtsg) {
-                    utils.log("loginHelper", "Successfully refreshed fb_dtsg after login");
-                } else {
+                if (!refreshResult || !refreshResult.fb_dtsg) {
                     utils.warn("loginHelper", "Failed to refresh fb_dtsg. Some API functions may not work correctly.");
                 }
             } catch (refreshError) {

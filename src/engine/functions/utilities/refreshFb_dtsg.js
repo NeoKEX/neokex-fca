@@ -26,7 +26,6 @@ module.exports = function (defaultFuncs, api, ctx) {
       if (dtsg) {
         ctx.fb_dtsg = dtsg;
         ctx.jazoest = jazoest;
-        utils.log("refreshFb_dtsg", "Successfully refreshed fb_dtsg");
         cb(null, { fb_dtsg: dtsg, jazoest: jazoest });
       } else {
         throw new Error("Failed to extract fb_dtsg from response");

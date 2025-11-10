@@ -50,7 +50,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 if (jsonStart !== -1) {
                     const jsonData = JSON.parse(text.substring(jsonStart));
                     if (jsonData.code === 200) {
-                        utils.log("✅ Subscription success received.");
                         emitter.emit("success", jsonData);
                         return;
                     }
@@ -63,7 +62,7 @@ module.exports = function (defaultFuncs, api, ctx) {
                     }
                 }
             } catch (err) {
-                utils.error("❌ Error parsing WebSocket message:", err);
+                utils.error("realtime", "Error parsing WebSocket message:", err);
                 emitter.emit("error", err);
             }
         }
@@ -94,8 +93,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                     "Accept-Language": "en-US,en;q=0.9"
                 };
 
-                utils.log(`📤 Headers for WebSocket handshake:\n${Object.entries(baseHeaders).map(([k, v]) => `${k}: ${v}`).join("\n")}`);
-
                 const wsOptions = { headers: baseHeaders };
                 if (ctx.globalOptions.proxy) {
                     wsOptions.agent = new HttpsProxyAgent(ctx.globalOptions.proxy);
@@ -104,7 +101,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                 ws = new WebSocket(url, wsOptions);
 
                 ws.onopen = () => {
-                    utils.log("✅ Connected via undici.WebSocket");
                     subscriptions.forEach((payload, index) => {
                         const prefix = Buffer.from([14, index, 0, payload.length]);
                         const suffix = Buffer.from([0, 0]);
@@ -115,7 +111,6 @@ module.exports = function (defaultFuncs, api, ctx) {
                     keepAliveInterval = setInterval(() => {
                         if (ws.readyState === ws.OPEN) {
                             ws.send("ping");
-                            utils.log("🔁 Sent keep-alive ping.");
                         }
                     }, 10000);
                 };
@@ -123,24 +118,21 @@ module.exports = function (defaultFuncs, api, ctx) {
                 ws.onmessage = (event) => {
                     if (event.data instanceof Blob) {
                         handleMessage(event.data);
-                    } else {
-                        utils.warn("Unknown message type:", typeof event.data);
                     }
                 };
 
                 ws.onerror = (err) => {
-                    utils.error("WebSocket error:", err.message || err);
+                    utils.error("realtime", "WebSocket error:", err.message || err);
                     emitter.emit("error", err);
                 };
 
                 ws.onclose = () => {
-                    utils.warn("🔌 WebSocket closed. Reconnecting...");
                     clearInterval(keepAliveInterval);
                     reconnectTimeout = setTimeout(connect, 1000);
                 };
 
             } catch (err) {
-                utils.error("💥 Connection error:", err.message);
+                utils.error("realtime", "Connection error:", err.message);
                 emitter.emit("error", err);
                 clearInterval(keepAliveInterval);
                 clearTimeout(reconnectTimeout);

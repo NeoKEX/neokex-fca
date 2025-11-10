@@ -20,7 +20,6 @@ module.exports = (defaultFuncs, api, ctx) => {
         try {
           await api.sendMessage(message, threadID, replyToMessage);
           scheduledMessages.delete(scheduleId);
-          utils.log('scheduleMessage', `Message ${scheduleId} sent successfully`);
         } catch (error) {
           utils.error('scheduleMessage', `Failed to send scheduled message ${scheduleId}:`, error);
           scheduledMessages.delete(scheduleId);
@@ -36,8 +35,6 @@ module.exports = (defaultFuncs, api, ctx) => {
         createdAt: Date.now()
       });
 
-      utils.log('scheduleMessage', `Message scheduled with ID: ${scheduleId} for ${new Date(scheduledTime).toISOString()}`);
-
       return {
         scheduleId,
         scheduledTime,
@@ -46,7 +43,6 @@ module.exports = (defaultFuncs, api, ctx) => {
           if (scheduled) {
             clearTimeout(scheduled.timeout);
             scheduledMessages.delete(scheduleId);
-            utils.log('scheduleMessage', `Cancelled scheduled message: ${scheduleId}`);
             return true;
           }
           return false;
@@ -69,7 +65,6 @@ module.exports = (defaultFuncs, api, ctx) => {
       if (scheduled) {
         clearTimeout(scheduled.timeout);
         scheduledMessages.delete(scheduleId);
-        utils.log('scheduleMessage', `Cancelled scheduled message: ${scheduleId}`);
         return true;
       }
       return false;
@@ -79,7 +74,6 @@ module.exports = (defaultFuncs, api, ctx) => {
       const count = scheduledMessages.size;
       scheduledMessages.forEach((data) => clearTimeout(data.timeout));
       scheduledMessages.clear();
-      utils.log('scheduleMessage', `Cancelled ${count} scheduled messages`);
       return count;
     }
   };

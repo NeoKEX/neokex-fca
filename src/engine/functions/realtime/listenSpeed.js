@@ -77,7 +77,6 @@ function connectLightspeed(ctx, globalCallback) {
 
         try {
             client = new mqtt.Client(_ => websocket(host, options.wsOptions), options);
-            utils.log("[Lightspeed] Attempting MQTT connection...");
         } catch (err) {
             utils.error("[Lightspeed] MQTT Client creation failed:", err.message);
             reconnect(retryCount + 1);
@@ -85,30 +84,24 @@ function connectLightspeed(ctx, globalCallback) {
         }
 
         client.on('connect', () => {
-            utils.log("[Lightspeed] MQTT client connected. Attempting to subscribe to topics...");
             retryCount = 0;
 
-            // --- ITO ANG IDINAGDAG NA SUBSCRIBE LOGIC ---
             const topicsToSubscribe = [
-                "/t_ms", // Para sa mga messages at deltas
-                "/orca_presence", // Para sa online status
-                "/messaging_events" // Para sa ibang events
+                "/t_ms",
+                "/orca_presence",
+                "/messaging_events"
             ];
 
             topicsToSubscribe.forEach(topic => {
                 client.subscribe(topic, (err) => {
                     if (err) {
                         utils.error(`[Lightspeed] Failed to subscribe to topic ${topic}:`, err.message);
-                    } else {
-                        utils.log(`[Lightspeed] Subscribed to topic: ${topic}`);
                     }
                 });
             });
-            // -----------------------------------------
         });
 
         client.on('message', (topic, payload) => {
-            utils.log(`[Lightspeed] Payload Received on topic ${topic}:`);
             globalCallback(null, { type: 'lightspeed_message', topic: topic.toString(), payload: payload });
         });
 
@@ -126,7 +119,6 @@ function connectLightspeed(ctx, globalCallback) {
 
     function reconnect(retryCount) {
         const delay = Math.min(3000 * Math.pow(2, retryCount), 60000);
-        utils.log(`[Lightspeed] Reconnecting in ${delay / 1000} seconds...`);
         setTimeout(() => startConnection(retryCount), delay);
     }
 
@@ -136,7 +128,6 @@ function connectLightspeed(ctx, globalCallback) {
         stop: () => {
             isStopped = true;
             if (client) client.end(true);
-            utils.log("[Lightspeed] Listener has been manually stopped.");
         }
     };
 }

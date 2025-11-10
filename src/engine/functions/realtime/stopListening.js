@@ -8,7 +8,6 @@ module.exports = function (defaultFuncs, api, ctx) {
       if (ctx.mqttClient) {
         ctx.mqttClient.end(false, () => {
           ctx.mqttClient = null;
-          utils.log("MQTT client disconnected successfully");
           if (callback) callback(null);
         });
       } else {

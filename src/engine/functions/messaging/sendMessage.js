@@ -88,7 +88,6 @@ module.exports = (defaultFuncs, api, ctx) => {
       }
       form["specific_to_list[" + threadID.length + "]"] = "fbid:" + ctx.userID;
       form["client_thread_id"] = "root:" + messageAndOTID;
-      utils.log("sendMessage", "Sending message to multiple users: " + threadID);
     } else {
       // This means that threadID is the id of a user, and the chat
       // is a single person chat
@@ -129,7 +128,6 @@ module.exports = (defaultFuncs, api, ctx) => {
         
         // Check if graceful error handling is enabled
         if (ctx.globalOptions.ignoreThreadMembershipErrors) {
-          utils.log("sendMessage", `Skipping thread ${threadID} due to membership error (graceful mode enabled)`);
           return {
             error: true,
             errorCode: 1545012,
@@ -155,7 +153,6 @@ module.exports = (defaultFuncs, api, ctx) => {
       // Check if this is a successful response despite empty payload
       if (resData.__ar === 1 && resData.rid) {
         // Facebook accepted the request, treat as success even without payload.actions
-        utils.log("sendMessage", `Message sent successfully (no payload.actions returned, thread: ${threadID})`);
         return {
           threadID: threadID,
           messageID: utils.generateOfflineThreadingID(),

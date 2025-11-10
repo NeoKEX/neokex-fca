@@ -6,6 +6,7 @@ const { wrapper } = require("axios-cookiejar-support");
 const FormData = require("form-data");
 const { getHeaders } = require("./headers");
 const { getType } = require("./constants");
+const utils = require("./index");
 
 const jar = new CookieJar();
 const client = wrapper(axios.create({ jar }));
@@ -37,14 +38,12 @@ async function requestWithRetry(requestFunction, retries = 3) {
             return adaptResponse(res);
         } catch (error) {
             if (i === retries - 1) {
-                console.error(`Request failed after ${retries} attempts:`, error.message);
                 if (error.response) {
                     return adaptResponse(error.response);
                 }
                 throw error;
             }
             const backoffTime = Math.pow(2, i) * 1000;
-            console.warn(`Request attempt ${i + 1} failed. Retrying in ${backoffTime}ms...`);
             await delay(backoffTime);
         }
     }
@@ -66,7 +65,7 @@ function setProxy(proxyUrl) {
                 },
             };
         } catch (e) {
-            console.error("Invalid proxy URL. Please use a full URL format (e.g., http://user:pass@host:port).");
+            utils.error("network", "Invalid proxy URL:", proxyUrl);
             proxyConfig = {};
         }
     } else {

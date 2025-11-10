@@ -24,10 +24,8 @@ function extractAndSearchLightspeedRequest(allJsonData) {
     return null;
   }
 
-  // Save the entire object for debugging
   try {
     fs.writeFileSync(outputFile, JSON.stringify(lightReq, null, 2), "utf8");
-    utils.log(`pin.js: Saved lightspeed_web_request to ${outputFile}`);
   } catch (err) {
     utils.error("pin.js: Failed to write lightspeed_web_request.json", err);
   }
@@ -39,10 +37,6 @@ function extractAndSearchLightspeedRequest(allJsonData) {
       json: lightReq
     });
 
-    utils.log(`pin.js: Found ${matches.length} matching command(s).`);
-    matches.forEach((match, idx) => {
-      console.log(`📌 Match ${idx + 1}:`, match);
-    });
   } catch (err) {
     utils.error("pin.js: JSONPath search failed.", err);
   }

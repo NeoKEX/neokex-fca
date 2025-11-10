@@ -76,8 +76,6 @@ async function buildAPI(html, jar, netData, globalOptions, fbLinkFunc, errorRetr
     // Warn if DTSG extraction failed
     if (!dtsg || dtsg === '') {
         utils.warn("buildAPI", "Failed to extract fb_dtsg from initial HTML. Will attempt refresh after login.");
-    } else {
-        utils.log("buildAPI", "Successfully extracted fb_dtsg token");
     }
 
     const clientIDData = findConfig("MqttWebDeviceID");

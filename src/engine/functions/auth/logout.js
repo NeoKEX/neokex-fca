@@ -53,7 +53,6 @@ module.exports = function (defaultFuncs, api, ctx) {
         .then(utils.saveCookies(ctx.jar));
       
       ctx.loggedIn = false;
-      utils.log("logout", "Logged out successfully.");
 
     } catch (err) {
       utils.error("logout", err);
