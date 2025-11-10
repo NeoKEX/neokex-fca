@@ -1,0 +1,52 @@
+# Test files
+test-*.js
+*test*.js
+final-demo.js
+example.js
+
+# Sensitive files
+cookies.json
+*.log
+
+# Development documentation
+replit.md
+FIXES_APPLIED.md
+
+# Test assets
+test-image.png
+*.png
+*.jpg
+*.jpeg
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Node modules
+node_modules/
+
+# Build artifacts
+*.tgz
+*.log
+
+# CI/CD
+.github/
+.travis.yml
+.circleci/
+
+# Documentation (keep only essential ones)
+CONTRIBUTING.md
+
+# Temporary files
+*.tmp
+tmp/
+temp/

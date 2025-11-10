@@ -1,12 +1,21 @@
 {
   "name": "neokex-fca",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "An advanced, next-generation Facebook Chat API library with enhanced features, multi-format cookie support, and comprehensive messaging capabilities. Built for modern Node.js applications.",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
+  "files": [
+    "lib/",
+    "src/",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "test": "echo \"Visit https://github.com/NeoKEX for documentation and examples\"",
-    "prepublishOnly": "echo \"Preparing NeoKEX-FCA for publication...\""
+    "prepublishOnly": "echo \"Preparing NeoKEX-FCA for publication...\"",
+    "lint": "eslint src/",
+    "format": "prettier --write \"src/**/*.js\""
   },
   "repository": {
     "type": "git",

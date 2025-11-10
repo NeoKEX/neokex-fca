@@ -10,10 +10,13 @@
 
 - **Multi-Format Cookie Support**: Support for arrays, strings (semicolon/comma/newline-separated), objects, and JSON strings
 - **Advanced Messaging**: Send, edit, delete, forward, search messages with full attachment support
+- **Message Scheduling**: Schedule messages to be sent at specific times (in-memory)
 - **Real-time Events**: Listen to messages, typing indicators, read receipts, and presence updates via MQTT
 - **Thread Management**: Create groups, manage members, change names, themes, emojis, and more
+- **Unread Count Tracking**: Get unread message counts for specific threads or all threads
 - **Poll System**: Create and manage polls in group conversations
 - **Media Handling**: Upload/download photos, videos, files, stickers, and voice messages
+- **Attachment Metadata**: Get metadata about attachments without downloading them
 - **User Management**: Get user info, friend lists, and blocked users
 - **Social Features**: Like, comment, share posts, follow/unfollow users
 - **Auto-Reconnection**: Automatic reconnection with exponential backoff
@@ -171,6 +174,24 @@ api.createPoll(threadID, 'What do you prefer?', ['Option 1', 'Option 2', 'Option
 api.votePoll(pollID, optionID, true, callback); // true = add vote, false = remove vote
 ```
 
+#### scheduleMessage (Advanced)
+```javascript
+// Schedule a message to be sent at a specific time
+const scheduledTime = Date.now() + 60000; // 1 minute from now
+const scheduled = api.scheduleMessage.schedule('Scheduled message!', threadID, scheduledTime);
+
+// List all scheduled messages
+const pending = api.scheduleMessage.list();
+
+// Cancel a specific scheduled message
+scheduled.cancel();
+
+// Cancel all scheduled messages
+api.scheduleMessage.cancelAll();
+```
+
+**⚠️ Important Note:** Scheduled messages are stored in-memory only and will be lost if the process restarts. For production use, implement your own persistence layer with a database or task queue.
+
 ### Thread Management
 
 #### getThreadInfo
@@ -217,6 +238,23 @@ api.archiveThread(threadID, true, callback); // true = archive, false = unarchiv
 #### muteThread (Advanced)
 ```javascript
 api.muteThread(threadID, -1, callback); // -1 = mute forever, 0 = unmute, seconds = mute duration
+```
+
+#### getUnreadCount (Advanced)
+```javascript
+// Get unread count for a specific thread
+api.getUnreadCount(threadID, (err, result) => {
+  console.log(`Thread ${result.threadName}: ${result.unreadCount} unread`);
+});
+
+// Get total unread count across all threads
+api.getUnreadCount(null, (err, result) => {
+  console.log(`Total unread: ${result.totalUnreadCount}`);
+  console.log(`Unread threads: ${result.unreadThreadsCount}`);
+  result.threads.forEach(t => {
+    console.log(`  - ${t.threadName}: ${t.unreadCount}`);
+  });
+});
 ```
 
 ### User Operations
@@ -270,6 +308,20 @@ api.downloadAttachment(attachmentURL, './downloads/file.jpg', (err, result) => {
 // Download to memory
 api.downloadAttachment(attachmentURL, null, (err, result) => {
   console.log('Data buffer:', result.data);
+});
+```
+
+#### getAttachmentMetadata (Advanced)
+```javascript
+// Get metadata about an attachment without downloading
+api.getAttachmentMetadata(attachmentURL, (err, metadata) => {
+  if (metadata.isAccessible) {
+    console.log('Type:', metadata.mediaType);
+    console.log('Size:', metadata.fileSizeFormatted);
+    console.log('Extension:', metadata.fileExtension);
+  } else {
+    console.log('Not accessible:', metadata.error);
+  }
 });
 ```
 

@@ -209,6 +209,59 @@ declare module 'neokex-fca' {
     size: number;
   }
 
+  export interface UnreadCountResult {
+    threadID?: string;
+    unreadCount?: number;
+    threadName?: string;
+    totalUnreadCount?: number;
+    unreadThreadsCount?: number;
+    threads?: Array<{
+      threadID: string;
+      threadName: string;
+      unreadCount: number;
+    }>;
+  }
+
+  export interface ScheduledMessage {
+    scheduleId: string;
+    scheduledTime: number;
+    cancel: () => boolean;
+  }
+
+  export interface ScheduledMessageInfo {
+    scheduleId: string;
+    threadID: string;
+    scheduledTime: number;
+    createdAt: number;
+    message: string;
+  }
+
+  export interface AttachmentMetadata {
+    url: string;
+    mediaType?: string;
+    contentType?: string;
+    fileSize?: number;
+    fileSizeFormatted?: string;
+    fileExtension?: string;
+    lastModified?: string | null;
+    etag?: string | null;
+    isAccessible: boolean;
+    error?: string;
+    statusCode?: number;
+  }
+
+  export interface ScheduleMessageAPI {
+    schedule(
+      message: string | Message,
+      threadID: string,
+      scheduledTime: number,
+      replyToMessage?: string
+    ): ScheduledMessage;
+    list(): ScheduledMessageInfo[];
+    cancel(scheduleId: string): boolean;
+    cancelAll(): number;
+  }
+
   export interface API {
     getCurrentUserID(): string;
     getOptions(key?: string): any;
@@ -322,6 +375,18 @@ declare module 'neokex-fca' {
       timestamp: number | null,
       callback?: (err: any, messages: MessageEvent[]) => void
     ): Promise<MessageEvent[]>;
+
+    getUnreadCount(
+      threadID?: string,
+      callback?: (err: any, result: UnreadCountResult) => void
+    ): Promise<UnreadCountResult>;
+
+    scheduleMessage: ScheduleMessageAPI;
+
+    getAttachmentMetadata(
+      attachmentUrl: string,
+      callback?: (err: any, metadata: AttachmentMetadata) => void
+    ): Promise<AttachmentMetadata>;
 
     archiveThread(
       threadID: string,

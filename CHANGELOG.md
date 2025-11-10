@@ -2,6 +2,29 @@
 
 All notable changes to NeoKEX-FCA will be documented in this file.
 
+## [3.0.1] - 2025-11-10
+
+### 🐛 Critical Bug Fixes
+- **sendMessage**: Fixed ReferenceError when attachment upload fails (resData undefined in error handling)
+- **sendMessage**: Fixed missing return value in getUrl function for URL attachments
+- **client**: Eliminated singleton state to prevent cross-user session leakage in concurrent logins
+
+### ✨ New Features
+- **getUnreadCount**: Get unread message counts for specific threads or all threads
+- **scheduleMessage**: Schedule messages to be sent at specific times (in-memory with persistence warning)
+- **getAttachmentMetadata**: Get metadata about attachments without downloading them
+
+### 📦 NPM Publishing Preparation
+- Added `.npmignore` to exclude test files, demos, and sensitive data
+- Added `files` field to package.json for explicit package content control
+- Removed test files and sensitive data (cookies.json) from repository
+- Enhanced TypeScript definitions for new API functions
+
+### 📚 Documentation
+- Updated README with examples for all new API functions
+- Added warning about scheduleMessage in-memory limitations
+- Enhanced feature list with new capabilities
+
 ## [3.0.0] - 2025-11-10
 
 ### 🎉 Initial Release

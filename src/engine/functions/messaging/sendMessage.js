@@ -26,7 +26,7 @@ module.exports = (defaultFuncs, api, ctx) => {
        voice_clip: "true"
      }, {}).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
      if (oksir.error) {
-       throw new Error(resData);
+       throw new Error(`Attachment upload failed: ${JSON.stringify(oksir.error)}`);
      }
      uploads.push(oksir.payload.metadata[0]);
     }
@@ -40,8 +40,9 @@ module.exports = (defaultFuncs, api, ctx) => {
       uri: url
     }).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
     if (!resData || resData.error || !resData.payload){
-        throw new Error(resData);
+        throw new Error(`URL attachment failed: ${JSON.stringify(resData?.error || 'Invalid response')}`);
     }
+    return resData.payload;
   }
 
   async function sendContent(form, threadID, isSingleUser, messageAndOTID, callback) {
@@ -89,7 +90,7 @@ module.exports = (defaultFuncs, api, ctx) => {
       if (resData.error === 1545012) {
         utils.warn("sendMessage", "Got error 1545012. This might mean that you're not part of the conversation " + threadID);
       }
-      throw new Error(resData);
+      throw new Error(`Send message failed: ${JSON.stringify(resData.error)}`);
     }
     const messageInfo = resData.payload.actions.reduce((p, v) => {
         return { threadID: v.thread_fbid, messageID: v.message_id, timestamp: v.timestamp } || p;
