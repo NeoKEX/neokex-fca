@@ -41,30 +41,66 @@ module.exports = function (defaultFuncs, api, ctx) {
         .post("https://www.facebook.com/ajax/messaging/attachments/sharedphotos.php", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
+      if (!resData) {
+        cb(null, null);
+        return returnPromise;
+      }
+
       if (resData.error) {
         throw resData;
       }
 
+      if (!resData.payload || !resData.payload.imagesData || !Array.isArray(resData.payload.imagesData)) {
+        cb(null, null);
+        return returnPromise;
+      }
+
       const imagePromises = resData.payload.imagesData.map(async (image) => {
-        const imageForm = {
-          thread_id: threadID,
-          image_id: image.fbid
-        };
-        const imageRes = await defaultFuncs
-          .post("https://www.facebook.com/ajax/messaging/attachments/sharedphotos.php", ctx.jar, imageForm)
-          .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
+        try {
+          const imageForm = {
+            thread_id: threadID,
+            image_id: image.fbid
+          };
+          const imageRes = await defaultFuncs
+            .post("https://www.facebook.com/ajax/messaging/attachments/sharedphotos.php", ctx.jar, imageForm)
+            .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-        if (imageRes.error) {
-          throw imageRes;
+          if (!imageRes || imageRes.error) {
+            return null;
+          }
+
+          if (!imageRes.jsmods || !imageRes.jsmods.require || 
+              !imageRes.jsmods.require[0] || !imageRes.jsmods.require[0][3] ||
+              !imageRes.jsmods.require[0][3][1]) {
+            return null;
+          }
+
+          const queryMetadata = imageRes.jsmods.require[0][3][1].query_metadata;
+          const queryResults = imageRes.jsmods.require[0][3][1].query_results;
+          
+          if (!queryMetadata || !queryMetadata.query_path || !queryMetadata.query_path[0] ||
+              !queryResults) {
+            return null;
+          }
+
+          const queryThreadID = queryMetadata.query_path[0].message_thread;
+          if (!queryThreadID || !queryResults[queryThreadID] || 
+              !queryResults[queryThreadID].message_images ||
+              !queryResults[queryThreadID].message_images.edges ||
+              !queryResults[queryThreadID].message_images.edges[0]) {
+            return null;
+          }
+
+          const imageData = queryResults[queryThreadID].message_images.edges[0].node.image2;
+          return imageData || null;
+        } catch (err) {
+          return null;
         }
-
-        const queryThreadID = imageRes.jsmods.require[0][3][1].query_metadata.query_path[0].message_thread;
-        const imageData = imageRes.jsmods.require[0][3][1].query_results[queryThreadID].message_images.edges[0].node.image2;
-        return imageData;
       });
 
       const images = await Promise.all(imagePromises);
-      cb(null, images);
+      const filteredImages = images.filter(img => img !== null);
+      cb(null, filteredImages.length > 0 ? filteredImages : null);
     } catch (err) {
       utils.error("getThreadPictures", err.message || err);
       cb(err);

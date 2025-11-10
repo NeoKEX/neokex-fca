@@ -175,7 +175,7 @@ login({ appState }, options, async (err, api) => {
 
   await test('getThreadPictures (target thread)', async () => {
     const picture = await api.getThreadPictures(TARGET_THREAD_ID);
-    return { success: true, details: picture ? 'Has picture' : 'No picture' };
+    return { success: true, details: picture ? 'Has picture' : 'No pictures (null)' };
   });
 
   await test('getThreadPicturesList (target thread)', async () => {
@@ -187,15 +187,15 @@ login({ appState }, options, async (err, api) => {
 
   await test('getUnreadCount (target thread)', async () => {
     const result = await api.getUnreadCount(TARGET_THREAD_ID);
-    return typeof result === 'number' || (result && typeof result.unreadCount === 'number')
-      ? { success: true, details: `Unread: ${typeof result === 'number' ? result : result.unreadCount}` }
+    return result && typeof result.unreadCount === 'number'
+      ? { success: true, details: `Unread: ${result.unreadCount}` }
       : { success: false, error: 'Invalid unread count' };
   });
 
   await test('getUnreadCount (all threads)', async () => {
     const result = await api.getUnreadCount(null);
     return result && typeof result.totalUnreadCount === 'number'
-      ? { success: true, details: `Total unread: ${result.totalUnreadCount}` }
+      ? { success: true, details: `Total unread: ${result.totalUnreadCount}, Unread threads: ${result.unreadThreadsCount}` }
       : { success: false, error: 'Invalid total unread count' };
   });
 
@@ -382,11 +382,15 @@ login({ appState }, options, async (err, api) => {
   });
 
   await test('addExternalModule', async () => {
-    const testModule = { testFunction: () => 'test' };
+    const testModule = { 
+      testFunction: (defaultFuncs, api, ctx) => {
+        return () => 'test module works';
+      }
+    };
     api.addExternalModule(testModule);
-    return typeof api.testFunction === 'function'
-      ? { success: true, details: 'External module added' }
-      : { success: false, error: 'Module not added' };
+    return typeof api.testFunction === 'function' && api.testFunction() === 'test module works'
+      ? { success: true, details: 'External module added and callable' }
+      : { success: false, error: 'Module not added or not callable' };
   });
 
   // ============================================================================
