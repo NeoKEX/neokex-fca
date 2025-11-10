@@ -28,6 +28,10 @@ module.exports = function (defaultFuncs, api, ctx) {
         .get("https://www.facebook.com/ajax/mercury/search_snippets.php", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
+      if (!resData) {
+        throw new Error("No response data received");
+      }
+
       if (resData.error) {
         throw new Error(resData.error);
       }
