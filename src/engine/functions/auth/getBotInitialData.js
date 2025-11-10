@@ -1,6 +1,6 @@
 "use strict";
 
-const utils = require("../../../utils");
+const utils = require("../../../helpers");
 // @NethWs3Dev
 
 module.exports = (defaultFuncs, api, ctx) => {
@@ -24,18 +24,27 @@ module.exports = (defaultFuncs, api, ctx) => {
       customUserAgent: utils.windowsUserAgent
   }, (err, data) => {
   
-      if (err) throw err;
+      if (err) {
+        return callback(err);
+      }
+      
       const profileMatch = data.match(/"CurrentUserInitialData",\[\],\{(.*?)\},(.*?)\]/);
       if (profileMatch && profileMatch[1]){
-        const accountJson = JSON.parse(`{${profileMatch[1]}}`);
-        accountJson.name = accountJson.NAME;
-        accountJson.uid = accountJson.USER_ID;
-        delete accountJson.NAME;
-        delete accountJson.USER_ID;
-        return callback(null, {
-          ...accountJson
-      });
-      } else return callback(null, { error: "Something went wrong. Maybe its possible that it has a limitation due to spam requests. You can try again later." });
+        try {
+          const accountJson = JSON.parse(`{${profileMatch[1]}}`);
+          accountJson.name = accountJson.NAME;
+          accountJson.uid = accountJson.USER_ID;
+          delete accountJson.NAME;
+          delete accountJson.USER_ID;
+          return callback(null, {
+            ...accountJson
+          });
+        } catch (parseErr) {
+          return callback(parseErr);
+        }
+      } else {
+        return callback(new Error("Could not parse account data. Maybe there's a limitation due to spam requests. You can try again later."));
+      }
   }, true);
   return returnPromise;
   };
