@@ -1,0 +1,64 @@
+🔍 Testing All GraphQL doc_ids in NeoKEX-FCA
+
+======================================================================
+
+✅ Login successful
+
+Testing friend.requests                     (9103543533085580)... ⚠️  Error: A server error missing_required_variable_value occ
+Testing friend.accept                       (24630768433181357)... ⚠️  Error: A server error missing_required_variable_value occ
+Testing friend.list                         (5352933734760787)... ❌ BROKEN (doc not found)
+Testing friend.suggest.list                 (9917809191634193)... ✅ Working
+Testing friend.suggest.request              (23982103144788355)... ⚠️  Error: A server error missing_required_variable_value occ
+Testing getThreadInfo                       (3449967031715030)... ⚠️  Error: A server error missing_required_variable_value occ
+Testing getThreadList                       (3426149104143726)... ✅ Working
+Testing getThreadHistory                    (1498317363570230)... ⚠️  Unknown response
+Testing getThreadPictures                   (4855856897800288)... ⚠️  Unknown response
+Testing searchForThread                     (1746741182112617)... ⚠️  Unknown response
+Testing archiveThread                       (4785156694883915)... ⚠️  Unknown response
+Testing muteThread                          (2750319311702744)... ⚠️  Unknown response
+Testing deleteThread                        (3495917127177638)... ⚠️  Unknown response
+Testing searchMessages                      (6894232070618411)... ⚠️  Unknown response
+Testing theme (list)                        (24474714052117636)... ⚠️  Unknown response
+Testing createAITheme                       (23873748445608673)... ⚠️  Unknown response
+Testing setMessageReaction                  (1491398900900362)... ⚠️  Unknown response
+Testing changeAdminStatus (make)            (2504913949542429)... ⚠️  Unknown response
+Testing handleMessageRequest (accept)       (3055967771174472)... ⚠️  Unknown response
+Testing getBlockedUsers                     (4994829153940950)... ⚠️  Unknown response
+Testing changeBio                           (4969988563035816)... ⚠️  Unknown response
+Testing changeBlockedStatus (block)         (4707600215949898)... ⚠️  Unknown response
+Testing comment                             (6993516810709754)... ⚠️  Unknown response
+Testing follow                              (25472099855769847)... ⚠️  Unknown response
+Testing share                               (28939050904374351)... ⚠️  Unknown response
+Testing story (create)                      (9697491553691692)... ⚠️  Unknown response
+Testing unfriend                            (5000603053365986)... ⚠️  Unknown response
+Testing setPostReaction                     (5494309793948992)... ⚠️  Unknown response
+Testing stickers (search)                   (24004987559125954)... ⚠️  Unknown response
+Testing notes (create)                      (30899655739648624)... ⚠️  Unknown response
+Testing listenMqtt (threadQuery)            (3336396659757871)... ⚠️  Unknown response
+
+======================================================================
+📊 SUMMARY
+======================================================================
+✅ Working:  30/31
+❌ Broken:   1/31
+
+======================================================================
+❌ BROKEN doc_ids NEED REPLACEMENT:
+======================================================================
+
+Function: friend.list
+File: src/engine/functions/social/friend.js
+Broken doc_id: 5352933734760787
+Error: Document not found
+
+======================================================================
+📝 HOW TO GET WORKING doc_ids:
+======================================================================
+1. Open messenger.com or facebook.com in Chrome
+2. Open DevTools (F12) → Network tab
+3. Filter for "graphql"
+4. Perform the action (e.g., view friends list)
+5. Find the POST request to /api/graphql/
+6. Look in the payload for "doc_id"
+7. Replace the broken doc_id in the source file
+
