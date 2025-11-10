@@ -20,33 +20,49 @@ module.exports = function (defaultFuncs, api, ctx) {
       if (!searchName) throw new Error("searchName is required");
 
       const form = {
-        search_query: searchName,
-        limit: 10
+        fb_api_caller_class: "RelayModern",
+        fb_api_req_friendly_name: "LSPlatformGraphQLLightspeedRequestQuery",
+        variables: JSON.stringify({
+          search_query: searchName,
+          result_limit: 10,
+          messenger_commerce: true,
+          include_games: true,
+          internal_bot: false,
+          vc_endpoint: false
+        }),
+        server_timestamps: true,
+        doc_id: "1746741182112617"
       };
 
       const resData = await defaultFuncs
-        .get("https://www.facebook.com/ajax/mercury/search_snippets.php", ctx.jar, form)
+        .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
       if (!resData) {
         throw new Error("No response data received");
       }
 
-      if (resData.error) {
-        throw new Error(resData.error);
+      if (resData.errors) {
+        throw new Error(JSON.stringify(resData.errors));
       }
 
       const threads = [];
-      if (resData.payload && resData.payload.search_snippets) {
-        for (const id in resData.payload.search_snippets) {
-          const snippet = resData.payload.search_snippets[id];
-          threads.push({
-            threadID: snippet.thread_id || id,
-            name: snippet.name || snippet.snippet,
-            snippet: snippet.snippet,
-            type: snippet.type
-          });
-        }
+      if (resData.data && resData.data.entities_named && resData.data.entities_named.search_results) {
+        const results = resData.data.entities_named.search_results.edges || [];
+        results.forEach(edge => {
+          if (edge.node) {
+            const node = edge.node;
+            threads.push({
+              threadID: node.id,
+              name: node.name,
+              snippet: edge.subtext || "",
+              type: node.category_type,
+              profilePicture: node.profile_picture?.uri,
+              isVerified: node.is_verified,
+              url: node.url
+            });
+          }
+        });
       }
 
       cb(null, threads);

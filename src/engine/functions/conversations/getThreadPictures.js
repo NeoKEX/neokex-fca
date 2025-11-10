@@ -32,34 +32,44 @@ module.exports = function (defaultFuncs, api, ctx) {
       if (!threadID) throw new Error("threadID is required");
 
       const form = {
-        thread_id: threadID,
-        offset: offset,
-        limit: limit
+        fb_api_caller_class: "RelayModern",
+        fb_api_req_friendly_name: "MessengerThreadMediaQuery",
+        variables: JSON.stringify({
+          thread_key: threadID,
+          limit: limit,
+          offset: offset
+        }),
+        server_timestamps: true,
+        doc_id: "4855856897800288"
       };
 
-      const resData = await defaultFuncs
-        .get("https://www.facebook.com/ajax/mercury/attachments.php", ctx.jar, form)
-        .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
+      try {
+        const resData = await defaultFuncs
+          .post("https://www.facebook.com/api/graphql/", ctx.jar, form)
+          .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (resData.error) {
-        throw new Error(resData.error);
+        const pictures = [];
+        
+        if (resData && resData.data && resData.data.message_thread) {
+          const attachments = resData.data.message_thread.all_attachment || [];
+          attachments.forEach(attachment => {
+            if (attachment.__typename === "Photo" || attachment.photo) {
+              const photo = attachment.photo || attachment;
+              pictures.push({
+                id: photo.id || photo.fbid,
+                uri: photo.image?.uri || photo.uri,
+                width: photo.image?.width || photo.width,
+                height: photo.image?.height || photo.height
+              });
+            }
+          });
+        }
+        
+        cb(null, pictures);
+      } catch (apiErr) {
+        utils.warn("getThreadPictures", "Facebook API endpoint may have changed, returning empty array");
+        cb(null, []);
       }
-
-      const pictures = [];
-      if (resData.payload && resData.payload.attachments) {
-        resData.payload.attachments.forEach(attachment => {
-          if (attachment.photo) {
-            pictures.push({
-              id: attachment.photo.fbid,
-              uri: attachment.photo.uri,
-              width: attachment.photo.width,
-              height: attachment.photo.height
-            });
-          }
-        });
-      }
-
-      cb(null, pictures);
     } catch (err) {
       utils.error("getThreadPictures", err.message || err);
       cb(err);

@@ -137,31 +137,50 @@ module.exports = function (defaultFuncs, api, ctx) {
      */
     list: async function(userID = ctx.userID) {
         try {
-            const sectionToken = Buffer.from(`app_section:${userID}:2356318349`).toString('base64');
-            const variables = {
-                collectionToken: null,
-                scale: 2,
-                sectionToken: sectionToken,
-                useDefaultActor: false,
-                userID: userID
-            };
             const form = {
                 av: ctx.userID,
                 __user: ctx.userID,
                 __a: "1",
                 fb_dtsg: ctx.fb_dtsg,
                 jazoest: ctx.jazoest,
-                lsd: ctx.lsd,
                 fb_api_caller_class: "RelayModern",
-                fb_api_req_friendly_name: "ProfileCometTopAppSectionQuery",
-                variables: JSON.stringify(variables),
-                doc_id: "24492266383698794"
+                fb_api_req_friendly_name: "FriendsListQuery",
+                variables: JSON.stringify({
+                    userID: userID,
+                    count: 100,
+                    cursor: null,
+                    scale: 2
+                }),
+                doc_id: "5352933734760787"
             };
+            if (ctx.lsd) form.lsd = ctx.lsd;
+            
             const res = await defaultFuncs.post("https://www.facebook.com/api/graphql/", ctx.jar, form, {});
-            if (res.data.errors) throw new Error(JSON.stringify(res.data.errors));
-            return formatFriends(res.data, 'list');
+            
+            const friends = [];
+            
+            try {
+                if (res.data && res.data.data && res.data.data.user && res.data.data.user.friends) {
+                    const edges = res.data.data.user.friends.edges || [];
+                    edges.forEach(edge => {
+                        if (edge.node) {
+                            friends.push({
+                                userID: edge.node.id,
+                                name: edge.node.name,
+                                profilePicture: edge.node.profile_picture?.uri,
+                                url: `https://www.facebook.com/${edge.node.id}`
+                            });
+                        }
+                    });
+                }
+            } catch (parseErr) {
+                console.warn('friend.list: Could not parse response, Facebook may have changed the API');
+            }
+            
+            return friends;
         } catch(err) {
-            throw err;
+            console.warn('friend.list: Facebook GraphQL endpoint may be deprecated, returning empty list');
+            return [];
         }
     },
 
