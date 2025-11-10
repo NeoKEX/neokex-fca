@@ -25,7 +25,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       };
 
       for (let i = 0; i < threadArray.length; i++) {
-        form[`ids[${i}]`] = threadArray[i];
+        form[`ids[${threadArray[i]}]`] = threadArray[i];
       }
 
       const resData = await defaultFuncs

@@ -33,7 +33,7 @@ module.exports = function (defaultFuncs, api, ctx) {
 
       const messageBox = shouldAccept ? "inbox" : "other";
       for (let i = 0; i < threadArray.length; i++) {
-        form[`${messageBox}[${i}]`] = threadArray[i];
+        form[`${messageBox}[${threadArray[i]}]`] = threadArray[i];
       }
 
       const resData = await defaultFuncs
