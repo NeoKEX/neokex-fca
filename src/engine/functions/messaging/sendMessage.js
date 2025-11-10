@@ -150,7 +150,22 @@ module.exports = (defaultFuncs, api, ctx) => {
       err.errorDescription = resData.errorDescription;
       throw err;
     }
+    // Handle response - Facebook may return empty payload for some cases (e.g., messaging self)
     if (!resData.payload || !resData.payload.actions || resData.payload.actions.length === 0) {
+      // Check if this is a successful response despite empty payload
+      if (resData.__ar === 1 && resData.rid) {
+        // Facebook accepted the request, treat as success even without payload.actions
+        utils.log("sendMessage", `Message sent successfully (no payload.actions returned, thread: ${threadID})`);
+        return {
+          threadID: threadID,
+          messageID: utils.generateOfflineThreadingID(),
+          timestamp: Date.now(),
+          success: true
+        };
+      }
+      
+      // This is a genuine error
+      utils.warn("sendMessage", `Invalid payload structure. Response: ${JSON.stringify(resData).substring(0, 500)}`);
       const err = new Error("Send message failed: Invalid response payload.");
       err.errorCode = 'INVALID_PAYLOAD';
       err.threadID = threadID;

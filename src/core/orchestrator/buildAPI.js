@@ -33,8 +33,52 @@ async function buildAPI(html, jar, netData, globalOptions, fbLinkFunc, errorRetr
     };
 
     const dtsgData = findConfig("DTSGInitialData");
-    const dtsg = dtsgData ? dtsgData.token : utils.getFrom(html, '"token":"', '"');
-    const dtsgResult = { fb_dtsg: dtsg, jazoest: `2${Array.from(dtsg).reduce((a, b) => a + b.charCodeAt(0), '')}` };
+    let dtsg = dtsgData ? dtsgData.token : utils.getFrom(html, '"token":"', '"');
+    
+    // Additional fallback: try to find in __bbox.payload.global_scope or DTSGInitData
+    if (!dtsg || dtsg === '') {
+        for (const scriptData of netData) {
+            if (scriptData.__bbox && scriptData.__bbox.payload && scriptData.__bbox.payload.global_scope) {
+                const globalScope = scriptData.__bbox.payload.global_scope;
+                if (globalScope.fb_dtsg) {
+                    dtsg = globalScope.fb_dtsg;
+                    break;
+                }
+            }
+            // Try DTSGInitData as well
+            if (scriptData.define) {
+                for (const def of scriptData.define) {
+                    if (Array.isArray(def) && (def[0] === 'DTSGInitData' || def[0].endsWith('DTSGInitData')) && def[1] && def[1].token) {
+                        dtsg = def[1].token;
+                        break;
+                    }
+                }
+            }
+            if (dtsg) break;
+        }
+    }
+    
+    // Final fallback: try multiple HTML patterns
+    if (!dtsg || dtsg === '') {
+        dtsg = utils.getFrom(html, '"DTSGInitialData",{"token":"', '"') ||
+               utils.getFrom(html, '"DTSG":{"token":"', '"') ||
+               utils.getFrom(html, 'DTSGInitialData",[],{"token":"', '"') ||
+               utils.getFrom(html, '"token":"', '"');
+    }
+    
+    const dtsgResult = { fb_dtsg: dtsg, jazoest: dtsg ? `2${Array.from(dtsg).reduce((a, b) => a + b.charCodeAt(0), '')}` : undefined };
+    
+    // Extract lsd token for additional endpoints
+    const lsd = utils.getFrom(html, '["LSD",[],{"token":"', '"') ||
+                utils.getFrom(html, '"LSD",\\[\\],{"token":"', '"') ||
+                utils.getFrom(html, 'LSD",\\[\\],{"token":"', '"');
+    
+    // Warn if DTSG extraction failed
+    if (!dtsg || dtsg === '') {
+        utils.warn("buildAPI", "Failed to extract fb_dtsg from initial HTML. Will attempt refresh after login.");
+    } else {
+        utils.log("buildAPI", "Successfully extracted fb_dtsg token");
+    }
 
     const clientIDData = findConfig("MqttWebDeviceID");
     const clientID = clientIDData ? clientIDData.clientID : undefined;
@@ -80,6 +124,7 @@ async function buildAPI(html, jar, netData, globalOptions, fbLinkFunc, errorRetr
         callback_Task: {},
         region,
         firstListen: true,
+        lsd: lsd,
         ...dtsgResult,
     };
     const defaultFuncs = utils.makeDefaults(html, userID, ctx);

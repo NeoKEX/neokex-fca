@@ -67,6 +67,20 @@ function makeDefaults(html, userID, ctx) {
 
     return newObj;
   }
+  
+  function getSessionParams(ctxParam) {
+    // Keep this simple - only the essential session parameters
+    // matching ws3-fca's approach
+    return {
+      av: ctxParam.userID,
+      __user: ctxParam.userID,
+      __req: (reqCounter++).toString(36),
+      __rev: revision,
+      __a: 1,
+      fb_dtsg: ctxParam.fb_dtsg,
+      jazoest: ctxParam.jazoest,
+    };
+  }
 
   return {
     get: (url, jar, qs, ctxx, customHeader = {}) =>
@@ -84,6 +98,8 @@ function makeDefaults(html, userID, ctx) {
         ctx.globalOptions,
         ctxx || ctx
       ),
+    
+    getSessionParams: (ctxParam) => getSessionParams(ctxParam),
   };
 }
 

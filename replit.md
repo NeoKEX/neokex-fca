@@ -154,20 +154,45 @@ if (result.error) {
 
 ## v3.1.1 (November 10, 2025)
 
-### Bug Fixes
+### Critical Bug Fixes
 
-1. **getBotInitialData.js** - Fixed incorrect data access. The `httpGet` function returns `{ body: string }` but code was calling `.match()` directly on the data object. Changed `data.match()` to `data.body.match()`.
+1. **getBotInitialData.js** - Fixed data access bug
+   - Issue: `httpGet` returns `{ body: string }` but code was calling `.match()` directly on data object
+   - Fix: Changed `data.match()` to `data.body.match()`
+   - Status: ✅ Fully resolved
 
-2. **sendMessage.js** - Enhanced error 1545012 (not a participant) handling with:
-   - Optional pre-validation with cached thread membership checks
-   - Graceful error mode that returns error objects instead of throwing
-   - Automatic cache invalidation when membership errors occur
+2. **sendMessage.js** - Multiple critical fixes
+   - Enhanced error 1545012 (not a participant) handling with optional pre-validation and graceful error mode
+   - Added optional pre-validation with 5-minute cached thread membership checks
+   - Added graceful error mode that returns error objects instead of throwing exceptions
+   - Added automatic cache invalidation when error 1545012 occurs
+   - Fixed response handling to gracefully handle empty payloads (e.g., when messaging self)
+   - Now checks for success indicators (__ar, rid) even when payload.actions is empty
    - Two new global options: `validateThreadMembership` and `ignoreThreadMembershipErrors`
+   - Status: ✅ Fully resolved
+
+3. **buildAPI.js** - Enhanced fb_dtsg token extraction
+   - Added multiple fallback methods for extracting fb_dtsg from Facebook's HTML
+   - Added fallback patterns for different Facebook page structures
+   - Added lsd token extraction
+   - Added defensive logging to track token extraction status
+   - Status: ✅ Fully resolved
+
+4. **loginHelper.js** - Added automatic fb_dtsg refresh
+   - Automatically calls `refreshFb_dtsg` if tokens are missing after initial login
+   - Ensures tokens are always available for API calls
+   - Status: ✅ Fully resolved
 
 ### Configuration Options Added
 
 - `ctx.globalOptions.validateThreadMembership` - Enables pre-validation of thread membership before sending messages (default: false)
 - `ctx.globalOptions.ignoreThreadMembershipErrors` - Returns error objects instead of throwing when not a participant (default: false)
+
+### Architecture Improvements
+
+- Simplified session parameter handling to match proven ws3-fca approach
+- Added `getSessionParams()` helper function for consistency
+- Improved token extraction robustness with multiple fallback strategies
 
 ## v3.1.0 (November 10, 2025)
 

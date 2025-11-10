@@ -216,6 +216,21 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
         api.defaultFuncs = defaultFuncs;
         api.globalOptions = globalOptions;
         
+        // Refresh fb_dtsg if initial extraction failed
+        if (!ctx.fb_dtsg || !ctx.jazoest) {
+            utils.warn("loginHelper", "fb_dtsg not found during initial extraction. Attempting to refresh...");
+            try {
+                const refreshResult = await api.refreshFb_dtsg();
+                if (refreshResult && refreshResult.fb_dtsg) {
+                    utils.log("loginHelper", "Successfully refreshed fb_dtsg after login");
+                } else {
+                    utils.warn("loginHelper", "Failed to refresh fb_dtsg. Some API functions may not work correctly.");
+                }
+            } catch (refreshError) {
+                utils.warn("loginHelper", "Error refreshing fb_dtsg:", refreshError.message);
+            }
+        }
+        
         return callback(null, api);
     } catch (error) {
         utils.error("loginHelper", error.error || error);
