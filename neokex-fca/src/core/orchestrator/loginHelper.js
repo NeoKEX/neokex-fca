@@ -26,13 +26,15 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                     cookieStrings = appState.split(';').map(s => s.trim()).filter(Boolean);
                 } else if (appState.includes(',')) {
                     cookieStrings = appState.split(',').map(s => s.trim()).filter(Boolean);
-                } else if (appState.includes('\\n')) {
-                    cookieStrings = appState.split('\\n').map(s => s.trim()).filter(Boolean);
-                } else if (appState.startsWith('[')) {
+                } else if (/\r?\n/.test(appState)) {
+                    cookieStrings = appState.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+                } else if (appState.startsWith('[') || appState.startsWith('{')) {
                     try {
                         const parsed = JSON.parse(appState);
                         if (Array.isArray(parsed)) {
                             cookieStrings = parsed.map(c => [c.name || c.key, c.value].join('='));
+                        } else if (typeof parsed === 'object') {
+                            cookieStrings = Object.entries(parsed).map(([key, value]) => `${key}=${value}`);
                         }
                     } catch (e) {
                         cookieStrings = [appState];
@@ -43,7 +45,7 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
             } else if (typeof appState === 'object' && !Array.isArray(appState)) {
                 cookieStrings = Object.entries(appState).map(([key, value]) => `${key}=${value}`);
             } else {
-                throw new Error("Invalid appState format. Supported formats: array, string (semicolon/comma/newline-separated), or object.");
+                throw new Error("Invalid appState format. Supported formats: array, string (semicolon/comma/newline-separated), JSON string, or object.");
             }
 
             cookieStrings.forEach(cookieString => {
