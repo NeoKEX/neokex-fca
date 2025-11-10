@@ -14,7 +14,38 @@ const allowedProperties = {
   location: true,
 };
 
+// Cache for thread membership validation (threadID -> timestamp)
+const threadMembershipCache = new Map();
+const CACHE_TTL = 300000; // 5 minutes
+
 module.exports = (defaultFuncs, api, ctx) => {
+  
+  async function validateThreadMembership(threadID) {
+    // Skip validation for arrays (new group chats) or if disabled
+    if (utils.getType(threadID) === "Array" || !ctx.globalOptions.validateThreadMembership) {
+      return true;
+    }
+    
+    // Check cache first
+    const cached = threadMembershipCache.get(threadID);
+    if (cached && (Date.now() - cached < CACHE_TTL)) {
+      return true;
+    }
+    
+    try {
+      const threadInfo = await api.getThreadInfo(threadID);
+      if (threadInfo && threadInfo.participantIDs && threadInfo.participantIDs.includes(ctx.userID)) {
+        threadMembershipCache.set(threadID, Date.now());
+        return true;
+      }
+      return false;
+    } catch (err) {
+      utils.warn("validateThreadMembership", `Failed to validate thread ${threadID}: ${err.message}`);
+      // On validation error, allow the send to proceed (fail open)
+      return true;
+    }
+  }
+  
   async function uploadAttachment(attachments) {
     var uploads = [];
     for (var i = 0; i < attachments.length; i++) {
@@ -91,7 +122,22 @@ module.exports = (defaultFuncs, api, ctx) => {
     }
     if (resData.error) {
       if (resData.error === 1545012) {
+        // Invalidate cache for this thread
+        threadMembershipCache.delete(threadID);
+        
         utils.warn("sendMessage", "Got error 1545012. This might mean that you're not part of the conversation " + threadID);
+        
+        // Check if graceful error handling is enabled
+        if (ctx.globalOptions.ignoreThreadMembershipErrors) {
+          utils.log("sendMessage", `Skipping thread ${threadID} due to membership error (graceful mode enabled)`);
+          return {
+            error: true,
+            errorCode: 1545012,
+            threadID: threadID,
+            message: "Not a participant in this conversation"
+          };
+        }
+        
         const err = new Error(`Cannot send message to thread ${threadID}: You are not a participant in this conversation. This can happen if:\n  - You were removed from the group chat\n  - You left the conversation\n  - You are blocked by the recipient\n  - The thread ID is invalid or the conversation was deleted\n  - The recipient's account was deactivated\n\nTip: Verify the thread ID and ensure you have an active conversation with this user/group.`);
         err.errorCode = 1545012;
         err.threadID = threadID;
@@ -130,6 +176,23 @@ module.exports = (defaultFuncs, api, ctx) => {
     let disallowedProperties = Object.keys(msg).filter(prop => !allowedProperties[prop]);
     if (disallowedProperties.length > 0) {
       throw new Error("Dissallowed props: `" + disallowedProperties.join(", ") + "`");
+    }
+    
+    // Optional pre-validation of thread membership
+    if (ctx.globalOptions.validateThreadMembership) {
+      const isValid = await validateThreadMembership(threadID);
+      if (!isValid) {
+        utils.warn("sendMessage", `Pre-validation failed: Not a member of thread ${threadID}`);
+        if (ctx.globalOptions.ignoreThreadMembershipErrors) {
+          return {
+            error: true,
+            errorCode: 1545012,
+            threadID: threadID,
+            message: "Not a participant in this conversation (pre-validation)"
+          };
+        }
+        throw new Error(`Cannot send message to thread ${threadID}: Pre-validation indicates you are not a participant in this conversation.`);
+      }
     }
     let messageAndOTID = utils.generateOfflineThreadingID();
     let form = {

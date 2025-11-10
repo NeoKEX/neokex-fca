@@ -125,9 +125,51 @@ Includes comprehensive type definitions (`lib/types/index.d.ts`) for:
 
 **Detailed Logging**: Uses chalk for colorful console output with different log levels (error, warn, log)
 
-**Rationale**: Facebook's APIs can be unreliable. Robust error handling prevents bot crashes and provides useful debugging information.
+**Thread Membership Error Handling (New in v3.1.1)**: The `sendMessage` function includes advanced handling for error 1545012 (not a participant in conversation):
+- **Pre-validation**: Set `validateThreadMembership: true` in global options to check thread membership before sending (uses 5-minute cache)
+- **Graceful Mode**: Set `ignoreThreadMembershipErrors: true` to return error objects instead of throwing exceptions when not a participant
+- **Cache Invalidation**: Automatically removes threads from cache when error 1545012 occurs
+- **Configurable**: Both features are opt-in and disabled by default for backward compatibility
 
-# Recent Changes (v3.1.0 - November 10, 2025)
+**Usage Example**:
+```javascript
+const api = await client.login({
+  appState: cookies,
+  globalOptions: {
+    validateThreadMembership: true,     // Enable pre-validation (optional)
+    ignoreThreadMembershipErrors: true  // Enable graceful error handling (optional)
+  }
+});
+
+// With graceful mode enabled, failed sends return error objects instead of throwing
+const result = await api.sendMessage("Hello", invalidThreadID);
+if (result.error) {
+  console.log(`Skipped thread ${result.threadID}: ${result.message}`);
+}
+```
+
+**Rationale**: Facebook's APIs can be unreliable. Robust error handling prevents bot crashes and provides useful debugging information. The new thread membership handling allows bots to continue operating when sending to multiple threads, even if some threads are invalid.
+
+# Recent Changes
+
+## v3.1.1 (November 10, 2025)
+
+### Bug Fixes
+
+1. **getBotInitialData.js** - Fixed incorrect data access. The `httpGet` function returns `{ body: string }` but code was calling `.match()` directly on the data object. Changed `data.match()` to `data.body.match()`.
+
+2. **sendMessage.js** - Enhanced error 1545012 (not a participant) handling with:
+   - Optional pre-validation with cached thread membership checks
+   - Graceful error mode that returns error objects instead of throwing
+   - Automatic cache invalidation when membership errors occur
+   - Two new global options: `validateThreadMembership` and `ignoreThreadMembershipErrors`
+
+### Configuration Options Added
+
+- `ctx.globalOptions.validateThreadMembership` - Enables pre-validation of thread membership before sending messages (default: false)
+- `ctx.globalOptions.ignoreThreadMembershipErrors` - Returns error objects instead of throwing when not a participant (default: false)
+
+## v3.1.0 (November 10, 2025)
 
 ## Major Stability Refactoring
 
