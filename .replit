@@ -25,3 +25,6 @@ args = "node demo.js"
 
 [workflows.workflow.metadata]
 outputType = "console"
+
+[nix]
+channel = "stable-25_05"
