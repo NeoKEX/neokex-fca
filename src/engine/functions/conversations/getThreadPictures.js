@@ -68,8 +68,8 @@ module.exports = function (defaultFuncs, api, ctx) {
         const result = pictures.length > 0 ? pictures[0] : null;
         cb(null, result);
       } catch (apiErr) {
-        utils.warn("getThreadPictures", "Facebook API endpoint may have changed, returning empty array");
-        cb(null, []);
+        utils.warn("getThreadPictures", "Facebook API endpoint may have changed, returning null");
+        cb(null, null);
       }
     } catch (err) {
       utils.error("getThreadPictures", err.message || err);
