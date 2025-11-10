@@ -57,7 +57,7 @@ module.exports = function (defaultFuncs, api, ctx) {
               const photo = attachment.photo || attachment;
               pictures.push({
                 id: photo.id || photo.fbid,
-                uri: photo.image?.uri || photo.uri,
+                url: photo.image?.uri || photo.uri,
                 width: photo.image?.width || photo.width,
                 height: photo.image?.height || photo.height
               });
@@ -65,7 +65,8 @@ module.exports = function (defaultFuncs, api, ctx) {
           });
         }
         
-        cb(null, pictures);
+        const result = pictures.length > 0 ? pictures[0] : null;
+        cb(null, result);
       } catch (apiErr) {
         utils.warn("getThreadPictures", "Facebook API endpoint may have changed, returning empty array");
         cb(null, []);

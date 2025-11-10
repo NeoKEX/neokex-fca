@@ -44,7 +44,13 @@ module.exports = function (defaultFuncs, api, ctx) {
         throw new Error("Could not extract user ID from profile");
       }
 
-      cb(null, userID);
+      const result = [{
+        userID: userID,
+        name: name,
+        profileUrl: profileUrl
+      }];
+
+      cb(null, result);
     } catch (err) {
       utils.error("getUserID", err.message || err);
       cb(err);

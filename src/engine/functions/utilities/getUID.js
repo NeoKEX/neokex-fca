@@ -17,7 +17,11 @@ module.exports = function (defaultFuncs, api, ctx) {
     });
 
     try {
-      if (!url) throw new Error("URL is required");
+      if (!url) {
+        const currentUserID = api.getCurrentUserID();
+        cb(null, currentUserID);
+        return returnPromise;
+      }
 
       const form = {
         url: url

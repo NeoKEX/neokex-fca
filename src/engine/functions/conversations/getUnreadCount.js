@@ -10,25 +10,11 @@ module.exports = (defaultFuncs, api, ctx) => {
 
     if (threadID) {
       const threadInfo = await api.getThreadInfo(threadID);
-      return {
-        threadID: threadInfo.threadID,
-        unreadCount: threadInfo.unreadCount,
-        threadName: threadInfo.threadName || 'Direct Message'
-      };
+      return threadInfo.unreadCount || 0;
     } else {
       const threads = await api.getThreadList(20, null, []);
       const totalUnread = threads.reduce((sum, thread) => sum + (thread.unreadCount || 0), 0);
-      const unreadThreads = threads.filter(t => t.unreadCount > 0).map(t => ({
-        threadID: t.threadID,
-        threadName: t.name || 'Direct Message',
-        unreadCount: t.unreadCount
-      }));
-      
-      return {
-        totalUnreadCount: totalUnread,
-        unreadThreadsCount: unreadThreads.length,
-        threads: unreadThreads
-      };
+      return totalUnread;
     }
   };
 };
