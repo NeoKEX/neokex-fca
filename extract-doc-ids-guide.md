@@ -1,6 +1,10 @@
 # 📝 Guide: Extract Working Facebook GraphQL doc_ids
 
-## ⚠️ Only 1 Broken doc_id Found
+## ⚠️ Security Notice
+
+**Never commit your Facebook cookies/appState to the repository!** The cookies in `attached_assets/` are for testing only and should be rotated after use. Each user should supply their own cookies for testing.
+
+## 🔍 Only 1 Broken doc_id Found
 
 **Broken Function**: `friend.list` in `src/engine/functions/social/friend.js`  
 **Broken doc_id**: `5352933734760787`  

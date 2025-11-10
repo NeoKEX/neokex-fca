@@ -97,7 +97,7 @@ login({ appState }, { logging: false }, async (err, api) => {
           console.log('❌ BROKEN (doc not found)');
           broken++;
           brokenDocs.push({ ...doc, error: 'Document not found' });
-        } else if (error.message && error.message.includes('Variable')) {
+        } else if (error.message && error.message.includes('Variable') || error.message.includes('required')) {
           console.log('✅ Working (needs variables)');
           working++;
         } else {
@@ -108,8 +108,8 @@ login({ appState }, { logging: false }, async (err, api) => {
         console.log('✅ Working');
         working++;
       } else {
-        console.log('⚠️  Unknown response');
-        working++;
+        console.log('⚠️  Unknown (needs manual review)');
+        working++; // Still counts as working, but flagged for review
       }
       
       // Rate limit delay

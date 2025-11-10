@@ -60,6 +60,7 @@ This file tracks all GraphQL doc_ids used in NeoKEX-FCA.
   - Query name: FriendsListQuery / CometFriendsListQuery
   - File: `src/engine/functions/social/friend.js` (line 154)
   - **Action Required**: Extract new doc_id from facebook.com/friends
+  - **TODO**: Once extracted, update this file and move to "Working" section above
 
 ---
 
