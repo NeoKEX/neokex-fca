@@ -21,6 +21,10 @@ module.exports = (defaultFuncs, api, ctx) => {
       ).then(utils.saveCookies(ctx.jar))
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
+      if (!resData) {
+        throw new Error('No response from server');
+      }
+
       if (resData.error) {
         throw new Error(JSON.stringify(resData.error));
       }
