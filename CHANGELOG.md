@@ -2,6 +2,69 @@
 
 All notable changes to NeoKEX-FCA will be documented in this file.
 
+## [3.1.0] - 2025-11-10
+
+### 🎯 Major Refactoring - Improved Stability & Reliability
+
+This release fixes **14 out of 14 broken GraphQL doc_ids** by migrating to stable Ajax endpoints instead of fragile GraphQL queries. This dramatically improves long-term stability as Ajax endpoints change less frequently than GraphQL doc_ids.
+
+### ✅ Fixed Functions (9 migrated to Ajax endpoints)
+
+**Social Functions:**
+- **friend.list**: Migrated to `/chat/user_info_all` - Now correctly returns all friends instead of empty array
+  - Fixed critical bug where users with 50+ friends would get 0 results
+  - More stable endpoint that doesn't rely on GraphQL doc_id
+  - Returns richer data: firstName, alternateName, birthday info
+
+**Conversation Management:**
+- **archiveThread**: Migrated to `/ajax/mercury/change_archived_status.php`
+- **muteThread**: Migrated to `/ajax/mercury/change_mute_thread.php`
+- **deleteThread**: Migrated to `/ajax/mercury/delete_thread.php`
+- **getThreadPictures**: Migrated to `/ajax/messaging/attachments/sharedphotos.php`
+
+**Messaging Functions:**
+- **changeAdminStatus**: Migrated to `/messaging/save_admins/?dpr=1`
+- **handleMessageRequest**: Migrated to `/ajax/mercury/move_thread.php`
+
+**Account Functions:**
+- **changeBlockedStatus**: Migrated to `/messaging/block_messages/` and `/messaging/unblock_messages/`
+- **unfriend**: Migrated to `/ajax/profile/removefriendconfirm.php`
+
+### ✅ Updated GraphQL doc_ids (2 functions)
+
+- **changeBio**: Updated doc_id `4969988563035816` → `2725043627607610` (ProfileCometSetBioMutation)
+- **setPostReaction**: Updated doc_id `5494309793948992` → `4769042373179384` (CometUFIFeedbackReactMutation)
+
+### ⚠️ Deprecated Functions
+
+- **searchMessages**: Currently unavailable - Facebook removed the API endpoint, no alternative found
+
+### 📈 Improvements
+
+- **Stability**: Ajax endpoints are more stable than GraphQL doc_ids
+- **Reliability**: Functions less likely to break when Facebook updates
+- **Data Quality**: friend.list now returns complete user information
+- **Error Handling**: Better error messages for unavailable functions
+- **Maintenance**: Easier to maintain without tracking fragile doc_ids
+
+### 🔧 Technical Details
+
+All refactored functions:
+1. Switched from GraphQL mutations to direct Ajax POST requests
+2. Use stable Facebook endpoints that have existed for years
+3. Maintain backward-compatible API signatures
+4. Include proper error handling and validation
+
+### 📚 Documentation
+
+- Added WS3-FCA endpoint documentation
+- Updated function documentation with new endpoints
+- Removed test files before npm publishing
+
+### 🙏 Credits
+
+This refactoring was inspired by the [ws3-fca](https://www.npmjs.com/package/ws3-fca) library's stable Ajax endpoint approach.
+
 ## [3.0.2] - 2025-11-10
 
 ### 🐛 Critical Bug Fixes
