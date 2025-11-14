@@ -137,7 +137,7 @@ async function get(url, reqJar, qs, options, ctx, customHeader) {
  * @returns {Promise<object>}
  */
 async function post(url, reqJar, form, options, ctx, customHeader) {
-    const headers = getHeaders(url, options, ctx, customHeader);
+    const headers = getHeaders(url, options, ctx, customHeader, 'xhr');
     let data = form;
     let contentType = headers['Content-Type'] || 'application/x-www-form-urlencoded';
 
@@ -189,7 +189,7 @@ async function postFormData(url, reqJar, form, qs, options, ctx) {
     const customHeader = { "Content-Type": `multipart/form-data; boundary=${formData.getBoundary()}` };
 
     const config = {
-        headers: getHeaders(url, options, ctx, customHeader),
+        headers: getHeaders(url, options, ctx, customHeader, 'xhr'),
         timeout: 60000,
         params: qs,
         ...proxyConfig,

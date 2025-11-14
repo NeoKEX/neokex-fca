@@ -8,28 +8,39 @@ const { randomUserAgent } = require("./user-agents");
  * @param {object} options - Global options from context.
  * @param {object} ctx - The application context (containing fb_dtsg, lsd, etc.).
  * @param {object} customHeader - Any extra headers to merge.
+ * @param {string} requestType - Type of request: 'xhr' for GraphQL/AJAX or 'navigate' for page navigation
  * @returns {object} A complete headers object.
  */
-function getHeaders(url, options, ctx, customHeader) {
-    const { 
-        userAgent, 
-        secChUa, 
-        secChUaFullVersionList, 
-        secChUaPlatform, 
-        secChUaPlatformVersion 
-    } = randomUserAgent();
+function getHeaders(url, options, ctx, customHeader, requestType = 'navigate') {
+    let userAgent, secChUa, secChUaFullVersionList, secChUaPlatform, secChUaPlatformVersion;
+    
+    if (options && options.cachedUserAgent) {
+        userAgent = options.cachedUserAgent;
+        secChUa = options.cachedSecChUa;
+        secChUaFullVersionList = options.cachedSecChUaFullVersionList;
+        secChUaPlatform = options.cachedSecChUaPlatform;
+        secChUaPlatformVersion = options.cachedSecChUaPlatformVersion;
+    } else {
+        const generated = randomUserAgent();
+        userAgent = generated.userAgent;
+        secChUa = generated.secChUa;
+        secChUaFullVersionList = generated.secChUaFullVersionList;
+        secChUaPlatform = generated.secChUaPlatform;
+        secChUaPlatformVersion = generated.secChUaPlatformVersion;
+    }
 
     const host = new URL(url).hostname;
     const referer = `https://${host}/`;
 
+    const isXhr = requestType === 'xhr';
+
     const headers = {
-        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+        'Accept': isXhr ? '*/*' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
         'Accept-Language': 'en-US,en;q=0.9',
         'Cache-Control': 'max-age=0',
         'Connection': 'keep-alive',
         'Dpr': '1',
         'Host': host,
-        'Origin': `https://${host}`,
         'Referer': referer,
         'Sec-Ch-Prefers-Color-Scheme': 'light',
         'Sec-Ch-Ua': secChUa,
@@ -38,14 +49,19 @@ function getHeaders(url, options, ctx, customHeader) {
         'Sec-Ch-Ua-Model': '""',
         'Sec-Ch-Ua-Platform': secChUaPlatform,
         'Sec-Ch-Ua-Platform-Version': secChUaPlatformVersion,
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-User': '?1',
-        'Upgrade-Insecure-Requests': '1',
+        'Sec-Fetch-Dest': isXhr ? 'empty' : 'document',
+        'Sec-Fetch-Mode': isXhr ? 'cors' : 'navigate',
+        'Sec-Fetch-Site': isXhr ? 'same-origin' : 'none',
         'User-Agent': userAgent,
         'Viewport-Width': '1920'
     };
+
+    if (isXhr) {
+        headers['Origin'] = `https://${host}`;
+    } else {
+        headers['Sec-Fetch-User'] = '?1';
+        headers['Upgrade-Insecure-Requests'] = '1';
+    }
 
     if (ctx) {
         if (ctx.fb_dtsg) {

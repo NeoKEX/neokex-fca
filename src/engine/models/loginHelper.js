@@ -28,6 +28,15 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
         const jar = utils.getJar();
         utils.log("Logging in...");
 
+        if (!globalOptions.cachedUserAgent) {
+            const { userAgent, secChUa, secChUaFullVersionList, secChUaPlatform, secChUaPlatformVersion } = utils.randomUserAgent();
+            globalOptions.cachedUserAgent = userAgent;
+            globalOptions.cachedSecChUa = secChUa;
+            globalOptions.cachedSecChUaFullVersionList = secChUaFullVersionList;
+            globalOptions.cachedSecChUaPlatform = secChUaPlatform;
+            globalOptions.cachedSecChUaPlatformVersion = secChUaPlatformVersion;
+        }
+
         const appState = credentials.appState;
 
         if (appState) {

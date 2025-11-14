@@ -45,7 +45,15 @@ async function buildAPI(html, jar, netData, globalOptions, fbLinkFunc, errorRetr
 
     const dtsgData = findConfig("DTSGInitialData");
     const dtsg = dtsgData ? dtsgData.token : utils.getFrom(html, '"token":"', '"');
-    const dtsgResult = { fb_dtsg: dtsg, jazoest: `2${Array.from(dtsg).reduce((a, b) => a + b.charCodeAt(0), '')}` };
+    
+    const lsdData = findConfig("LSD");
+    const lsd = lsdData ? lsdData.token : utils.getFrom(html, '"LSD",[],{"token":"', '"');
+    
+    const dtsgResult = { 
+        fb_dtsg: dtsg, 
+        jazoest: `2${Array.from(dtsg).reduce((a, b) => a + b.charCodeAt(0), '')}`,
+        lsd: lsd
+    };
 
     const clientIDData = findConfig("MqttWebDeviceID");
     const clientID = clientIDData ? clientIDData.clientID : undefined;
