@@ -75,8 +75,7 @@
     "node-cron": "^4.2.1",
     "tough-cookie": "^6.0.0",
     "undici": "^7.16.0",
-    "websocket-stream": "^5.5.2",
-    "ws3-fca": "^3.5.2"
+    "websocket-stream": "^5.5.2"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
