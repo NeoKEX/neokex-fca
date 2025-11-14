@@ -1,6 +1,6 @@
 {
   "name": "neokex-fca",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "module": "commonjs",
   "types": "src/types/index.d.ts",
   "description": "Advanced Facebook Chat API (FCA) for Node.js - Automate Facebook Messenger with real-time messaging, AI theme generation, and comprehensive bot features",
