@@ -14,9 +14,9 @@ module.exports = (defaultFuncs, api, ctx) => {
    * @param {Array<Object>} netData - The array of all extracted JSON objects from the HTML.
    * @returns {Object|null} An object containing the bot's essential info, security tokens, and context accessor functions.
    */
-  return function GetBotInfo(netData) {
+  return function getBotInfo(netData) {
     if (!netData || !Array.isArray(netData)) {
-        utils.error("GetBotInfo", "netData is not a valid array.");
+        utils.error("getBotInfo", "netData is not a valid array.");
         return null;
     }
 
@@ -50,7 +50,7 @@ module.exports = (defaultFuncs, api, ctx) => {
     const lsdData = findConfig("LSD");
 
     if (!currentUserData || !dtsgInitialData) {
-        utils.error("GetBotInfo", "Could not find critical data (CurrentUserInitialData or DTSGInitialData).");
+        utils.error("getBotInfo", "Could not find critical data (CurrentUserInitialData or DTSGInitialData).");
         return null;
     }
 
