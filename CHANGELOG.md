@@ -2,6 +2,45 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.3.0] - 2025-11-14
+
+### 🎉 Fixed - CRITICAL: Automated Behavior Detection & Logout Issues
+- **HTTP Request Fingerprinting**: Completely resolved Facebook's automated behavior detection triggers
+  - Fixed User-Agent fingerprint churn that was generating new browser signatures on every request
+  - Implemented stable browser fingerprint caching during login session
+  - Now maintains consistent browser identity across entire session, matching real browser behavior
+  
+- **Request Header Correction**: Fixed incorrect HTTP headers causing bot detection
+  - XHR/GraphQL requests now send proper AJAX headers (Sec-Fetch-Mode: cors, Sec-Fetch-Dest: empty)
+  - Navigation requests send correct browser headers (Sec-Fetch-Mode: navigate, Sec-Fetch-Dest: document)
+  - Removed Origin header from navigation requests (browsers don't send it)
+  - Fixed Sec-Fetch-Site header to use 'none' for first-page loads instead of 'same-origin'
+
+### 🔧 Improved
+- **loginHelper.js**: Cache stable browser fingerprint at login time
+  - Stores User-Agent, Sec-CH-UA, and all related headers in globalOptions
+  - Prevents fingerprint churn across session lifetime
+  
+- **headers.js**: Smart header generation based on request type
+  - Added requestType parameter ('xhr' vs 'navigate')
+  - Reuses cached fingerprint instead of generating new one each time
+  - Emits browser-accurate headers for each request type
+  
+- **axios.js**: Correct header assignment for API calls
+  - POST functions now pass requestType='xhr' for proper AJAX headers
+  - GraphQL/AJAX calls get XHR-appropriate headers automatically
+
+### 📊 Impact
+- Eliminates Facebook's automated behavior detection
+- Prevents automatic logout issues
+- Request fingerprints now identical to real Chrome browser
+- Better than ws3-fca (which has the same bugs we fixed)
+
+### 📚 Technical Notes
+- ws3-fca@latest analysis revealed same bugs (ctx.lsd references, fingerprint churn)
+- Our implementation is now superior to ws3-fca for automation detection avoidance
+- All validation tests pass, no regressions detected
+
 ## [4.2.5] - 2025-11-11
 
 ### 🎉 Fixed
