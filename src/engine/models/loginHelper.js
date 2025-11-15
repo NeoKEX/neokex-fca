@@ -177,13 +177,40 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
         api.globalOptions = globalOptions;
         
         const { TokenRefreshManager } = require('../../utils/tokenRefresh');
-        const tokenManager = new TokenRefreshManager();
-        tokenManager.startAutoRefresh(ctx, defaultFuncs, fbLinkFunc());
-        api.refreshTokens = () => tokenManager.refreshTokens(ctx, defaultFuncs, fbLinkFunc());
+        if (api.tokenRefreshManager) {
+            api.tokenRefreshManager.stopAutoRefresh();
+        } else {
+            api.tokenRefreshManager = new TokenRefreshManager();
+        }
+        
+        const { globalAutoReLoginManager } = require('../../utils/autoReLogin');
+        
+        if (globalOptions.autoReLogin !== false) {
+            globalAutoReLoginManager.setCredentials(credentials, globalOptions, callback);
+            utils.log("AutoReLogin", "Auto re-login enabled with stored credentials");
+            
+            api.tokenRefreshManager.setSessionExpiryCallback((error) => {
+                utils.warn("TokenRefresh", "Session expiry detected. Triggering auto re-login...");
+                globalAutoReLoginManager.handleSessionExpiry(api, fbLinkFunc(), errorRetrievingMsg);
+            });
+        }
+        
+        api.tokenRefreshManager.startAutoRefresh(ctx, defaultFuncs, fbLinkFunc());
+        
+        api.refreshTokens = () => api.tokenRefreshManager.refreshTokens(ctx, defaultFuncs, fbLinkFunc());
         api.getTokenRefreshStatus = () => ({
-            lastRefresh: tokenManager.lastRefresh,
-            nextRefresh: tokenManager.getTimeUntilNextRefresh()
+            lastRefresh: api.tokenRefreshManager.lastRefresh,
+            nextRefresh: api.tokenRefreshManager.getTimeUntilNextRefresh(),
+            failureCount: api.tokenRefreshManager.getFailureCount()
         });
+        api.enableAutoReLogin = (enable = true) => {
+            if (enable) {
+                globalAutoReLoginManager.setCredentials(credentials, globalOptions, callback);
+            } else {
+                globalAutoReLoginManager.disable();
+            }
+        };
+        api.isAutoReLoginEnabled = () => globalAutoReLoginManager.isEnabled();
         
         return callback(null, api);
     } catch (error) {

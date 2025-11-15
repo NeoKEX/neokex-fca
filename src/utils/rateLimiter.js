@@ -149,12 +149,23 @@ class RateLimiter {
     }
 
     /**
-     * Get cooldown remaining time
+     * Get cooldown remaining time for thread
      * @param {string} threadID - Thread identifier
      * @returns {number} Remaining milliseconds
      */
     getCooldownRemaining(threadID) {
         const cooldownEnd = this.threadCooldowns.get(threadID);
+        if (!cooldownEnd) return 0;
+        return Math.max(0, cooldownEnd - Date.now());
+    }
+
+    /**
+     * Get cooldown remaining time for endpoint
+     * @param {string} endpoint - Endpoint identifier
+     * @returns {number} Remaining milliseconds
+     */
+    getEndpointCooldownRemaining(endpoint) {
+        const cooldownEnd = this.endpointCooldowns.get(endpoint);
         if (!cooldownEnd) return 0;
         return Math.max(0, cooldownEnd - Date.now());
     }

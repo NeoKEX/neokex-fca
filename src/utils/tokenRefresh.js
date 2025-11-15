@@ -12,6 +12,9 @@ class TokenRefreshManager {
         this.refreshInterval = null;
         this.REFRESH_INTERVAL_MS = 24 * 60 * 60 * 1000; // 24 hours
         this.lastRefresh = Date.now();
+        this.failureCount = 0;
+        this.MAX_FAILURES = 3;
+        this.onSessionExpiry = null;
     }
 
     /**
@@ -38,19 +41,27 @@ class TokenRefreshManager {
     }
 
     /**
-     * Manually refresh tokens
+     * Manually refresh tokens with retry logic
      * @param {Object} ctx - Application context
      * @param {Object} defaultFuncs - Default functions
      * @param {string} fbLink - Facebook link
+     * @param {number} retryCount - Current retry attempt (internal use)
      * @returns {Promise<boolean>}
      */
-    async refreshTokens(ctx, defaultFuncs, fbLink) {
+    async refreshTokens(ctx, defaultFuncs, fbLink, retryCount = 0) {
+        const MAX_RETRIES = 3;
+        const RETRY_DELAYS = [2000, 5000, 10000];
+        
         try {
             const resp = await utils.get(fbLink, ctx.jar, null, ctx.globalOptions, { noRef: true });
             
             const html = resp.body;
             if (!html) {
                 throw new Error("Empty response from Facebook");
+            }
+
+            if (html.includes("login") || html.includes("checkpoint")) {
+                throw new Error("Session expired or checkpoint required");
             }
 
             const dtsgMatch = html.match(/"DTSGInitialData",\[],{"token":"([^"]+)"/);
@@ -60,6 +71,8 @@ class TokenRefreshManager {
                 for (let i = 0; i < ctx.fb_dtsg.length; i++) {
                     ctx.ttstamp += ctx.fb_dtsg.charCodeAt(i);
                 }
+            } else {
+                throw new Error("Failed to extract fb_dtsg token");
             }
 
             const lsdMatch = html.match(/"LSD",\[],{"token":"([^"]+)"/);
@@ -78,9 +91,27 @@ class TokenRefreshManager {
             }
 
             this.lastRefresh = Date.now();
+            this.failureCount = 0;
             return true;
         } catch (error) {
-            utils.error("TokenRefresh", "Refresh failed:", error.message);
+            this.failureCount++;
+            utils.error("TokenRefresh", `Refresh failed (attempt ${retryCount + 1}/${MAX_RETRIES + 1}):`, error.message);
+            
+            if (this.failureCount >= this.MAX_FAILURES) {
+                utils.error("TokenRefresh", `Maximum failures (${this.MAX_FAILURES}) reached. Session may be expired.`);
+                if (this.onSessionExpiry && typeof this.onSessionExpiry === 'function') {
+                    this.onSessionExpiry(error);
+                }
+                return false;
+            }
+            
+            if (retryCount < MAX_RETRIES) {
+                const delay = RETRY_DELAYS[retryCount];
+                utils.log("TokenRefresh", `Retrying in ${delay}ms...`);
+                await new Promise(resolve => setTimeout(resolve, delay));
+                return await this.refreshTokens(ctx, defaultFuncs, fbLink, retryCount + 1);
+            }
+            
             return false;
         }
     }
@@ -111,6 +142,29 @@ class TokenRefreshManager {
      */
     needsImmediateRefresh() {
         return (Date.now() - this.lastRefresh) >= this.REFRESH_INTERVAL_MS;
+    }
+
+    /**
+     * Set callback for session expiry detection
+     * @param {Function} callback - Callback function to trigger on session expiry
+     */
+    setSessionExpiryCallback(callback) {
+        this.onSessionExpiry = callback;
+    }
+
+    /**
+     * Reset failure count (useful after successful re-login)
+     */
+    resetFailureCount() {
+        this.failureCount = 0;
+    }
+
+    /**
+     * Get current failure count
+     * @returns {number}
+     */
+    getFailureCount() {
+        return this.failureCount;
     }
 }
 

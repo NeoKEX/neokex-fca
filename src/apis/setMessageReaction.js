@@ -19,7 +19,7 @@ module.exports = function (defaultFuncs, api, ctx) {
     }),
       dpr: 1
     });
-    const resData = await utils.parseAndCheckLogin(ctx.jar, defaultFuncs)(defData);
+    const resData = await utils.parseAndCheckLogin(ctx, defaultFuncs)(defData);
     if (!resData) {
       throw new Error("setMessageReactionLegacy returned empty object.");
     }

@@ -8,6 +8,7 @@ const { parseDelta } = require('./mqttDeltaValue');
 
 let form = {};
 let getSeqID;
+
 const topics = [
     "/legacy_web", "/webrtc", "/rtc_multi", "/onevc", "/br_sr", "/sr_res",
     "/t_ms", "/thread_typing", "/orca_typing_notifications", "/notify_disconnect",
@@ -51,7 +52,7 @@ function markAsRead(ctx, api, threadID) {
  * @param {Object} ctx
  * @param {Function} globalCallback
  */
-async function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
+async function listenMqtt(defaultFuncs, api, ctx, globalCallback, reconnectState, getSeqID) {
     const chatOn = ctx.globalOptions.online;
     const region = ctx.region;
     const foreground = false;
@@ -125,14 +126,56 @@ async function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
         });
     });
     ctx.mqttClient = mqttClient;
+    
+    let keepAliveInterval;
+    if (ctx.globalOptions.mqttKeepAlive !== false) {
+        keepAliveInterval = setInterval(() => {
+            if (mqttClient.connected) {
+                const pingPayload = { type: 'ping', timestamp: Date.now() };
+                mqttClient.publish('/t_ping', JSON.stringify(pingPayload), { qos: 0 }, (err) => {
+                    if (err) {
+                        utils.warn("MQTT Keep-Alive", "Ping failed:", err.message);
+                    }
+                });
+            }
+        }, 55000);
+    }
+    
+    mqttClient.on('close', () => {
+        utils.warn("MQTT", "Connection closed. Attempting reconnect with exponential backoff...");
+        if (keepAliveInterval) {
+            clearInterval(keepAliveInterval);
+            keepAliveInterval = null;
+        }
+        reconnectState.clearReconnectTimeout();
+        
+        if (ctx.globalOptions.autoReconnect) {
+            const backoffDelay = Math.min(30000, reconnectState.BASE_RECONNECT_DELAY * Math.pow(2, reconnectState.reconnectAttempts));
+            reconnectState.reconnectAttempts++;
+            if (reconnectState.reconnectAttempts <= reconnectState.MAX_RECONNECT_ATTEMPTS) {
+                utils.log("MQTT", `Reconnecting in ${backoffDelay}ms (attempt ${reconnectState.reconnectAttempts}/${reconnectState.MAX_RECONNECT_ATTEMPTS})...`);
+                reconnectState.reconnectTimeout = setTimeout(() => {
+                    reconnectState.reconnectTimeout = null;
+                    getSeqID();
+                }, backoffDelay);
+            } else {
+                utils.error("MQTT", "Maximum reconnection attempts reached. Giving up.");
+                globalCallback({ type: "stop_listen", error: "Max reconnection attempts exceeded" });
+            }
+        }
+    });
+    
     mqttClient.on('error', (err) => {
         utils.error("listenMqtt", err);
+        if (keepAliveInterval) {
+            clearInterval(keepAliveInterval);
+            keepAliveInterval = null;
+        }
         mqttClient.end();
-        if (ctx.globalOptions.autoReconnect) getSeqID();
-        else globalCallback({ type: "stop_listen", error: "Connection refused" });
     });
 
     mqttClient.on('connect', async () => {
+        reconnectState.reconnectAttempts = 0;
         topics.forEach(topic => mqttClient.subscribe(topic));
         const queue = { sync_api_version: 10, max_deltas_able_to_process: 1000, delta_batch_size: 500, encoding: "JSON", entity_fbid: ctx.userID };
         let topic;
@@ -196,6 +239,20 @@ async function listenMqtt(defaultFuncs, api, ctx, globalCallback) {
 module.exports = (defaultFuncs, api, ctx) => {
     let globalCallback = () => {};
     let reconnectInterval;
+    
+    const reconnectState = {
+        reconnectTimeout: null,
+        reconnectAttempts: 0,
+        MAX_RECONNECT_ATTEMPTS: 10,
+        BASE_RECONNECT_DELAY: 1000,
+        clearReconnectTimeout: function() {
+            if (this.reconnectTimeout) {
+                clearTimeout(this.reconnectTimeout);
+                this.reconnectTimeout = null;
+            }
+        }
+    };
+    
     getSeqID = async () => {
         try {
             form = {
@@ -215,11 +272,23 @@ module.exports = (defaultFuncs, api, ctx) => {
             const resData = await defaultFuncs.post("https://www.facebook.com/api/graphqlbatch/", ctx.jar, form).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
             if (utils.getType(resData) != "Array" || (resData.error && resData.error !== 1357001)) throw resData;
             ctx.lastSeqId = resData[0].o0.data.viewer.message_threads.sync_sequence_id;
-            listenMqtt(defaultFuncs, api, ctx, globalCallback);
+            reconnectState.reconnectAttempts = 0;
+            listenMqtt(defaultFuncs, api, ctx, globalCallback, reconnectState, getSeqID);
         } catch (err) {
-            const descriptiveError = new Error("Failed to get sequence ID. This is often caused by an invalid appstate. Please try generating a new appstate.json file.");
-            descriptiveError.originalError = err;
-            return globalCallback(descriptiveError);
+            reconnectState.reconnectAttempts++;
+            if (reconnectState.reconnectAttempts <= reconnectState.MAX_RECONNECT_ATTEMPTS && ctx.globalOptions.autoReconnect) {
+                const backoffDelay = Math.min(30000, reconnectState.BASE_RECONNECT_DELAY * Math.pow(2, reconnectState.reconnectAttempts - 1));
+                utils.warn("MQTT", `Failed to get sequence ID (attempt ${reconnectState.reconnectAttempts}/${reconnectState.MAX_RECONNECT_ATTEMPTS}). Retrying in ${backoffDelay}ms...`);
+                reconnectState.clearReconnectTimeout();
+                reconnectState.reconnectTimeout = setTimeout(() => {
+                    reconnectState.reconnectTimeout = null;
+                    getSeqID();
+                }, backoffDelay);
+            } else {
+                const descriptiveError = new Error("Failed to get sequence ID after maximum retries. This is often caused by an invalid appstate. Please try generating a new appstate.json file.");
+                descriptiveError.originalError = err;
+                return globalCallback(descriptiveError);
+            }
         }
     };
 
@@ -227,6 +296,7 @@ module.exports = (defaultFuncs, api, ctx) => {
         class MessageEmitter extends EventEmitter {
             stop() {
                 globalCallback = () => {};
+                reconnectState.clearReconnectTimeout();
                 if (reconnectInterval) {
                     clearTimeout(reconnectInterval);
                     reconnectInterval = null;
@@ -252,7 +322,7 @@ module.exports = (defaultFuncs, api, ctx) => {
         if (typeof callback === 'function') globalCallback = callback;
 
         if (!ctx.firstListen || !ctx.lastSeqId) await getSeqID();
-        else listenMqtt(defaultFuncs, api, ctx, globalCallback);
+        else listenMqtt(defaultFuncs, api, ctx, globalCallback, reconnectState, getSeqID);
 
         if (ctx.firstListen) {
             try {

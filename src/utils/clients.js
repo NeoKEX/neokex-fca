@@ -23,6 +23,16 @@ function parseAndCheckLogin(ctx, http, retryCount = 0) {
   const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
   return async (data) => {
+    if (data.statusCode === 401) {
+      const err = new Error("Session expired - Authentication required");
+      err.error = 401;
+      err.errorCode = 401;
+      err.errorType = "AUTHENTICATION_REQUIRED";
+      err.requiresReLogin = true;
+      warn("Session Status", "Session expired. Re-login required.");
+      throw err;
+    }
+
     if (data.statusCode >= 500 && data.statusCode < 600) {
       if (retryCount >= 5) {
         const err = new Error("Request retry failed. Check the `res` and `statusCode` property on this error.");
@@ -109,6 +119,22 @@ function parseAndCheckLogin(ctx, http, retryCount = 0) {
       }
     }
 
+    const SESSION_EXPIRY_CODES = {
+      1357046: "Session token expired - Re-authentication required",
+      1357045: "Invalid session token - Re-login needed",
+      458: "Session expired - User not logged in"
+    };
+
+    if (res.error && SESSION_EXPIRY_CODES[res.error]) {
+      const err = new Error(SESSION_EXPIRY_CODES[res.error]);
+      err.error = res.error;
+      err.errorCode = res.error;
+      err.errorType = "SESSION_EXPIRED";
+      err.requiresReLogin = true;
+      warn("Session Status", `${SESSION_EXPIRY_CODES[res.error]} (Code: ${res.error})`);
+      throw err;
+    }
+
     const ACCOUNT_ERROR_CODES = {
       1357001: "Account blocked - Facebook detected automated behavior",
       1357004: "Account checkpoint required - Please verify your account on facebook.com",
@@ -122,6 +148,7 @@ function parseAndCheckLogin(ctx, http, retryCount = 0) {
       err.error = "Account security issue";
       err.errorCode = res.error;
       err.errorType = res.error === 1357004 ? "CHECKPOINT" : res.error === 1357031 ? "LOCKED" : "BLOCKED";
+      err.requiresReLogin = res.error === 1357004 || res.error === 1357031;
       warn("Account Status", `${ACCOUNT_ERROR_CODES[res.error]} (Code: ${res.error})`);
       throw err;
     }
@@ -130,6 +157,16 @@ function parseAndCheckLogin(ctx, http, retryCount = 0) {
       const err = new Error("Facebook blocked the login");
       err.error = "Not logged in.";
       err.errorType = "BLOCKED";
+      throw err;
+    }
+
+    if (typeof data.body === 'string' && (data.body.includes('<title>Facebook - Log In or Sign Up</title>') || data.body.includes('name="login_form"'))) {
+      const err = new Error("Session expired - Redirected to login page");
+      err.error = 401;
+      err.errorCode = 401;
+      err.errorType = "LOGIN_REDIRECT";
+      err.requiresReLogin = true;
+      warn("Session Status", "Detected login page redirect. Session expired.");
       throw err;
     }
 
