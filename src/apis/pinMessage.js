@@ -61,6 +61,10 @@ module.exports = function (defaultFuncs, api, ctx) {
 
 
         const lightReq = extractAndSearchLightspeedRequest(allJsonData);
+        if (!lightReq || !lightReq.pin_status) {
+          utils.warn("pin.js: No pinned messages found or pin_status missing.");
+          return [];
+        }
         return lightReq;
       } catch (err) {
         utils.error(`pin.js: Failed to process "list" for thread ${threadID}`, err);
