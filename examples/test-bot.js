@@ -38,7 +38,7 @@ login({ appState }, (err, api) => {
 
       console.log(`📨 Command: ${command} from ${senderID} in ${threadID}`);
 
-      handleCommand(api, command, args, threadID, messageID, senderID, isGroup);
+      handleCommand(api, command, args, event);
     }
   });
 
@@ -47,7 +47,8 @@ login({ appState }, (err, api) => {
   console.log('💡 Example: /help\n');
 });
 
-async function handleCommand(api, command, args, threadID, messageID, senderID, isGroup) {
+async function handleCommand(api, command, args, event) {
+  const { threadID, messageID, senderID, isGroup } = event;
   try {
     switch (command) {
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -64,20 +65,26 @@ ${PREFIX}about - Bot information
 
 👤 USER INFO
 ${PREFIX}me - Your user info
-${PREFIX}user <name> - Search for user
-${PREFIX}friends - List your friends
 ${PREFIX}userid <name> - Get user ID by name
+${PREFIX}friends - List your friends
+${PREFIX}userv2 <userID> - Get detailed user info (v2)
+${PREFIX}bio <text> - Change your bio
 
 💬 THREAD COMMANDS
 ${PREFIX}info - Thread information
 ${PREFIX}history [limit] - Get message history
 ${PREFIX}members - List thread members
 ${PREFIX}photo - Thread photo URL
+${PREFIX}threads - List your threads
+${PREFIX}themeinfo - Get current theme info
+${PREFIX}mute - Toggle mute for this thread
+${PREFIX}archive - Toggle archive status
+${PREFIX}deletethis - Delete this thread
 
 🎨 THEMES
 ${PREFIX}themes - List all available themes
 ${PREFIX}theme <name> - Change thread theme
-${PREFIX}color <color> - Change thread color
+${PREFIX}color <hex> - Change thread color
 ${PREFIX}aitheme <prompt> - Generate AI theme
 
 ✏️ THREAD SETTINGS
@@ -89,15 +96,36 @@ ${PREFIX}nickname <@mention> <nickname> - Set nickname
 ${PREFIX}typing - Send typing indicator
 ${PREFIX}react <emoji> - React to this message
 ${PREFIX}unsend - Unsend this message
+${PREFIX}edit <text> - Edit this message
+${PREFIX}forward <threadID> - Forward this message
 ${PREFIX}poll <question> | <option1> | <option2> - Create poll
+${PREFIX}pin - Pin this message
+${PREFIX}unpin - Unpin this message
+${PREFIX}markread - Mark thread as read
+${PREFIX}markreadall - Mark all threads as read
+
+👥 GROUP MANAGEMENT
+${PREFIX}creategroup <name> | <userID1> | <userID2> - Create group
+${PREFIX}adduser <userID> - Add user to group
+${PREFIX}removeuser <userID> - Remove user from group
+${PREFIX}groupimage - Info about changing group image
+
+🔗 SOCIAL
+${PREFIX}block <userID> - Block a user
+${PREFIX}unblock <userID> - Unblock a user
+${PREFIX}addfriend <userID> - Add friend
+${PREFIX}removefriend <userID> - Remove friend
+${PREFIX}follow <userID> - Follow user
+${PREFIX}unfollow <userID> - Unfollow user
+${PREFIX}sharecontact <userID> - Share contact
 
 🔍 SEARCH
-${PREFIX}search <query> - Search users
 ${PREFIX}searchthread <query> - Search threads
 
-📊 STATS
+📊 STATS & ADMIN
 ${PREFIX}status - Bot status
-${PREFIX}test - Run quick API test`, threadID);
+${PREFIX}test - Run quick API test
+${PREFIX}logout - Logout bot`, threadID);
         break;
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -156,26 +184,36 @@ Total: ${friends.length} friends`, threadID);
         await api.sendMessage(`🔍 User ID for "${name}": ${uid}`, threadID);
         break;
 
-      case 'user':
-      case 'search':
+      case 'userv2':
         if (args.length === 0) {
-          await api.sendMessage(`❌ Usage: ${PREFIX}search <name>`, threadID);
+          await api.sendMessage(`❌ Usage: ${PREFIX}userv2 <userID>`, threadID);
           break;
         }
-        const query = args.join(' ');
-        const results = await api.searchUser(query);
-        if (results.length === 0) {
-          await api.sendMessage(`❌ No users found for "${query}"`, threadID);
+        const targetUserID = args[0];
+        const userInfoV2 = await api.getUserInfoV2(targetUserID);
+        const v2User = userInfoV2[targetUserID];
+        if (v2User) {
+          await api.sendMessage(`👤 Detailed User Info (v2)
+
+Name: ${v2User.name || 'Unknown'}
+ID: ${targetUserID}
+Username: ${v2User.vanity || 'None'}
+Gender: ${v2User.gender || 'Unknown'}
+Is Friend: ${v2User.isFriend ? 'Yes' : 'No'}
+Profile: https://facebook.com/${targetUserID}`, threadID);
         } else {
-          const userList = results.slice(0, 5).map((u, i) => 
-            `${i + 1}. ${u.name} (${u.userID})`
-          ).join('\n');
-          await api.sendMessage(`🔍 Search results for "${query}":
-
-${userList}
-
-Found: ${results.length} users`, threadID);
+          await api.sendMessage(`❌ Could not fetch user info for ${targetUserID}`, threadID);
         }
+        break;
+
+      case 'bio':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}bio <text>`, threadID);
+          break;
+        }
+        const bioText = args.join(' ');
+        await api.changeBio(bioText);
+        await api.sendMessage(`✅ Bio changed to: ${bioText}`, threadID);
         break;
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -224,6 +262,47 @@ Total: ${info.participantIDs.length} members`, threadID);
         } else {
           await api.sendMessage(`❌ No thread photo available`, threadID);
         }
+        break;
+
+      case 'threads':
+        const threadList = await api.getThreadList(20, null);
+        const threadListFormatted = threadList.slice(0, 10).map((t, i) => 
+          `${i + 1}. ${t.name || 'Unnamed'} (${t.threadID})`
+        ).join('\n');
+        await api.sendMessage(`📋 Your Threads (showing 10/${threadList.length}):
+
+${threadListFormatted}`, threadID);
+        break;
+
+      case 'themeinfo':
+        const currentThemeInfo = await api.getThemeInfo(threadID);
+        await api.sendMessage(`🎨 Current Theme Info
+
+Thread: ${currentThemeInfo.threadName || 'Unnamed'}
+Color: ${currentThemeInfo.color || 'Default'}
+Emoji: ${currentThemeInfo.emoji || '👍'}
+Theme ID: ${currentThemeInfo.theme_id || 'Default'}`, threadID);
+        break;
+
+      case 'mute':
+        const currentInfo = await api.getThreadInfo(threadID);
+        const isMuted = currentInfo.muteUntil > Date.now();
+        await api.muteThread(threadID, isMuted ? -1 : 9999999999);
+        await api.sendMessage(`🔇 Thread ${isMuted ? 'unmuted' : 'muted'}`, threadID);
+        break;
+
+      case 'archive':
+        const archiveThreadInfo = await api.getThreadInfo(threadID);
+        const isArchived = archiveThreadInfo.isArchived;
+        await api.changeArchivedStatus(threadID, !isArchived);
+        await api.sendMessage(`📦 Thread ${isArchived ? 'unarchived' : 'archived'}`, threadID);
+        break;
+
+      case 'deletethis':
+        await api.sendMessage(`⚠️ Deleting this thread in 3 seconds...`, threadID);
+        setTimeout(async () => {
+          await api.deleteThread(threadID);
+        }, 3000);
         break;
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -340,6 +419,173 @@ Example: ${PREFIX}poll Pizza or Burger? | Pizza | Burger`, threadID);
         await api.createPoll(question, threadID, { options });
         break;
 
+      case 'edit':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}edit <new text>`, threadID);
+          break;
+        }
+        const newText = args.join(' ');
+        await api.editMessage(newText, messageID);
+        await api.sendMessage(`✅ Message edited to: "${newText}"`, threadID);
+        break;
+
+      case 'forward':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}forward <threadID>`, threadID);
+          break;
+        }
+        const targetThreadID = args[0];
+        await api.forwardMessage(messageID, targetThreadID);
+        await api.sendMessage(`✅ Message forwarded to thread ${targetThreadID}`, threadID);
+        break;
+
+      case 'pin':
+        await api.pin('pin', threadID, messageID);
+        await api.sendMessage(`📌 Message pinned!`, threadID);
+        break;
+
+      case 'unpin':
+        await api.pin('unpin', threadID, messageID);
+        await api.sendMessage(`📌 Message unpinned!`, threadID);
+        break;
+
+      case 'markread':
+        await api.markAsRead(threadID, true);
+        await api.sendMessage(`✅ Thread marked as read`, threadID);
+        break;
+
+      case 'markreadall':
+        await api.markAsReadAll();
+        await api.sendMessage(`✅ All threads marked as read`, threadID);
+        break;
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 👥 GROUP MANAGEMENT COMMANDS
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      case 'creategroup':
+        const groupData = args.join(' ').split('|').map(s => s.trim());
+        if (groupData.length < 2) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}creategroup <name> | <userID1> | <userID2>
+Example: ${PREFIX}creategroup My Group | 100001 | 100002`, threadID);
+          break;
+        }
+        const [groupName, ...userIDs] = groupData;
+        await api.createNewGroup(userIDs, groupName);
+        await api.sendMessage(`✅ Group "${groupName}" created with ${userIDs.length} members`, threadID);
+        break;
+
+      case 'adduser':
+        if (!isGroup) {
+          await api.sendMessage(`❌ This command only works in group chats`, threadID);
+          break;
+        }
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}adduser <userID>`, threadID);
+          break;
+        }
+        const userToAdd = args[0];
+        await api.addUserToGroup(userToAdd, threadID);
+        await api.sendMessage(`✅ User ${userToAdd} added to group`, threadID);
+        break;
+
+      case 'removeuser':
+        if (!isGroup) {
+          await api.sendMessage(`❌ This command only works in group chats`, threadID);
+          break;
+        }
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}removeuser <userID>`, threadID);
+          break;
+        }
+        const userToRemove = args[0];
+        await api.removeUserFromGroup(userToRemove, threadID);
+        await api.sendMessage(`✅ User ${userToRemove} removed from group`, threadID);
+        break;
+
+      case 'groupimage':
+        if (!isGroup) {
+          await api.sendMessage(`❌ This command only works in group chats`, threadID);
+          break;
+        }
+        await api.sendMessage(`ℹ️ Note: changeGroupImage requires a readable stream (file), not a URL.
+Example: api.changeGroupImage(fs.createReadStream('image.jpg'), threadID)`, threadID);
+        break;
+
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      // 🔗 SOCIAL COMMANDS
+      // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+      case 'block':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}block <userID>`, threadID);
+          break;
+        }
+        const userToBlock = args[0];
+        await api.changeBlockedStatus(userToBlock, true);
+        await api.sendMessage(`🚫 User ${userToBlock} has been blocked`, threadID);
+        break;
+
+      case 'unblock':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}unblock <userID>`, threadID);
+          break;
+        }
+        const userToUnblock = args[0];
+        await api.changeBlockedStatus(userToUnblock, false);
+        await api.sendMessage(`✅ User ${userToUnblock} has been unblocked`, threadID);
+        break;
+
+      case 'addfriend':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}addfriend <userID>`, threadID);
+          break;
+        }
+        const friendToAdd = args[0];
+        await api.friend(friendToAdd, true);
+        await api.sendMessage(`✅ Friend request sent to ${friendToAdd}`, threadID);
+        break;
+
+      case 'removefriend':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}removefriend <userID>`, threadID);
+          break;
+        }
+        const friendToRemove = args[0];
+        await api.unfriend(friendToRemove);
+        await api.sendMessage(`✅ Removed ${friendToRemove} from friends`, threadID);
+        break;
+
+      case 'follow':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}follow <userID>`, threadID);
+          break;
+        }
+        const userToFollow = args[0];
+        await api.follow(userToFollow, true);
+        await api.sendMessage(`✅ Now following ${userToFollow}`, threadID);
+        break;
+
+      case 'unfollow':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}unfollow <userID>`, threadID);
+          break;
+        }
+        const userToUnfollow = args[0];
+        await api.follow(userToUnfollow, false);
+        await api.sendMessage(`✅ Unfollowed ${userToUnfollow}`, threadID);
+        break;
+
+      case 'sharecontact':
+        if (args.length === 0) {
+          await api.sendMessage(`❌ Usage: ${PREFIX}sharecontact <userID> [message]
+Example: ${PREFIX}sharecontact 100001234567890 Check out this contact!`, threadID);
+          break;
+        }
+        const contactUserID = args[0];
+        const contactMessage = args.slice(1).join(' ') || '';
+        api.shareContact(contactMessage, contactUserID, threadID);
+        await api.sendMessage(`✅ Contact card for user ${contactUserID} shared in this thread`, threadID);
+        break;
+
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
       // 🔍 SEARCH COMMANDS
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -349,18 +595,18 @@ Example: ${PREFIX}poll Pizza or Burger? | Pizza | Burger`, threadID);
           break;
         }
         const threadQuery = args.join(' ');
-        const threads = await api.searchForThread(threadQuery);
-        if (threads.length === 0) {
+        const searchResults = await api.searchForThread(threadQuery);
+        if (searchResults.length === 0) {
           await api.sendMessage(`❌ No threads found for "${threadQuery}"`, threadID);
         } else {
-          const threadList = threads.slice(0, 5).map((t, i) => 
+          const searchResultsFormatted = searchResults.slice(0, 5).map((t, i) => 
             `${i + 1}. ${t.name} (${t.threadID})`
           ).join('\n');
           await api.sendMessage(`🔍 Thread search results:
 
-${threadList}
+${searchResultsFormatted}
 
-Found: ${threads.length} threads`, threadID);
+Found: ${searchResults.length} threads`, threadID);
         }
         break;
 
@@ -418,6 +664,13 @@ Found: ${threads.length} threads`, threadID);
 ${testResults.join('\n')}
 
 ${testResults.filter(r => r.startsWith('✅')).length}/${testResults.length} tests passed`, threadID);
+        break;
+
+      case 'logout':
+        await api.sendMessage('👋 Logging out bot...', threadID);
+        await api.logout();
+        console.log('Bot logged out');
+        process.exit(0);
         break;
 
       default:
