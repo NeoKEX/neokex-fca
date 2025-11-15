@@ -173,7 +173,7 @@ module.exports = function (defaultFuncs, api, ctx) {
       av: ctx.i_userID || ctx.userID,
       queries: JSON.stringify({
         o0: {
-          doc_id: "3426149104143726",
+          doc_id: "3336396659757871",
           query_params: {
             limit: limit + (timestamp ? 1 : 0),
             before: timestamp,
@@ -191,14 +191,23 @@ module.exports = function (defaultFuncs, api, ctx) {
         .post("https://www.facebook.com/api/graphqlbatch/", ctx.jar, form)
         .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (resData[resData.length - 1].error_results > 0) {
-        throw new Error(JSON.stringify(resData[0].o0.errors));
+      if (!resData || !Array.isArray(resData) || resData.length === 0) {
+        throw new Error("getThreadList: Invalid response from server");
       }
 
-      if (resData[resData.length - 1].successful_results === 0) {
+      const lastResult = resData[resData.length - 1];
+      if (lastResult && lastResult.error_results && lastResult.error_results > 0) {
+        throw new Error(JSON.stringify(resData[0]?.o0?.errors || "Unknown error"));
+      }
+
+      if (lastResult && lastResult.successful_results === 0) {
         throw new Error("getThreadList: there was no successful_results");
       }
       
+      if (!resData[0] || !resData[0].o0 || !resData[0].o0.data) {
+        throw new Error("getThreadList: Invalid data structure in response");
+      }
+
       let nodes = resData[0].o0.data.viewer.message_threads.nodes;
       if (timestamp) {
         nodes.shift();

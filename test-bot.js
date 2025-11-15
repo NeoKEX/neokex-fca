@@ -398,7 +398,7 @@ async function runAllTests() {
   log('='.repeat(50));
 }
 
-login({ appState }, { online: true, listenEvents: false }, async (err, loginApi) => {
+login({ appState }, { online: true, listenEvents: true }, async (err, loginApi) => {
   if (err) {
     log(`Login failed: ${err}`, 'ERROR');
     return;
@@ -407,12 +407,27 @@ login({ appState }, { online: true, listenEvents: false }, async (err, loginApi)
   api = loginApi;
   log('Login successful! Bot user ID: ' + api.getCurrentUserID());
   
+  log('Starting MQTT listener...');
+  const stopListening = api.listenMqtt((err, event) => {
+    if (err) {
+      log(`MQTT Error: ${err}`, 'ERROR');
+      return;
+    }
+    if (event && event.type === 'message' && event.body && event.body.includes('Test execution completed')) {
+      setTimeout(() => process.exit(0), 2000);
+    }
+  });
+  
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  log('MQTT connected');
+  
   try {
     await runAllTests();
     log('Test execution completed successfully');
-    process.exit(0);
+    setTimeout(() => process.exit(0), 3000);
   } catch (error) {
     log(`Test execution failed: ${error.message}`, 'ERROR');
+    console.error(error);
     process.exit(1);
   }
 });

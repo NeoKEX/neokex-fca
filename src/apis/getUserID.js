@@ -39,7 +39,7 @@ module.exports = (defaultFuncs, api, ctx) => {
         rsp: "search",
         context: "search",
         path: "/home.php",
-        request_id: utils.generateClientID()
+        request_id: ctx.clientID || utils.getGUID()
       };
 
       const res = await defaultFuncs.get("https://www.facebook.com/ajax/typeahead/search.php", ctx.jar, form)
