@@ -2,6 +2,40 @@
 
 const utils = require('../utils');
 
+const GENDERS = {
+  0: "unknown",
+  1: "female_singular",
+  2: "male_singular",
+  3: "female_singular_guess",
+  4: "male_singular_guess",
+  5: "mixed",
+  6: "neuter_singular",
+  7: "unknown_singular",
+  8: "female_plural",
+  9: "male_plural",
+  10: "neuter_plural",
+  11: "unknown_plural"
+};
+
+function formatData(obj) {
+  return Object.keys(obj).map(key => {
+    const user = obj[key];
+    return {
+      alternateName: user.alternateName,
+      firstName: user.firstName,
+      gender: GENDERS[user.gender],
+      userID: utils.formatID(user.id.toString()),
+      isFriend: user.is_friend != null && user.is_friend ? true : false,
+      fullName: user.name,
+      profilePicture: user.thumbSrc,
+      type: user.type,
+      profileUrl: user.uri,
+      vanity: user.vanity,
+      isBirthday: !!user.is_birthday
+    };
+  });
+}
+
 module.exports = (defaultFuncs, api, ctx) => {
   return async function getFriendsList(callback) {
     let resolveFunc = () => {};
@@ -19,33 +53,22 @@ module.exports = (defaultFuncs, api, ctx) => {
     }
 
     try {
-      const form = {
-        viewer: ctx.userID
-      };
-
-      const res = await defaultFuncs.get(
-        "https://www.facebook.com/ajax/typeahead/first_degree.php",
+      const res = await defaultFuncs.postFormData(
+        "https://www.facebook.com/chat/user_info_all",
         ctx.jar,
-        form
+        {},
+        { viewer: ctx.userID }
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
+
+      if (!res) {
+        throw { error: "getFriendsList returned empty object." };
+      }
 
       if (res.error) {
         throw res;
       }
 
-      const friends = res.payload.entries.map(entry => ({
-        userID: utils.formatID(entry.uid.toString()),
-        name: entry.text,
-        firstName: entry.first_name,
-        vanity: entry.vanity,
-        type: entry.type,
-        photoUrl: entry.photo,
-        profileUrl: entry.path,
-        isVerified: entry.is_verified || false,
-        isFriend: true
-      }));
-
-      callback(null, friends);
+      callback(null, formatData(res.payload));
     } catch (err) {
       utils.error("getFriendsList", err);
       callback(err);
