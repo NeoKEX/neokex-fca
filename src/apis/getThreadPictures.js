@@ -43,11 +43,11 @@ module.exports = (defaultFuncs, api, ctx) => {
         form
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (res.error) {
+      if (res && res.error) {
         throw res;
       }
 
-      callback(null, res.payload);
+      return callback(null, res?.payload || res);
     } catch (err) {
       utils.error("getThreadPictures", err);
       callback(err);

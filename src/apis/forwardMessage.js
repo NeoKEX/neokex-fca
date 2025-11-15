@@ -37,7 +37,7 @@ module.exports = (defaultFuncs, api, ctx) => {
         form
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (res.error) {
+      if (res && res.error) {
         throw res;
       }
 

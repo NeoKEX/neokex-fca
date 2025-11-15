@@ -29,11 +29,11 @@ module.exports = (defaultFuncs, api, ctx) => {
         form
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (res.error) {
+      if (res && res.error) {
         throw res;
       }
 
-      callback(null, { success: true });
+      return callback(null, { success: true });
     } catch (err) {
       utils.error("deleteMessage", err);
       callback(err);

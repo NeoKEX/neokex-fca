@@ -35,11 +35,11 @@ module.exports = (defaultFuncs, api, ctx) => {
         form
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (res.error) {
+      if (res && res.error) {
         throw res;
       }
 
-      callback(null, { success: true, accepted: accept });
+      return callback(null, { success: true, accepted: accept });
     } catch (err) {
       utils.error("handleMessageRequest", err);
       callback(err);

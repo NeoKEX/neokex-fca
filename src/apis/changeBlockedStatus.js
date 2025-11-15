@@ -39,11 +39,11 @@ module.exports = (defaultFuncs, api, ctx) => {
         form
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
-      if (res.error) {
+      if (res && res.error) {
         throw res;
       }
 
-      callback(null, { success: true, blocked: block });
+      return callback(null, { success: true, blocked: block });
     } catch (err) {
       utils.error("changeBlockedStatus", err);
       callback(err);

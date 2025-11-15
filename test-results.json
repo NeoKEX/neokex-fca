@@ -1,139 +1,139 @@
 {
-  "passed": 18,
-  "failed": 4,
+  "passed": 19,
+  "failed": 3,
   "skipped": 0,
   "results": [
     {
       "testName": "getCurrentUserID",
       "passed": true,
       "details": "UserID: 61583873159587",
-      "timestamp": "2025-11-15T11:24:05.387Z"
+      "timestamp": "2025-11-15T11:27:27.108Z"
     },
     {
       "testName": "sendMessage",
       "passed": true,
-      "details": "MessageID: mid.$gAAUo4-LfptmguIdarGah0ISNZQfE",
-      "timestamp": "2025-11-15T11:24:05.728Z"
+      "details": "MessageID: mid.$gAAUo4-LfptmguIpu4Wah0UmXUHO5",
+      "timestamp": "2025-11-15T11:27:27.504Z"
     },
     {
       "testName": "getThreadInfo",
       "passed": true,
       "details": "Thread: BOT TEST NXXO",
-      "timestamp": "2025-11-15T11:24:07.341Z"
+      "timestamp": "2025-11-15T11:27:29.010Z"
     },
     {
       "testName": "getThreadHistory",
       "passed": true,
       "details": "Messages: 10",
-      "timestamp": "2025-11-15T11:24:07.619Z"
+      "timestamp": "2025-11-15T11:27:29.187Z"
     },
     {
       "testName": "getUserInfo",
       "passed": true,
       "details": "Name: Vinsmoke Neokex",
-      "timestamp": "2025-11-15T11:24:07.719Z"
+      "timestamp": "2025-11-15T11:27:29.290Z"
     },
     {
       "testName": "sendTypingIndicator",
       "passed": true,
       "details": "",
-      "timestamp": "2025-11-15T11:24:09.728Z"
+      "timestamp": "2025-11-15T11:27:31.293Z"
     },
     {
       "testName": "setMessageReaction",
       "passed": true,
       "details": "",
-      "timestamp": "2025-11-15T11:24:10.371Z"
+      "timestamp": "2025-11-15T11:27:31.866Z"
     },
     {
       "testName": "editMessage",
       "passed": true,
       "details": "",
-      "timestamp": "2025-11-15T11:24:11.373Z"
+      "timestamp": "2025-11-15T11:27:32.869Z"
     },
     {
       "testName": "markAsRead",
       "passed": true,
       "details": "",
-      "timestamp": "2025-11-15T11:24:11.397Z"
+      "timestamp": "2025-11-15T11:27:32.900Z"
     },
     {
       "testName": "getTheme",
       "passed": true,
       "details": "Themes: 92",
-      "timestamp": "2025-11-15T11:24:11.635Z"
+      "timestamp": "2025-11-15T11:27:33.145Z"
     },
     {
       "testName": "getThemeInfo",
       "passed": true,
       "details": "Color: 2037AF",
-      "timestamp": "2025-11-15T11:24:11.848Z"
+      "timestamp": "2025-11-15T11:27:33.392Z"
     },
     {
       "testName": "nickname",
       "passed": true,
       "details": "",
-      "timestamp": "2025-11-15T11:24:11.870Z"
+      "timestamp": "2025-11-15T11:27:33.412Z"
     },
     {
       "testName": "emoji",
       "passed": true,
       "details": "",
-      "timestamp": "2025-11-15T11:24:13.925Z"
+      "timestamp": "2025-11-15T11:27:35.466Z"
     },
     {
       "testName": "getUserID",
       "passed": false,
       "details": "Account checkpoint required - Please verify your account on facebook.com",
-      "timestamp": "2025-11-15T11:24:14.020Z"
+      "timestamp": "2025-11-15T11:27:35.547Z"
     },
     {
       "testName": "getFriendsList",
       "passed": false,
       "details": "Account checkpoint required - Please verify your account on facebook.com",
-      "timestamp": "2025-11-15T11:24:14.101Z"
+      "timestamp": "2025-11-15T11:27:35.611Z"
     },
     {
       "testName": "searchForThread",
       "passed": false,
       "details": "Account checkpoint required - Please verify your account on facebook.com",
-      "timestamp": "2025-11-15T11:24:14.170Z"
+      "timestamp": "2025-11-15T11:27:35.688Z"
     },
     {
       "testName": "muteThread",
-      "passed": false,
-      "details": "Cannot read properties of undefined (reading 'error')",
-      "timestamp": "2025-11-15T11:24:14.245Z"
+      "passed": true,
+      "details": "",
+      "timestamp": "2025-11-15T11:27:36.841Z"
     },
     {
       "testName": "changeThreadColor",
       "passed": true,
       "details": "Skipped - requires MQTT connection",
-      "timestamp": "2025-11-15T11:24:14.411Z"
+      "timestamp": "2025-11-15T11:27:37.084Z"
     },
     {
       "testName": "createPoll",
       "passed": true,
       "details": "Skipped - requires MQTT connection",
-      "timestamp": "2025-11-15T11:24:14.653Z"
+      "timestamp": "2025-11-15T11:27:37.286Z"
     },
     {
       "testName": "createNewGroup",
       "passed": true,
       "details": "Skipped - would create actual group",
-      "timestamp": "2025-11-15T11:24:14.902Z"
+      "timestamp": "2025-11-15T11:27:37.508Z"
     },
     {
       "testName": "changeArchivedStatus",
       "passed": true,
       "details": "Skipped - would archive test thread",
-      "timestamp": "2025-11-15T11:24:15.137Z"
+      "timestamp": "2025-11-15T11:27:37.796Z"
     },
     {
       "testName": "unsendMessage",
       "passed": true,
       "details": "",
-      "timestamp": "2025-11-15T11:24:17.096Z"
+      "timestamp": "2025-11-15T11:27:39.651Z"
     }
   ]
 }
