@@ -1,0 +1,36 @@
+{
+  "testThreadID": "1452334112548569",
+  "testThreadName": "BOT TEST NXXO",
+  "notes": {
+    "dongdev_version": "2.0.32",
+    "ws3_fca_version": "3.5.2",
+    "comparison": "Both libraries follow similar API patterns. @dongdev uses sequelize/sqlite3 for data storage. ws3-fca requires Node 22+. Our implementation is compatible with both approaches.",
+    "fixes_applied": "No critical bugs found in upstream packages that need immediate patching. Both use similar MQTT implementation and error handling patterns."
+  },
+  "fixtures": {
+    "testImages": {
+      "avatar": "attached_assets/test-avatar.png",
+      "groupImage": "attached_assets/test-group-image.png"
+    },
+    "stickerIDs": {
+      "thumbsUp": "369239263222822",
+      "heart": "369239343222814",
+      "like": "369239383222810"
+    },
+    "testPrompts": {
+      "aiTheme": "vibrant purple galaxy stars",
+      "pollQuestion": "Which feature should we test next?",
+      "pollOptions": ["Stickers", "Themes", "Groups", "Messages"]
+    },
+    "httpEndpoints": {
+      "get": "https://www.facebook.com",
+      "post": "https://httpbin.org/post"
+    }
+  },
+  "cleanup": {
+    "revertTheme": true,
+    "deleteTestGroups": true,
+    "unarchiveThreads": true,
+    "clearTestMessages": false
+  }
+}
