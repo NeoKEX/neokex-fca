@@ -85,7 +85,7 @@ ${PREFIX}deletethis - Delete this thread
 ${PREFIX}themes - List all available themes
 ${PREFIX}theme <name> - Change thread theme
 ${PREFIX}color <hex> - Change thread color
-${PREFIX}aitheme <prompt> - Generate AI theme
+${PREFIX}changetheme <prompt> - Generate & apply AI theme
 
 ✏️ THREAD SETTINGS
 ${PREFIX}name <name> - Change thread name
@@ -326,8 +326,18 @@ Use ${PREFIX}theme <name> to apply`, threadID);
           break;
         }
         const themeName = args.join(' ');
-        await api.theme(themeName, threadID);
-        await api.sendMessage(`✅ Theme changed to: ${themeName}`, threadID);
+        const themesList = await api.getTheme(threadID);
+        const selectedTheme = themesList.find(t => 
+          t.name.toLowerCase().includes(themeName.toLowerCase()) || 
+          t.id === themeName
+        );
+        if (selectedTheme) {
+          await api.sendMessage(`🎨 Applying theme: ${selectedTheme.name}...`, threadID);
+          await api.setThreadThemeMqtt(threadID, selectedTheme.id);
+          await api.sendMessage(`✅ Theme changed to: ${selectedTheme.name}`, threadID);
+        } else {
+          await api.sendMessage(`❌ Theme not found. Use ${PREFIX}themes to see available themes`, threadID);
+        }
         break;
 
       case 'color':
@@ -342,15 +352,53 @@ Example: ${PREFIX}color #0084ff`, threadID);
         break;
 
       case 'aitheme':
+      case 'changetheme':
         if (args.length === 0) {
-          await api.sendMessage(`❌ Usage: ${PREFIX}aitheme <prompt>
-Example: ${PREFIX}aitheme ocean sunset`, threadID);
+          await api.sendMessage(`❌ Usage: ${PREFIX}changetheme <AI prompt>
+Example: ${PREFIX}changetheme ocean sunset vibes
+Example: ${PREFIX}changetheme purple pink galaxy stars`, threadID);
           break;
         }
-        const prompt = args.join(' ');
-        const aiThemes = await api.createAITheme(prompt);
-        await api.sendMessage(`🤖 Generated ${aiThemes.length} AI theme(s) for: "${prompt}"
-Theme ID: ${aiThemes[0]?.id || 'Unknown'}`, threadID);
+        const aiPrompt = args.join(' ');
+        await api.sendMessage(`🎨 Generating AI theme: "${aiPrompt}"...`, threadID);
+        
+        try {
+          // Step 1: Generate AI theme
+          const aiThemes = await api.createAITheme(aiPrompt);
+          
+          if (!aiThemes || aiThemes.length === 0) {
+            await api.sendMessage(`❌ No themes generated. AI theme feature may not be available for your account.
+Try using ${PREFIX}themes to see standard themes.`, threadID);
+            break;
+          }
+          
+          const generatedTheme = aiThemes[0];
+          await api.sendMessage(`✅ Theme generated!
+Name: ${generatedTheme.accessibility_label || aiPrompt}
+ID: ${generatedTheme.id}
+
+Applying theme...`, threadID);
+          
+          // Step 2: Apply the theme using MQTT
+          await new Promise(resolve => setTimeout(resolve, 1000));
+          
+          try {
+            await api.setThreadThemeMqtt(threadID, generatedTheme.id);
+            await api.sendMessage(`🎉 AI theme applied successfully!`, threadID);
+          } catch (applyError) {
+            console.error('❌ Theme Application Error:', applyError.message);
+            await api.sendMessage(`⚠️ Theme generated but failed to apply: ${applyError.message}
+
+You can try applying it manually using theme ID: ${generatedTheme.id}`, threadID);
+          }
+          
+        } catch (error) {
+          console.error('❌ AI Theme Generation Error:', error.message || error);
+          await api.sendMessage(`❌ Error generating AI theme: ${error.message || 'Unknown error'}
+
+This feature may not be available for your account.
+Try using ${PREFIX}themes for standard themes instead.`, threadID);
+        }
         break;
 
       // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -678,8 +726,19 @@ ${testResults.filter(r => r.startsWith('✅')).length}/${testResults.length} tes
 Type ${PREFIX}help for available commands`, threadID);
     }
   } catch (error) {
-    console.error(`Error handling command ${command}:`, error);
-    await api.sendMessage(`❌ Error: ${error.message || 'Unknown error occurred'}`, threadID).catch(() => {});
+    console.error(`\n❌ ERROR in command /${command}:`);
+    console.error(`   Message: ${error.message}`);
+    console.error(`   Stack:`, error.stack);
+    console.error(`   Thread ID: ${threadID}`);
+    console.error(`   Sender ID: ${senderID}`);
+    console.error(`   Args:`, args);
+    
+    await api.sendMessage(`❌ Error executing /${command}:
+${error.message || 'Unknown error occurred'}
+
+If this persists, check the console logs for details.`, threadID).catch(err => {
+      console.error('Failed to send error message:', err.message);
+    });
   }
 }
 

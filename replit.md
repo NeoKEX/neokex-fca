@@ -103,7 +103,15 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 - `src/utils/clients.js` - Attachment type detection
 
 ### Recent Changes (v4.4.5)
-- **Test Bot Enhancement (Nov 15):**
+- **Test Bot Critical Fixes & AI Theme Feature (Nov 15):**
+  - **Fixed /theme command:** Now uses setThreadThemeMqtt instead of non-existent api.theme()
+  - **Added /changetheme command:** Generates AND applies AI themes with proper error handling
+  - **Fixed theme application:** All theme commands now use correct API methods (setThreadThemeMqtt for theme IDs, changeThreadColor for hex colors)
+  - **Enhanced error logging:** Comprehensive debugging with command context, stack traces, thread/sender IDs, and args
+  - **Improved error handling:** Nested try/catch blocks to distinguish generation vs application failures
+  - Updated help menu with AI theme command
+
+- **Test Bot Previous Enhancements (Nov 15):**
   - Fixed event object passing to handleCommand
   - Added 25+ new commands for comprehensive API testing
   - Implemented toggle logic for mute/archive commands
