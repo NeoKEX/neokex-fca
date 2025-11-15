@@ -20,16 +20,15 @@ module.exports = (defaultFuncs, api, ctx) => {
 
     try {
       const form = {
-        value: searchQuery.toLowerCase(),
-        viewer: ctx.userID,
-        rsp: "search",
-        context: "search",
-        path: "/home.php",
-        request_id: ctx.clientID || utils.getGUID()
+        client: "web_messenger",
+        query: searchQuery,
+        offset: 0,
+        limit: 21,
+        index: "fbid"
       };
 
-      const res = await defaultFuncs.get(
-        "https://www.facebook.com/ajax/typeahead/search.php",
+      const res = await defaultFuncs.post(
+        "https://www.facebook.com/ajax/mercury/search_threads.php",
         ctx.jar,
         form
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
@@ -38,7 +37,11 @@ module.exports = (defaultFuncs, api, ctx) => {
         throw res;
       }
 
-      const threads = res.payload.entries.filter(entry => entry.type === "thread");
+      if (!res.payload.mercury_payload || !res.payload.mercury_payload.threads) {
+        return callback({ error: `Could not find thread "${searchQuery}".` });
+      }
+
+      const threads = res.payload.mercury_payload.threads.map(utils.formatThread);
       callback(null, threads);
     } catch (err) {
       utils.error("searchForThread", err);
