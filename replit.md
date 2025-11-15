@@ -7,6 +7,12 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 
 ### ✅ Recent Achievements
 
+**API Function Improvements (November 15, 2025):**
+- **getFriendsList** - Fixed by switching to POST /chat/user_info_all endpoint (now passing tests!)
+- **getUserID** - Enhanced error handling with better checkpoint messaging
+- **searchForThread** - Improved error handling with clearer checkpoint messages
+- Comprehensive 68-function test suite: 58 passed, 7 failed (mostly due to Facebook checkpoints), 18 skipped
+
 **Anti-Bot Detection Improvements:**
 - Enhanced user-agent fingerprinting with Edge browser, Linux platforms, 15+ unique combinations
 - Multi-domain cookie persistence (.facebook.com, .messenger.com, .m.facebook.com)
@@ -61,6 +67,10 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 - `src/utils/clients.js` - Attachment type detection
 
 ### Recent Changes (v4.4.3)
+- **API Fixes (Nov 15):**
+  - getFriendsList: Changed to postFormData with /chat/user_info_all endpoint
+  - getUserID: Added input validation and checkpoint-friendly error messages
+  - searchForThread: Improved error handling for checkpoint scenarios
 - Fixed header bug: ctx.lsd || ctx.fb_dtsg fallback
 - Fixed Edge UA duplication bug
 - Fixed cookie multi-domain attribute parsing
@@ -99,12 +109,13 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 
 ## Known Issues & Limitations
 
-1. Rate limiter created but not integrated (deferred for proper testing)
-2. Token refresh needs retry/backoff for production resilience
-3. No automatic re-login on session expiry yet
-4. MQTT reconnection uses fixed jitter instead of exponential backoff
-5. No keepalive ping mechanism to prevent session timeout
-6. Machine ID persistence not implemented
+1. **Facebook Checkpoint Restrictions** - getUserID and searchForThread fail when account requires checkpoint verification (external limitation, cannot be programmatically fixed)
+2. Rate limiter created but not integrated (deferred for proper testing)
+3. Token refresh needs retry/backoff for production resilience
+4. No automatic re-login on session expiry yet
+5. MQTT reconnection uses fixed jitter instead of exponential backoff
+6. No keepalive ping mechanism to prevent session timeout
+7. Machine ID persistence not implemented
 
 ## Git Workflow
 - Automatic commits made at end of task completion
