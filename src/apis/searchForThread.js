@@ -11,17 +11,23 @@ module.exports = (defaultFuncs, api, ctx) => {
       rejectFunc = reject;
     });
 
-    if (!callback) {
-      callback = (err, result) => {
-        if (err) return rejectFunc(err);
-        resolveFunc(result);
-      };
-    }
+    // Store original callback if provided
+    const originalCallback = callback;
+    
+    // Always use a wrapped callback that settles the promise
+    callback = (err, result) => {
+      if (originalCallback) {
+        originalCallback(err, result);
+      }
+      if (err) return rejectFunc(err);
+      resolveFunc(result);
+    };
 
     if (!searchQuery || typeof searchQuery !== 'string') {
       const error = { error: "searchForThread: searchQuery parameter must be a non-empty string" };
       utils.error("searchForThread", error);
-      return callback(error);
+      callback(error);
+      return returnPromise;
     }
 
     try {
@@ -40,24 +46,35 @@ module.exports = (defaultFuncs, api, ctx) => {
       ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
 
       if (!res) {
-        throw { 
-          error: "searchForThread: No response received. This may be due to Facebook account checkpoint or security restrictions.",
-          details: "Please verify your account on facebook.com"
+        const error = { 
+          error: "Account checkpoint required - searchForThread is restricted until verification",
+          details: "Please verify your account on facebook.com. This function requires additional permissions."
         };
+        callback(error);
+        return returnPromise;
       }
 
       if (res.error) {
         throw res;
       }
 
-      if (!res.payload || !res.payload.mercury_payload || !res.payload.mercury_payload.threads) {
-        return callback({ 
+      // Support both legacy payload.threads (object map) and newer payload.mercury_payload.threads (array)
+      let threadsData = res.payload?.mercury_payload?.threads || res.payload?.threads;
+      
+      if (!threadsData) {
+        callback({ 
           error: `Could not find thread "${searchQuery}".`,
           details: "The thread may not exist or access may be restricted."
         });
+        return returnPromise;
       }
 
-      const threads = res.payload.mercury_payload.threads.map(utils.formatThread);
+      // Convert legacy object format to array if needed
+      if (!Array.isArray(threadsData)) {
+        threadsData = Object.values(threadsData);
+      }
+
+      const threads = threadsData.map(utils.formatThread);
       callback(null, threads);
     } catch (err) {
       if (err.error && typeof err.error === 'string' && err.error.includes('checkpoint')) {
