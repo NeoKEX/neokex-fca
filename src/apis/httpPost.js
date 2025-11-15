@@ -49,10 +49,10 @@ module.exports = function (defaultFuncs, api, ctx) {
         });
     } else {
       defaultFuncs
-        .post(url, ctx.jar, form, {}, customHeader)
+        .post(url, ctx.jar, form, ctx, customHeader)
         .then(function (resData) {
           callback(null, resData.body.toString());
-          })
+        })
         .catch(function (err) {
           utils.error("httpPost", err);
           return callback(err);

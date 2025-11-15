@@ -49,7 +49,7 @@ module.exports = function (defaultFuncs, api, ctx) {
         });
     } else {
       defaultFuncs
-        .get(url, ctx.jar, form, null, customHeader)
+        .get(url, ctx.jar, form, ctx, customHeader)
         .then(function (resData) {
           callback(null, resData.body.toString());
         })

@@ -262,8 +262,8 @@ declare module "neokex-fca" {
         shareContact(senderID: UserID, threadID: ThreadID, callback?: Callback): void;
         resolvePhotoUrl(photoID: string, callback?: Callback<string>): Promise<string>;
 
-        pin(action: "pin" | "unpin", threadID: ThreadID, messageID: MessageID): Promise<any>;
-        pin(action: "list", threadID: ThreadID): Promise<Message[]>;
+        pinMessage(action: "pin" | "unpin", threadID: ThreadID, messageID: MessageID): Promise<any>;
+        pinMessage(action: "list", threadID: ThreadID): Promise<Message[]>;
 
         markAsRead(threadID: ThreadID, read?: boolean, callback?: Callback): Promise<any>;
         markAsReadAll(callback?: Callback): Promise<void>;
@@ -306,7 +306,7 @@ declare module "neokex-fca" {
 
         follow(senderID: UserID, follow: boolean, callback?: Callback): void;
 
-        unsent(messageID: MessageID, threadID: ThreadID, callback?: Callback<UnsendMessageEvent>): Promise<UnsendMessageEvent>;
+        unsendMessage(messageID: MessageID, threadID: ThreadID, callback?: Callback<UnsendMessageEvent>): Promise<UnsendMessageEvent>;
         emoji(emoji: string, threadID?: ThreadID, callback?: Callback<EmojiEvent>): Promise<EmojiEvent>;
         gcname(newName: string, threadID?: ThreadID, callback?: Callback<GroupNameEvent>): Promise<GroupNameEvent>;
         nickname(nickname: string, threadID: ThreadID, participantID: UserID, callback?: Callback<NicknameEvent>): Promise<NicknameEvent>;
