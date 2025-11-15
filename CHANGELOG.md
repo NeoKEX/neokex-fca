@@ -2,6 +2,98 @@
 
 All notable changes to this project will be documented in this file.
 
+## [4.4.3] - 2025-11-15
+
+### 🎉 Major Anti-Bot Detection Improvements
+- **Enhanced User-Agent Fingerprinting**: Expanded browser fingerprint pool for better anti-detection
+  - Added Microsoft Edge browser support with proper Sec-CH-UA brand metadata
+  - Expanded Chrome version coverage: 6 versions per platform (108-113)
+  - Added Linux platform support (Ubuntu, Fedora variations)
+  - Fixed Edge UA string duplication bug (was appending "Edg/" twice)
+  - Total fingerprint pool: 15+ unique combinations across Windows/Mac/Linux
+
+- **Multi-Domain Cookie Persistence**: Session cookies now persist across all Facebook domains
+  - Cookies automatically set for .facebook.com, .messenger.com, .m.facebook.com
+  - Fixed cookie parsing bug that was duplicating domain attributes
+  - Better session stability and reduced logout frequency
+  - Matches real browser multi-domain cookie behavior
+
+- **Critical Header Bug Fix**: Fixed X-Fb-Lsd header missing on some requests
+  - Now falls back to ctx.fb_dtsg when ctx.lsd unavailable
+  - Prevents requests from failing due to missing required headers
+  - Ensures all GraphQL/AJAX requests have proper security tokens
+
+### 🔒 Enhanced Security & Error Handling
+- **Account Lock Detection**: Comprehensive checkpoint and restriction detection
+  - Detects error codes: 1357001, 1357004, 1357031, 1357033, 2056003
+  - Returns typed error responses with isAccountLocked, isCheckpoint, isRestricted flags
+  - Prevents unnecessary retries on locked/restricted accounts
+  - Graceful degradation instead of crashes
+
+### 🌍 Locale & Timezone Spoofing
+- **Geographic Fingerprint Randomization**: Realistic locale/timezone headers
+  - Randomized Accept-Language headers (en-US, en-GB, es-ES, fr-FR, de-DE, pt-BR, vi-VN, th-TH)
+  - X-FB-Timezone-Offset properly calculated in seconds (fixed minutes→seconds conversion)
+  - Locale and timezone cached per login session for consistency
+  - Prevents timezone/locale mismatch detection
+
+### 📎 Intelligent Attachment Handling
+- **Smart Attachment Type Detection**: Automatic file type recognition
+  - Detects image, video, audio, and document file types from MIME type
+  - No longer limited to just "voice_clip" detection
+  - Proper handling of all attachment categories
+
+- **Parallel Attachment Uploads**: Concurrent upload with throttling
+  - Uploads 3 attachments simultaneously with batching
+  - Reduces total upload time for multi-attachment messages
+  - Prevents overwhelming Facebook servers with too many concurrent connections
+
+### 🔄 Token Refresh Management (Integrated)
+- **Automatic Token Refresh**: 24-hour token refresh cycle
+  - Auto-refreshes fb_dtsg, lsd, jazoest tokens to prevent expiration
+  - Exposed API methods: api.refreshTokens() and api.getTokenRefreshStatus()
+  - Integrated into loginHelper for automatic background refresh
+  - **Note**: Needs retry/backoff hardening for production (future improvement)
+
+### ⚡ Rate Limiting Infrastructure (Created)
+- **Rate Limiter Class**: Adaptive rate limiting framework created
+  - Per-thread, global, and per-minute request tracking structure
+  - Cooldown management for error-triggered throttling
+  - **Note**: Not yet integrated into request pipeline - deferred for proper testing
+
+### 📊 Competitive Analysis vs ws3-fca & @dongdev/fca-unofficial
+**NeoKEX-FCA Now Surpasses:**
+- ✅ **Fingerprint Stability**: Better than ws3-fca (more diverse UA pool, cached per-session)
+- ✅ **Multi-Domain Cookies**: Better than both (automatic .facebook/.messenger/.m.facebook persistence)
+- ✅ **Attachment Handling**: Better than ws3-fca (parallel uploads, smart type detection)
+- ✅ **Account Lock Detection**: Better than ws3-fca (comprehensive error code handling)
+
+**Still Behind On:**
+- ❌ **Integrated Rate Limiting**: ws3-fca has rate limiter in request pipeline
+- ❌ **Auto Re-Login**: ws3-fca has session expiry detection + auto re-login
+- ❌ **MQTT Resilience**: @dongdev has better MQTT backoff and reconnection
+
+### 🔧 Technical Improvements
+- **headers.js**: Fixed timezone offset format (minutes * 60 = seconds)
+- **user-agents.js**: Fixed Edge UA generation, proper brand metadata
+- **loginHelper.js**: Integrated TokenRefreshManager with API object exposure
+- **clients.js**: Enhanced attachment type detection beyond voice_clip
+- **sendMessage.js**: Parallel attachment uploads with concurrency control
+
+### 🚨 Production Readiness Assessment
+- **Status**: Solid for low-volume automation, **NOT production-ready for high-volume bots**
+- **Missing Critical Features**:
+  1. Automatic re-login when session expires
+  2. Integrated rate limiting in HTTP pipeline
+  3. Token refresh retry/backoff logic
+  4. Session expiry detection mechanism
+
+### 📝 Next Priority (Recommended by Architect Review)
+1. Implement automatic re-login tied to token refresh failures
+2. Integrate RateLimiter into request pipeline with proper telemetry
+3. Build session expiry detector to trigger safe re-login workflows
+4. Harden TokenRefreshManager with retry/backoff mechanisms
+
 ## [4.3.0] - 2025-11-14
 
 ### 🎉 Fixed - CRITICAL: Automated Behavior Detection & Logout Issues
