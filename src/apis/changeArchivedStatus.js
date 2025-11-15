@@ -33,9 +33,12 @@ module.exports = (defaultFuncs, api, ctx) => {
       }
 
       const form = {
-        ids: threadIDs.map(id => "thread_fbids[" + id + "]=" + id).join("&"),
         should_archive: archive
       };
+      
+      threadIDs.forEach(id => {
+        form[`thread_fbids[${id}]`] = true;
+      });
 
       const res = await defaultFuncs.post(
         "https://www.facebook.com/ajax/mercury/change_archived_status.php",

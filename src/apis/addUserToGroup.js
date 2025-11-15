@@ -3,8 +3,7 @@
 const utils = require('../utils');
 
 module.exports = (defaultFuncs, api, ctx) => {
-  return async function changeThreadColor(color, threadID, callback) {
-    let reqID = ++ctx.wsReqNumber;
+  return async function addUserToGroup(userID, threadID, callback) {
     let resolveFunc = () => {};
     let rejectFunc = () => {};
     const returnPromise = new Promise((resolve, reject) => {
@@ -13,9 +12,9 @@ module.exports = (defaultFuncs, api, ctx) => {
     });
 
     if (!callback) {
-      callback = (err, data) => {
+      callback = (err, result) => {
         if (err) return rejectFunc(err);
-        resolveFunc(data);
+        resolveFunc(result);
       };
     }
 
@@ -24,61 +23,58 @@ module.exports = (defaultFuncs, api, ctx) => {
         throw new Error("Not connected to MQTT. Please use listenMqtt first.");
       }
 
-      const content = {
-        app_id: "2220391788200892",
-        payload: JSON.stringify({
-          data_trace_id: null,
-          epoch_id: parseInt(utils.generateOfflineThreadingID()),
-          tasks: [
-            {
-              failure_count: null,
-              label: "43",
-              payload: JSON.stringify({
-                thread_key: threadID,
-                theme_fbid: color,
-                source: null,
-                sync_group: 1,
-                payload: null
-              }),
-              queue_name: "thread_theme",
-              task_id: ++ctx.wsTaskNumber
-            }
-          ],
-          version_id: "8798795233522156"
-        }),
-        request_id: reqID,
-        type: 3
+      if (utils.getType(threadID) !== "Number" && utils.getType(threadID) !== "String") {
+        throw new Error("ThreadID should be of type Number or String");
+      }
+
+      if (utils.getType(userID) !== "Array") {
+        userID = [userID];
+      }
+
+      const reqID = ++ctx.wsReqNumber;
+      const taskID = ++ctx.wsTaskNumber;
+
+      const payload = {
+        epoch_id: utils.generateOfflineThreadingID(),
+        tasks: [
+          {
+            failure_count: null,
+            label: "23",
+            payload: JSON.stringify({
+              thread_key: threadID,
+              contact_ids: userID,
+              sync_group: 1
+            }),
+            queue_name: threadID.toString(),
+            task_id: taskID
+          }
+        ],
+        version_id: "24502707779384158"
       };
 
+      const form = JSON.stringify({
+        app_id: "772021112871879",
+        payload: JSON.stringify(payload),
+        request_id: reqID,
+        type: 3
+      });
+
       let responseHandled = false;
-      
       const handleRes = (topic, message) => {
-        if (responseHandled) return;
-        if (topic !== "/ls_resp") return;
+        if (topic !== "/ls_resp" || responseHandled) return;
         let jsonMsg;
         try {
           jsonMsg = JSON.parse(message.toString());
           jsonMsg.payload = JSON.parse(jsonMsg.payload);
-        } catch (err) {
+        } catch {
           return;
         }
         if (jsonMsg.request_id !== reqID) return;
         responseHandled = true;
         clearTimeout(timeout);
         ctx.mqttClient.removeListener("message", handleRes);
-        try {
-          const msgID = jsonMsg.payload.step[1][2][2][1][2];
-          const msgReplace = jsonMsg.payload.step[1][2][2][1][4];
-          const bodies = {
-            body: msgReplace,
-            messageID: msgID
-          };
-          callback(null, bodies);
-          resolveFunc(bodies);
-        } catch (err) {
-          callback(null, { success: true });
-          resolveFunc({ success: true });
-        }
+        callback(null, { success: true, response: jsonMsg.payload });
+        resolveFunc({ success: true, response: jsonMsg.payload });
       };
 
       const timeout = setTimeout(() => {
@@ -92,11 +88,7 @@ module.exports = (defaultFuncs, api, ctx) => {
       }, 30000);
 
       ctx.mqttClient.on("message", handleRes);
-      
-      ctx.mqttClient.publish("/ls_req", JSON.stringify(content), {
-        qos: 1,
-        retain: false
-      }, (err) => {
+      ctx.mqttClient.publish("/ls_req", form, { qos: 1, retain: false }, (err) => {
         if (err && !responseHandled) {
           responseHandled = true;
           clearTimeout(timeout);
@@ -106,7 +98,7 @@ module.exports = (defaultFuncs, api, ctx) => {
         }
       });
     } catch (err) {
-      utils.error("changeThreadColor", err);
+      utils.error("addUserToGroup", err);
       callback(err);
       rejectFunc(err);
     }

@@ -24,9 +24,12 @@ module.exports = (defaultFuncs, api, ctx) => {
       }
 
       const form = {
-        message_id: messageID,
-        recipient_ids: threadIDs.map(id => `recipient_ids[${id}]=${id}`).join("&")
+        message_id: messageID
       };
+      
+      threadIDs.forEach(id => {
+        form[`recipient_ids[${id}]`] = id;
+      });
 
       const res = await defaultFuncs.post(
         "https://www.facebook.com/ajax/mercury/forward_message.php",
