@@ -1,587 +1,587 @@
 {
-  "passed": 57,
-  "failed": 8,
+  "passed": 58,
+  "failed": 7,
   "skipped": 18,
   "details": [
     {
       "test": "1. getCurrentUserID",
       "status": true,
       "details": "61583873159587",
-      "timestamp": "2025-11-15T12:03:59.595Z",
+      "timestamp": "2025-11-15T12:30:24.235Z",
       "skipped": false
     },
     {
       "test": "2. getAppState",
       "status": true,
       "details": "15 cookies",
-      "timestamp": "2025-11-15T12:03:59.596Z",
+      "timestamp": "2025-11-15T12:30:24.235Z",
       "skipped": false
     },
     {
       "test": "3. login",
       "status": true,
       "details": "Already tested during initialization",
-      "timestamp": "2025-11-15T12:03:59.597Z",
+      "timestamp": "2025-11-15T12:30:24.235Z",
       "skipped": false
     },
     {
       "test": "4. logout",
       "status": false,
       "details": "Will test at end",
-      "timestamp": "2025-11-15T12:03:59.597Z",
+      "timestamp": "2025-11-15T12:30:24.236Z",
       "skipped": true
     },
     {
       "test": "5. sendMessage",
       "status": true,
-      "details": "mid.$gAAUo4-LfptmguKvkrWah2aZ7wJvD",
-      "timestamp": "2025-11-15T12:04:00.382Z",
+      "details": "mid.$gAAUo4-LfptmguMQQrGah37H7In-Y",
+      "timestamp": "2025-11-15T12:30:24.516Z",
       "skipped": false
     },
     {
       "test": "6. sendMessageMqtt",
       "status": true,
       "details": "MQTT message sent",
-      "timestamp": "2025-11-15T12:04:00.904Z",
+      "timestamp": "2025-11-15T12:30:25.098Z",
       "skipped": false
     },
     {
       "test": "7. editMessage",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:01.406Z",
+      "timestamp": "2025-11-15T12:30:25.600Z",
       "skipped": false
     },
     {
       "test": "8. unsendMessage",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:03.854Z",
+      "timestamp": "2025-11-15T12:30:27.710Z",
       "skipped": false
     },
     {
       "test": "9. deleteMessage",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:05.173Z",
+      "timestamp": "2025-11-15T12:30:29.174Z",
       "skipped": false
     },
     {
       "test": "10. forwardMessage",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:06.474Z",
+      "timestamp": "2025-11-15T12:30:30.654Z",
       "skipped": false
     },
     {
       "test": "11. sendTypingIndicator",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:07.477Z",
+      "timestamp": "2025-11-15T12:30:31.655Z",
       "skipped": false
     },
     {
       "test": "12. createPoll",
       "status": true,
       "details": "Poll created",
-      "timestamp": "2025-11-15T12:04:07.478Z",
+      "timestamp": "2025-11-15T12:30:31.656Z",
       "skipped": false
     },
     {
       "test": "13. shareContact",
       "status": true,
       "details": "Contact shared",
-      "timestamp": "2025-11-15T12:04:07.480Z",
+      "timestamp": "2025-11-15T12:30:31.656Z",
       "skipped": false
     },
     {
       "test": "14. getThreadInfo",
       "status": true,
       "details": "BOT TEST NXXO",
-      "timestamp": "2025-11-15T12:04:07.649Z",
+      "timestamp": "2025-11-15T12:30:31.984Z",
       "skipped": false
     },
     {
       "test": "15. getThreadHistory",
       "status": true,
       "details": "10 messages",
-      "timestamp": "2025-11-15T12:04:09.107Z",
+      "timestamp": "2025-11-15T12:30:32.235Z",
       "skipped": false
     },
     {
       "test": "16. getThreadList",
       "status": true,
       "details": "1 threads",
-      "timestamp": "2025-11-15T12:04:09.291Z",
+      "timestamp": "2025-11-15T12:30:32.477Z",
       "skipped": false
     },
     {
       "test": "17. getThreadPictures",
       "status": true,
       "details": "Retrieved pictures",
-      "timestamp": "2025-11-15T12:04:09.371Z",
+      "timestamp": "2025-11-15T12:30:32.630Z",
       "skipped": false
     },
     {
       "test": "18. searchForThread",
       "status": false,
-      "details": "Account checkpoint required - Please verify your account on facebook.com",
-      "timestamp": "2025-11-15T12:04:09.460Z",
+      "details": "",
+      "timestamp": "2025-11-15T12:30:32.807Z",
       "skipped": false
     },
     {
       "test": "19. muteThread (mute)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:10.582Z",
+      "timestamp": "2025-11-15T12:30:33.964Z",
       "skipped": false
     },
     {
       "test": "19. muteThread (unmute)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:11.673Z",
+      "timestamp": "2025-11-15T12:30:35.136Z",
       "skipped": false
     },
     {
       "test": "20. changeArchivedStatus (archive)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:12.745Z",
+      "timestamp": "2025-11-15T12:30:36.297Z",
       "skipped": false
     },
     {
       "test": "20. changeArchivedStatus (unarchive)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:13.857Z",
+      "timestamp": "2025-11-15T12:30:37.443Z",
       "skipped": false
     },
     {
       "test": "21. deleteThread",
       "status": false,
       "details": "Skipped - too destructive",
-      "timestamp": "2025-11-15T12:04:13.858Z",
+      "timestamp": "2025-11-15T12:30:37.443Z",
       "skipped": true
     },
     {
       "test": "22. pinMessage (pin)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:14.893Z",
+      "timestamp": "2025-11-15T12:30:38.525Z",
       "skipped": false
     },
     {
       "test": "22. pinMessage (list)",
       "status": true,
       "details": "Found 0 pinned",
-      "timestamp": "2025-11-15T12:04:16.661Z",
+      "timestamp": "2025-11-15T12:30:41.576Z",
       "skipped": false
     },
     {
       "test": "22. pinMessage (unpin)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:17.729Z",
+      "timestamp": "2025-11-15T12:30:42.815Z",
       "skipped": false
     },
     {
       "test": "23. handleMessageRequest",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:17.807Z",
+      "timestamp": "2025-11-15T12:30:43.103Z",
       "skipped": false
     },
     {
       "test": "24. getUserInfo",
       "status": true,
       "details": "Vinsmoke Neokex",
-      "timestamp": "2025-11-15T12:04:17.932Z",
+      "timestamp": "2025-11-15T12:30:43.260Z",
       "skipped": false
     },
     {
       "test": "25. getUserInfoV2",
       "status": true,
       "details": "Retrieved V2 info",
-      "timestamp": "2025-11-15T12:04:18.557Z",
+      "timestamp": "2025-11-15T12:30:44.127Z",
       "skipped": false
     },
     {
       "test": "26. getUserID",
       "status": false,
       "details": "Account checkpoint required - Please verify your account on facebook.com",
-      "timestamp": "2025-11-15T12:04:18.640Z",
+      "timestamp": "2025-11-15T12:30:44.317Z",
       "skipped": false
     },
     {
       "test": "27. getFriendsList",
-      "status": false,
-      "details": "Account checkpoint required - Please verify your account on facebook.com",
-      "timestamp": "2025-11-15T12:04:18.723Z",
+      "status": true,
+      "details": "1 friends",
+      "timestamp": "2025-11-15T12:30:44.501Z",
       "skipped": false
     },
     {
       "test": "28. getBotInfo",
       "status": false,
       "details": "Bot info retrieved",
-      "timestamp": "2025-11-15T12:04:18.726Z",
+      "timestamp": "2025-11-15T12:30:44.502Z",
       "skipped": false
     },
     {
       "test": "29. getBotInitialData",
       "status": true,
       "details": "{\"ACCOUNT_ID\":\"61583873159587\",\"SHORT_NAME\":\"Vinsm",
-      "timestamp": "2025-11-15T12:04:19.980Z",
+      "timestamp": "2025-11-15T12:30:45.862Z",
       "skipped": false
     },
     {
       "test": "30. getAccess",
       "status": true,
       "details": "Access token retrieved",
-      "timestamp": "2025-11-15T12:04:19.981Z",
+      "timestamp": "2025-11-15T12:30:45.863Z",
       "skipped": false
     },
     {
       "test": "31. setMessageReaction",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:20.318Z",
+      "timestamp": "2025-11-15T12:30:46.667Z",
       "skipped": false
     },
     {
       "test": "32. setMessageReactionMqtt",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:20.819Z",
+      "timestamp": "2025-11-15T12:30:47.168Z",
       "skipped": false
     },
     {
       "test": "33. markAsRead",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:21.338Z",
+      "timestamp": "2025-11-15T12:30:47.749Z",
       "skipped": false
     },
     {
       "test": "34. markAsReadAll",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:21.447Z",
+      "timestamp": "2025-11-15T12:30:47.937Z",
       "skipped": false
     },
     {
       "test": "35. markAsSeen",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:21.762Z",
+      "timestamp": "2025-11-15T12:30:48.289Z",
       "skipped": false
     },
     {
       "test": "36. markAsDelivered",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:21.908Z",
+      "timestamp": "2025-11-15T12:30:48.494Z",
       "skipped": false
     },
     {
       "test": "37. getTheme",
       "status": true,
       "details": "92 themes",
-      "timestamp": "2025-11-15T12:04:22.162Z",
+      "timestamp": "2025-11-15T12:30:48.997Z",
       "skipped": false
     },
     {
       "test": "38. getThemeInfo",
       "status": true,
       "details": "5B00B1",
-      "timestamp": "2025-11-15T12:04:22.406Z",
+      "timestamp": "2025-11-15T12:30:49.287Z",
       "skipped": false
     },
     {
       "test": "39. createAITheme",
       "status": true,
       "details": "1 AI themes generated",
-      "timestamp": "2025-11-15T12:04:32.692Z",
+      "timestamp": "2025-11-15T12:31:00.218Z",
       "skipped": false
     },
     {
       "test": "40. theme",
       "status": true,
       "details": "Applied theme 715026904230568",
-      "timestamp": "2025-11-15T12:04:33.239Z",
+      "timestamp": "2025-11-15T12:31:01.096Z",
       "skipped": false
     },
     {
       "test": "41. setThreadThemeMqtt",
       "status": true,
       "details": "Set theme via MQTT",
-      "timestamp": "2025-11-15T12:04:33.534Z",
+      "timestamp": "2025-11-15T12:31:01.503Z",
       "skipped": false
     },
     {
       "test": "42. changeThreadColor",
       "status": true,
       "details": "Changed to red",
-      "timestamp": "2025-11-15T12:04:35.114Z",
+      "timestamp": "2025-11-15T12:31:03.121Z",
       "skipped": false
     },
     {
       "test": "43. stickers.search",
       "status": true,
       "details": "40 stickers found",
-      "timestamp": "2025-11-15T12:04:37.394Z",
+      "timestamp": "2025-11-15T12:31:05.459Z",
       "skipped": false
     },
     {
       "test": "44. stickers.listPacks",
       "status": true,
       "details": "0 packs",
-      "timestamp": "2025-11-15T12:04:37.475Z",
+      "timestamp": "2025-11-15T12:31:05.643Z",
       "skipped": false
     },
     {
       "test": "45. stickers.getStorePacks",
       "status": true,
       "details": "0 store packs",
-      "timestamp": "2025-11-15T12:04:37.836Z",
+      "timestamp": "2025-11-15T12:31:05.971Z",
       "skipped": false
     },
     {
       "test": "46. stickers.listAllPacks",
       "status": true,
       "details": "0 total packs",
-      "timestamp": "2025-11-15T12:04:38.326Z",
+      "timestamp": "2025-11-15T12:31:06.572Z",
       "skipped": false
     },
     {
       "test": "47. stickers.addPack",
       "status": false,
       "details": "No packs available",
-      "timestamp": "2025-11-15T12:04:38.327Z",
+      "timestamp": "2025-11-15T12:31:06.572Z",
       "skipped": false
     },
     {
       "test": "48. stickers.getStickersInPack",
       "status": false,
       "details": "No packs available",
-      "timestamp": "2025-11-15T12:04:38.327Z",
+      "timestamp": "2025-11-15T12:31:06.572Z",
       "skipped": false
     },
     {
       "test": "49. stickers.getAiStickers",
       "status": true,
       "details": "5 AI stickers",
-      "timestamp": "2025-11-15T12:04:38.442Z",
+      "timestamp": "2025-11-15T12:31:06.749Z",
       "skipped": false
     },
     {
       "test": "50. sendMessage (sticker)",
       "status": false,
       "details": "No stickers available",
-      "timestamp": "2025-11-15T12:04:38.442Z",
+      "timestamp": "2025-11-15T12:31:06.750Z",
       "skipped": false
     },
     {
       "test": "51. emoji (set)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:39.465Z",
+      "timestamp": "2025-11-15T12:31:07.831Z",
       "skipped": false
     },
     {
       "test": "51. emoji (reset)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:40.486Z",
+      "timestamp": "2025-11-15T12:31:08.914Z",
       "skipped": false
     },
     {
       "test": "52. nickname (set)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:41.507Z",
+      "timestamp": "2025-11-15T12:31:09.996Z",
       "skipped": false
     },
     {
       "test": "52. nickname (clear)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:42.528Z",
+      "timestamp": "2025-11-15T12:31:11.078Z",
       "skipped": false
     },
     {
       "test": "53. gcname (rename)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:44.212Z",
+      "timestamp": "2025-11-15T12:31:13.007Z",
       "skipped": false
     },
     {
       "test": "53. gcname (restore)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:45.731Z",
+      "timestamp": "2025-11-15T12:31:14.586Z",
       "skipped": false
     },
     {
       "test": "54. gcmember (add)",
       "status": false,
       "details": "Requires secondary user ID",
-      "timestamp": "2025-11-15T12:04:45.731Z",
+      "timestamp": "2025-11-15T12:31:14.586Z",
       "skipped": true
     },
     {
       "test": "55. gcmember (remove)",
       "status": false,
       "details": "Requires secondary user ID",
-      "timestamp": "2025-11-15T12:04:45.731Z",
+      "timestamp": "2025-11-15T12:31:14.586Z",
       "skipped": true
     },
     {
       "test": "56. gcrule",
       "status": false,
       "details": "Requires secondary user ID",
-      "timestamp": "2025-11-15T12:04:45.731Z",
+      "timestamp": "2025-11-15T12:31:14.587Z",
       "skipped": true
     },
     {
       "test": "57. createNewGroup",
       "status": false,
       "details": "createNewGroup: participantIDs should have at least 2 IDs.",
-      "timestamp": "2025-11-15T12:04:45.732Z",
+      "timestamp": "2025-11-15T12:31:14.588Z",
       "skipped": false
     },
     {
       "test": "58. changeGroupImage",
       "status": false,
       "details": "Requires image file",
-      "timestamp": "2025-11-15T12:04:45.732Z",
+      "timestamp": "2025-11-15T12:31:14.588Z",
       "skipped": true
     },
     {
       "test": "59. addUserToGroup",
       "status": false,
       "details": "Covered by gcmember",
-      "timestamp": "2025-11-15T12:04:45.733Z",
+      "timestamp": "2025-11-15T12:31:14.588Z",
       "skipped": true
     },
     {
       "test": "60. changeBlockedStatus (block)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:46.830Z",
+      "timestamp": "2025-11-15T12:31:15.738Z",
       "skipped": false
     },
     {
       "test": "60. changeBlockedStatus (unblock)",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:47.905Z",
+      "timestamp": "2025-11-15T12:31:17.008Z",
       "skipped": false
     },
     {
       "test": "61. friend",
       "status": false,
       "details": "Too destructive for automated test",
-      "timestamp": "2025-11-15T12:04:47.906Z",
+      "timestamp": "2025-11-15T12:31:17.008Z",
       "skipped": true
     },
     {
       "test": "62. unfriend",
       "status": false,
       "details": "Too destructive for automated test",
-      "timestamp": "2025-11-15T12:04:47.907Z",
+      "timestamp": "2025-11-15T12:31:17.008Z",
       "skipped": true
     },
     {
       "test": "63. follow",
       "status": false,
       "details": "Requires target user",
-      "timestamp": "2025-11-15T12:04:47.907Z",
+      "timestamp": "2025-11-15T12:31:17.008Z",
       "skipped": true
     },
     {
       "test": "64. share",
       "status": false,
       "details": "Requires share content",
-      "timestamp": "2025-11-15T12:04:47.907Z",
+      "timestamp": "2025-11-15T12:31:17.009Z",
       "skipped": true
     },
     {
       "test": "65. changeAvatar",
       "status": false,
       "details": "Requires image file",
-      "timestamp": "2025-11-15T12:04:47.908Z",
+      "timestamp": "2025-11-15T12:31:17.009Z",
       "skipped": true
     },
     {
       "test": "66. changeBio",
       "status": true,
       "details": "",
-      "timestamp": "2025-11-15T12:04:49.248Z",
+      "timestamp": "2025-11-15T12:31:18.403Z",
       "skipped": false
     },
     {
       "test": "67. story",
       "status": false,
       "details": "Requires media content",
-      "timestamp": "2025-11-15T12:04:49.248Z",
+      "timestamp": "2025-11-15T12:31:18.404Z",
       "skipped": true
     },
     {
       "test": "68. comment",
       "status": false,
       "details": "Requires post ID",
-      "timestamp": "2025-11-15T12:04:49.248Z",
+      "timestamp": "2025-11-15T12:31:18.404Z",
       "skipped": true
     },
     {
       "test": "httpGet",
       "status": true,
       "details": "HTTP GET working",
-      "timestamp": "2025-11-15T12:04:49.329Z",
+      "timestamp": "2025-11-15T12:31:18.578Z",
       "skipped": false
     },
     {
       "test": "httpPost",
       "status": true,
       "details": "HTTP POST working",
-      "timestamp": "2025-11-15T12:04:51.274Z",
+      "timestamp": "2025-11-15T12:31:19.041Z",
       "skipped": false
     },
     {
       "test": "httpPostFormData",
       "status": false,
       "details": "Requires form data",
-      "timestamp": "2025-11-15T12:04:51.275Z",
+      "timestamp": "2025-11-15T12:31:19.041Z",
       "skipped": true
     },
     {
       "test": "resolvePhotoUrl",
       "status": false,
       "details": "Requires photo ID",
-      "timestamp": "2025-11-15T12:04:51.275Z",
+      "timestamp": "2025-11-15T12:31:19.041Z",
       "skipped": true
     },
     {
       "test": "listenMqtt",
       "status": true,
       "details": "Already initialized at start",
-      "timestamp": "2025-11-15T12:04:51.275Z",
+      "timestamp": "2025-11-15T12:31:19.042Z",
       "skipped": false
     },
     {
       "test": "addExternalModule",
       "status": false,
       "details": "Module loading - requires module path",
-      "timestamp": "2025-11-15T12:04:55.367Z",
+      "timestamp": "2025-11-15T12:31:23.061Z",
       "skipped": true
     },
     {
       "test": "notes",
       "status": false,
       "details": "Notes management - requires note data",
-      "timestamp": "2025-11-15T12:04:55.367Z",
+      "timestamp": "2025-11-15T12:31:23.061Z",
       "skipped": true
     }
   ]
