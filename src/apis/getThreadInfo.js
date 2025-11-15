@@ -38,11 +38,30 @@ function formatEventReminders(reminder) {
  * Formats a thread object from a GraphQL response.
  * @param {Object} data The raw GraphQL data for a thread.
  * @returns {Object | null} A formatted thread object or null if data is invalid.
+ * @throws {Error} If Facebook returns a GraphQL error
  */
 function formatThreadGraphQLResponse(data) {
-  if (data.errors) return null;
+  // Check for GraphQL errors and throw with details instead of silently returning null
+  if (data.errors) {
+    const details = data.errors.map(e => e.message || e).join(', ');
+    const error = new Error(`GraphQL error in getThreadInfo: ${details}`);
+    Object.assign(error, {
+      details: details,
+      fullErrors: data.errors
+    });
+    utils.error("formatThreadGraphQLResponse", error);
+    throw error;
+  }
+  
   const messageThread = data.message_thread;
-  if (!messageThread) return null;
+  if (!messageThread) {
+    const error = new Error("No message_thread in GraphQL response - thread may not exist or access may be restricted");
+    Object.assign(error, {
+      details: "The GraphQL query returned successfully but contained no message_thread data"
+    });
+    utils.error("formatThreadGraphQLResponse", error);
+    throw error;
+  }
 
   const threadID = messageThread.thread_key.thread_fbid
     ? messageThread.thread_key.thread_fbid
@@ -193,9 +212,37 @@ module.exports = function (defaultFuncs, api, ctx) {
         const threadInfos = {};
         for (let i = resData.length - 2; i >= 0; i--) {
             const res = resData[i];
-            if (res.error_results) continue;
             
-            const threadInfo = formatThreadGraphQLResponse(res[Object.keys(res)[0]].data);
+            // Check for error_results and throw instead of silently continuing
+            if (res.error_results) {
+                const error = new Error(`Facebook returned error_results for thread query: ${res.error_results} errors`);
+                Object.assign(error, {
+                    error_count: res.error_results,
+                    thread_index: i
+                });
+                utils.error("getThreadInfo", error);
+                throw error;
+            }
+            
+            const oKey = Object.keys(res)[0];
+            const responseData = res[oKey];
+            
+            // Check for errors in the response object
+            if (responseData.errors || responseData.error_results) {
+                const details = responseData.errors 
+                    ? JSON.stringify(responseData.errors) 
+                    : `error_results: ${responseData.error_results}`;
+                const error = new Error(`GraphQL error in thread response: ${details}`);
+                Object.assign(error, {
+                    details: details,
+                    thread_index: i,
+                    fullErrors: responseData.errors
+                });
+                utils.error("getThreadInfo", error);
+                throw error;
+            }
+            
+            const threadInfo = formatThreadGraphQLResponse(responseData.data);
             if (threadInfo) {
                 threadInfos[threadInfo.threadID || threadID[threadID.length - 1 - i]] = threadInfo;
             }

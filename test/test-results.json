@@ -1,31 +1,21 @@
 {
   "summary": {
-    "total": 77,
-    "passed": 45,
-    "failed": 14,
-    "skipped": 18
+    "total": 78,
+    "passed": 55,
+    "failed": 7,
+    "skipped": 16
   },
   "testContext": {
     "userID": "61583873159587",
+    "mqttStopListening": {},
     "threadList": [
       {
-        "threadID": "1452334112548569",
-        "threadName": "BOT TEST NXXO",
+        "threadID": "1934417034086206",
+        "threadName": "[Test Group]",
         "participantIDs": [
           "61559292325465",
           "61577632319942",
-          "61579272156519",
-          "61580289960932",
-          "61580973722694",
-          "61581421845635",
-          "61581867883321",
-          "61581931409515",
-          "61583412585711",
-          "61583873159587",
-          "100074691084353",
-          "100083039411474",
-          "100083343477138",
-          "100086493947812"
+          "61583873159587"
         ],
         "userInfo": [
           {
@@ -34,8 +24,8 @@
             "firstName": "ANYA AI",
             "vanity": "aihq.2024",
             "url": "https://www.facebook.com/aihq.2024",
-            "thumbSrc": "https://scontent-bom2-3.xx.fbcdn.net/v/t39.30808-1/441297978_122105894684309744_4040774802853446416_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=101&ccb=1-7&_nc_sid=111fe6&_nc_ohc=3GpzT2f4BGUQ7kNvwEalUCq&_nc_oc=Adm3YXyrmY4UhLEhTZpGlkiIUJ4zMmHRDmj28sduqiBFhoqiDg-15yTWZ_FLu744kfo&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfglG6jCiw3ccoJBSAX4TNYWOnc5q3AZK7149JFloDhtqg&oe=691E48CD",
-            "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t39.30808-1/441297978_122105894684309744_4040774802853446416_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=101&ccb=1-7&_nc_sid=111fe6&_nc_ohc=3GpzT2f4BGUQ7kNvwEalUCq&_nc_oc=Adm3YXyrmY4UhLEhTZpGlkiIUJ4zMmHRDmj28sduqiBFhoqiDg-15yTWZ_FLu744kfo&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfglG6jCiw3ccoJBSAX4TNYWOnc5q3AZK7149JFloDhtqg&oe=691E48CD",
+            "thumbSrc": "https://scontent-bom2-3.xx.fbcdn.net/v/t39.30808-1/441297978_122105894684309744_4040774802853446416_n.jpg?stp=cp0_dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=111fe6&_nc_ohc=6bazCMBU25IQ7kNvwEgjn0v&_nc_oc=AdnBm4n3Kva_R5qdrkbH1bQgwwQG8WjCkjilgyUKv3viACDsGSXVSMO2BJjq03dpxjg&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&_nc_gid=Q6dqMBXoA1L5gzkYXGzDjQ&oh=00_Afh2-DyARezExsziE4KgR82DK7edCZXTcwYvt8P2D4iHuw&oe=691E810D",
+            "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t39.30808-1/441297978_122105894684309744_4040774802853446416_n.jpg?stp=cp0_dst-jpg_s60x60_tt6&_nc_cat=101&ccb=1-7&_nc_sid=111fe6&_nc_ohc=6bazCMBU25IQ7kNvwEgjn0v&_nc_oc=AdnBm4n3Kva_R5qdrkbH1bQgwwQG8WjCkjilgyUKv3viACDsGSXVSMO2BJjq03dpxjg&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&_nc_gid=Q6dqMBXoA1L5gzkYXGzDjQ&oh=00_Afh2-DyARezExsziE4KgR82DK7edCZXTcwYvt8P2D4iHuw&oe=691E810D",
             "gender": "FEMALE",
             "type": "User",
             "isFriend": false,
@@ -47,90 +37,11 @@
             "firstName": "সমকামী বিরোধী",
             "vanity": "",
             "url": "https://www.facebook.com/profile.php?id=61577632319942",
-            "thumbSrc": "https://scontent-bom2-4.xx.fbcdn.net/v/t39.30808-1/581675459_122144966576921077_4816823647264339687_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=106&ccb=1-7&_nc_sid=e99d92&_nc_ohc=iKnJuKSRwHYQ7kNvwGocOFf&_nc_oc=AdnzeWdFukQQVYe--NiyB8u3wLWTbrIhy-YoOi6ZW-gHb42xTPM2eb872kwujZQvb4k&_nc_zt=24&_nc_ht=scontent-bom2-4.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjPcmknibEDTWNvy9h5uMcAewagRZca7NxPe1BJJaxYhQ&oe=691E5756",
-            "profileUrl": "https://scontent-bom2-4.xx.fbcdn.net/v/t39.30808-1/581675459_122144966576921077_4816823647264339687_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=106&ccb=1-7&_nc_sid=e99d92&_nc_ohc=iKnJuKSRwHYQ7kNvwGocOFf&_nc_oc=AdnzeWdFukQQVYe--NiyB8u3wLWTbrIhy-YoOi6ZW-gHb42xTPM2eb872kwujZQvb4k&_nc_zt=24&_nc_ht=scontent-bom2-4.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjPcmknibEDTWNvy9h5uMcAewagRZca7NxPe1BJJaxYhQ&oe=691E5756",
+            "thumbSrc": "https://scontent-bom2-4.xx.fbcdn.net/v/t39.30808-1/581675459_122144966576921077_4816823647264339687_n.jpg?stp=cp0_dst-jpg_p60x60_tt6&_nc_cat=106&ccb=1-7&_nc_sid=e99d92&_nc_ohc=iKnJuKSRwHYQ7kNvwGocOFf&_nc_oc=AdnzeWdFukQQVYe--NiyB8u3wLWTbrIhy-YoOi6ZW-gHb42xTPM2eb872kwujZQvb4k&_nc_zt=24&_nc_ht=scontent-bom2-4.xx&_nc_gid=Q6dqMBXoA1L5gzkYXGzDjQ&oh=00_AfjEnbhSCrIR3CHIkOpY-3Mi_lg1gWAbEkMSjXEzqzVNTg&oe=691E5756",
+            "profileUrl": "https://scontent-bom2-4.xx.fbcdn.net/v/t39.30808-1/581675459_122144966576921077_4816823647264339687_n.jpg?stp=cp0_dst-jpg_p60x60_tt6&_nc_cat=106&ccb=1-7&_nc_sid=e99d92&_nc_ohc=iKnJuKSRwHYQ7kNvwGocOFf&_nc_oc=AdnzeWdFukQQVYe--NiyB8u3wLWTbrIhy-YoOi6ZW-gHb42xTPM2eb872kwujZQvb4k&_nc_zt=24&_nc_ht=scontent-bom2-4.xx&_nc_gid=Q6dqMBXoA1L5gzkYXGzDjQ&oh=00_AfjEnbhSCrIR3CHIkOpY-3Mi_lg1gWAbEkMSjXEzqzVNTg&oe=691E5756",
             "gender": "MALE",
             "type": "User",
             "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "61579272156519",
-            "name": "সমকামী বিরোধী গেসুকে",
-            "firstName": "সমকামী বিরোধী",
-            "vanity": "",
-            "url": "https://www.facebook.com/profile.php?id=61579272156519",
-            "thumbSrc": "https://scontent-bom2-4.xx.fbcdn.net/v/t39.30808-1/539202724_122112731396975738_3646358444449456837_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=106&ccb=1-7&_nc_sid=e99d92&_nc_ohc=tOWq9OV2_SIQ7kNvwEt7-Tt&_nc_oc=AdnRNsaft0l8g5fraHkxBx4NCiUhI7sO8SufiMfuLPzoUf5M7NyBF3RMGTkZgE_LPuM&_nc_zt=24&_nc_ht=scontent-bom2-4.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjZln3MGL0Y2y4uyvhj2tHc_hBx9AN-mjAFjGtny32iOg&oe=691E5ACB",
-            "profileUrl": "https://scontent-bom2-4.xx.fbcdn.net/v/t39.30808-1/539202724_122112731396975738_3646358444449456837_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=106&ccb=1-7&_nc_sid=e99d92&_nc_ohc=tOWq9OV2_SIQ7kNvwEt7-Tt&_nc_oc=AdnRNsaft0l8g5fraHkxBx4NCiUhI7sO8SufiMfuLPzoUf5M7NyBF3RMGTkZgE_LPuM&_nc_zt=24&_nc_ht=scontent-bom2-4.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjZln3MGL0Y2y4uyvhj2tHc_hBx9AN-mjAFjGtny32iOg&oe=691E5ACB",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "61580289960932",
-            "name": "কাঁচা বাঁশ",
-            "firstName": "কাঁচা",
-            "vanity": "",
-            "url": "https://www.facebook.com/profile.php?id=61580289960932",
-            "thumbSrc": "https://scontent-bom1-1.xx.fbcdn.net/v/t39.30808-1/571326718_122111518551009665_205737749060831126_n.jpg?stp=c0.0.352.352a_dst-jpg_s120x120_tt6&_nc_cat=104&ccb=1-7&_nc_sid=1d2534&_nc_ohc=Rl4ahcEG_VIQ7kNvwERNRAb&_nc_oc=AdmyP1QqLSIzepmMgi9-bBHg2bgzt7DK_kUlVsPAm14YwQBCvA3EssvW2shosOLu1Eo&_nc_zt=24&_nc_ht=scontent-bom1-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfgCkO5RxHc9FAUg4xakct8eUWPy_j2V2UKaaizpLoRIxw&oe=691E74B7",
-            "profileUrl": "https://scontent-bom1-1.xx.fbcdn.net/v/t39.30808-1/571326718_122111518551009665_205737749060831126_n.jpg?stp=c0.0.352.352a_dst-jpg_s120x120_tt6&_nc_cat=104&ccb=1-7&_nc_sid=1d2534&_nc_ohc=Rl4ahcEG_VIQ7kNvwERNRAb&_nc_oc=AdmyP1QqLSIzepmMgi9-bBHg2bgzt7DK_kUlVsPAm14YwQBCvA3EssvW2shosOLu1Eo&_nc_zt=24&_nc_ht=scontent-bom1-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfgCkO5RxHc9FAUg4xakct8eUWPy_j2V2UKaaizpLoRIxw&oe=691E74B7",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "61580973722694",
-            "name": "NeoKex Here",
-            "firstName": "NeoKex",
-            "vanity": "",
-            "url": "https://www.facebook.com/profile.php?id=61580973722694",
-            "thumbSrc": "https://scontent-bom2-1.xx.fbcdn.net/v/t39.30808-1/548200040_122096414205032457_6761668791501443002_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_ohc=FjGjRNB8GiMQ7kNvwGU26dj&_nc_oc=AdlRtJOjwx0A8GvlSx_OqrNfIQtVuT1ChSgXvix2sqWF_qhSkKvNpXC3jBMiOxXbrLQ&_nc_zt=24&_nc_ht=scontent-bom2-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjIcV5iV_npCVGYNkeQqqCuqvadQIG4Mu1MYEYNQFdyaA&oe=691E6404",
-            "profileUrl": "https://scontent-bom2-1.xx.fbcdn.net/v/t39.30808-1/548200040_122096414205032457_6761668791501443002_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_ohc=FjGjRNB8GiMQ7kNvwGU26dj&_nc_oc=AdlRtJOjwx0A8GvlSx_OqrNfIQtVuT1ChSgXvix2sqWF_qhSkKvNpXC3jBMiOxXbrLQ&_nc_zt=24&_nc_ht=scontent-bom2-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjIcV5iV_npCVGYNkeQqqCuqvadQIG4Mu1MYEYNQFdyaA&oe=691E6404",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "61581421845635",
-            "name": "Facebook user",
-            "url": null,
-            "thumbSrc": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/85215299_479381239411958_7755129104415850496_n.jpg?stp=c379.0.1290.1290a_dst-jpg_s120x120_tt6&_nc_cat=1&ccb=1-7&_nc_sid=51f973&_nc_ohc=3Fw28GfkvSoQ7kNvwEF4K1I&_nc_oc=AdkYnvFcx9FwdVE0viVqsRT-cNyQx-jhqL-CDFUsootmXFtqjoeK0xZrOuDhiHMLNNE&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhnRDMcdcfjrdevftwj0bTCwlHQmEHVt_rCjZEn-_qIow&oe=693FE896",
-            "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/85215299_479381239411958_7755129104415850496_n.jpg?stp=c379.0.1290.1290a_dst-jpg_s120x120_tt6&_nc_cat=1&ccb=1-7&_nc_sid=51f973&_nc_ohc=3Fw28GfkvSoQ7kNvwEF4K1I&_nc_oc=AdkYnvFcx9FwdVE0viVqsRT-cNyQx-jhqL-CDFUsootmXFtqjoeK0xZrOuDhiHMLNNE&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhnRDMcdcfjrdevftwj0bTCwlHQmEHVt_rCjZEn-_qIow&oe=693FE896",
-            "type": "UnavailableMessagingActor",
-            "isBirthday": false
-          },
-          {
-            "id": "61581867883321",
-            "name": "Facebook user",
-            "url": null,
-            "thumbSrc": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/85215299_479381239411958_7755129104415850496_n.jpg?stp=c379.0.1290.1290a_dst-jpg_s120x120_tt6&_nc_cat=1&ccb=1-7&_nc_sid=51f973&_nc_ohc=3Fw28GfkvSoQ7kNvwEF4K1I&_nc_oc=AdkYnvFcx9FwdVE0viVqsRT-cNyQx-jhqL-CDFUsootmXFtqjoeK0xZrOuDhiHMLNNE&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhnRDMcdcfjrdevftwj0bTCwlHQmEHVt_rCjZEn-_qIow&oe=693FE896",
-            "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/85215299_479381239411958_7755129104415850496_n.jpg?stp=c379.0.1290.1290a_dst-jpg_s120x120_tt6&_nc_cat=1&ccb=1-7&_nc_sid=51f973&_nc_ohc=3Fw28GfkvSoQ7kNvwEF4K1I&_nc_oc=AdkYnvFcx9FwdVE0viVqsRT-cNyQx-jhqL-CDFUsootmXFtqjoeK0xZrOuDhiHMLNNE&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhnRDMcdcfjrdevftwj0bTCwlHQmEHVt_rCjZEn-_qIow&oe=693FE896",
-            "type": "UnavailableMessagingActor",
-            "isBirthday": false
-          },
-          {
-            "id": "61581931409515",
-            "name": "GO GE TA",
-            "firstName": "GO GE TA",
-            "vanity": "",
-            "url": "https://www.facebook.com/profile.php?id=61581931409515",
-            "thumbSrc": "https://scontent-bom2-1.xx.fbcdn.net/v/t39.30808-1/581157352_122110165311064380_397252305888177652_n.jpg?stp=c128.0.602.602a_dst-jpg_s120x120_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_ohc=_m7y0Ae1NWcQ7kNvwHmrMb4&_nc_oc=AdlIsB49dzeUZl19ri8fPoiXnlvd-9lFmqjUSyYHPCRrz7BxjykyqvqGVV_a1hqo8L8&_nc_zt=24&_nc_ht=scontent-bom2-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_Afh1An3d19vmwhY22SklZZOBXYvjX6amXDdtoz-jMp3koQ&oe=691E5C97",
-            "profileUrl": "https://scontent-bom2-1.xx.fbcdn.net/v/t39.30808-1/581157352_122110165311064380_397252305888177652_n.jpg?stp=c128.0.602.602a_dst-jpg_s120x120_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_ohc=_m7y0Ae1NWcQ7kNvwHmrMb4&_nc_oc=AdlIsB49dzeUZl19ri8fPoiXnlvd-9lFmqjUSyYHPCRrz7BxjykyqvqGVV_a1hqo8L8&_nc_zt=24&_nc_ht=scontent-bom2-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_Afh1An3d19vmwhY22SklZZOBXYvjX6amXDdtoz-jMp3koQ&oe=691E5C97",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "61583412585711",
-            "name": "Facebook user",
-            "url": null,
-            "thumbSrc": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/85215299_479381239411958_7755129104415850496_n.jpg?stp=c379.0.1290.1290a_dst-jpg_s120x120_tt6&_nc_cat=1&ccb=1-7&_nc_sid=51f973&_nc_ohc=3Fw28GfkvSoQ7kNvwEF4K1I&_nc_oc=AdkYnvFcx9FwdVE0viVqsRT-cNyQx-jhqL-CDFUsootmXFtqjoeK0xZrOuDhiHMLNNE&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhnRDMcdcfjrdevftwj0bTCwlHQmEHVt_rCjZEn-_qIow&oe=693FE896",
-            "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/85215299_479381239411958_7755129104415850496_n.jpg?stp=c379.0.1290.1290a_dst-jpg_s120x120_tt6&_nc_cat=1&ccb=1-7&_nc_sid=51f973&_nc_ohc=3Fw28GfkvSoQ7kNvwEF4K1I&_nc_oc=AdkYnvFcx9FwdVE0viVqsRT-cNyQx-jhqL-CDFUsootmXFtqjoeK0xZrOuDhiHMLNNE&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhnRDMcdcfjrdevftwj0bTCwlHQmEHVt_rCjZEn-_qIow&oe=693FE896",
-            "type": "UnavailableMessagingActor",
             "isBirthday": false
           },
           {
@@ -139,60 +50,8 @@
             "firstName": "Vinsmoke",
             "vanity": "",
             "url": "https://www.facebook.com/profile.php?id=61583873159587",
-            "thumbSrc": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s120x120&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_ohc=dcQJzN7K8wEQ7kNvwEA0rc8&_nc_oc=AdkZKozKWVI3YjT1k49hqOnXp7mZy-aqYBjxqB_5atFelrX7WTIGKEG41CCvIP6RToY&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_Afg7IyY38aw_sznUK9-LSaBqlJYwMbIplkrFkB__7iyeYQ&oe=694004FA",
-            "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=dst-png_s120x120&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_ohc=dcQJzN7K8wEQ7kNvwEA0rc8&_nc_oc=AdkZKozKWVI3YjT1k49hqOnXp7mZy-aqYBjxqB_5atFelrX7WTIGKEG41CCvIP6RToY&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_Afg7IyY38aw_sznUK9-LSaBqlJYwMbIplkrFkB__7iyeYQ&oe=694004FA",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "100074691084353",
-            "name": "AR O B",
-            "firstName": "AR",
-            "vanity": "rifatsahariar.arob",
-            "url": "https://www.facebook.com/rifatsahariar.arob",
-            "thumbSrc": "https://scontent-bom1-1.xx.fbcdn.net/v/t39.30808-1/547973002_792702083229487_7673480358548011388_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_ohc=Z8GT3ptSrxAQ7kNvwHKVFBs&_nc_oc=AdlRzhgbm-z6VzAnc7yBJAFARkq8AgTEoJTkW7lgq9kNl7JIlo4CqhvixOIMjGUMvLY&_nc_zt=24&_nc_ht=scontent-bom1-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_Afhgoaz16SIOKJIKq2EQi5hrN0ZjXOU-WT3pJtNPba3BsQ&oe=691E596E",
-            "profileUrl": "https://scontent-bom1-1.xx.fbcdn.net/v/t39.30808-1/547973002_792702083229487_7673480358548011388_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=107&ccb=1-7&_nc_sid=e99d92&_nc_ohc=Z8GT3ptSrxAQ7kNvwHKVFBs&_nc_oc=AdlRzhgbm-z6VzAnc7yBJAFARkq8AgTEoJTkW7lgq9kNl7JIlo4CqhvixOIMjGUMvLY&_nc_zt=24&_nc_ht=scontent-bom1-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_Afhgoaz16SIOKJIKq2EQi5hrN0ZjXOU-WT3pJtNPba3BsQ&oe=691E596E",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "100083039411474",
-            "name": "Saifullah Neoaz",
-            "firstName": "Saifullah",
-            "vanity": "nexo.here",
-            "url": "https://www.facebook.com/nexo.here",
-            "thumbSrc": "https://scontent-bom5-1.xx.fbcdn.net/v/t39.30808-1/556852288_794070686704238_1742260317200188560_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=109&ccb=1-7&_nc_sid=e99d92&_nc_ohc=GWBRqgzqMA4Q7kNvwH_kbVW&_nc_oc=AdnmZ9jZ5rHQYj6IUiVPxRmlowr0aowuGu3qVbwirEoeGHkhf2gFougjsyQJ2P7gDWw&_nc_zt=24&_nc_ht=scontent-bom5-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfglD1O6j1B5KSKBynWEey3z26VT3yJe6wJ4xY2oKed9Ng&oe=691E47E7",
-            "profileUrl": "https://scontent-bom5-1.xx.fbcdn.net/v/t39.30808-1/556852288_794070686704238_1742260317200188560_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=109&ccb=1-7&_nc_sid=e99d92&_nc_ohc=GWBRqgzqMA4Q7kNvwH_kbVW&_nc_oc=AdnmZ9jZ5rHQYj6IUiVPxRmlowr0aowuGu3qVbwirEoeGHkhf2gFougjsyQJ2P7gDWw&_nc_zt=24&_nc_ht=scontent-bom5-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfglD1O6j1B5KSKBynWEey3z26VT3yJe6wJ4xY2oKed9Ng&oe=691E47E7",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "100083343477138",
-            "name": "Yøur Dazai",
-            "firstName": "Yøur",
-            "vanity": "y.ur.dazai",
-            "url": "https://www.facebook.com/y.ur.dazai",
-            "thumbSrc": "https://scontent-bom2-1.xx.fbcdn.net/v/t39.30808-1/393185908_305266372261476_6005165448812099347_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_ohc=H1aBW-rg8pgQ7kNvwEx_4k6&_nc_oc=AdkgPW94X2x3K-7SN4tj4MkPG1YcT1kIWmegeRBfA1Xnh3AFRZg1VziFD0rRkh2xLL4&_nc_zt=24&_nc_ht=scontent-bom2-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjnPBJ8Qr408DEmj8IUE3lZK5UQnWhKRsZte3OdTcEIUA&oe=691E5269",
-            "profileUrl": "https://scontent-bom2-1.xx.fbcdn.net/v/t39.30808-1/393185908_305266372261476_6005165448812099347_n.jpg?stp=dst-jpg_s120x120_tt6&_nc_cat=103&ccb=1-7&_nc_sid=e99d92&_nc_ohc=H1aBW-rg8pgQ7kNvwEx_4k6&_nc_oc=AdkgPW94X2x3K-7SN4tj4MkPG1YcT1kIWmegeRBfA1Xnh3AFRZg1VziFD0rRkh2xLL4&_nc_zt=24&_nc_ht=scontent-bom2-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfjnPBJ8Qr408DEmj8IUE3lZK5UQnWhKRsZte3OdTcEIUA&oe=691E5269",
-            "gender": "MALE",
-            "type": "User",
-            "isFriend": false,
-            "isBirthday": false
-          },
-          {
-            "id": "100086493947812",
-            "name": "Ibna Saad",
-            "firstName": "Ibna",
-            "vanity": "ibna.saad.66168",
-            "url": "https://www.facebook.com/ibna.saad.66168",
-            "thumbSrc": "https://scontent-bom5-1.xx.fbcdn.net/v/t39.30808-1/532962208_759742016918923_7223236611382591691_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=111&ccb=1-7&_nc_sid=1d2534&_nc_ohc=3Bdx--1M4WAQ7kNvwGLsNI1&_nc_oc=AdnWEY74n_iiL8R_M_y1UcduUt3-QajS-ezEd8W1kW0dF0BynxLFd7MwqA4Yb2QJHzY&_nc_zt=24&_nc_ht=scontent-bom5-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfhUf0jtFyxLRhY9XEq23uf24A29YTtk6dTLLI3oC5rX-g&oe=691E498D",
-            "profileUrl": "https://scontent-bom5-1.xx.fbcdn.net/v/t39.30808-1/532962208_759742016918923_7223236611382591691_n.jpg?stp=dst-jpg_p120x120_tt6&_nc_cat=111&ccb=1-7&_nc_sid=1d2534&_nc_ohc=3Bdx--1M4WAQ7kNvwGLsNI1&_nc_oc=AdnWEY74n_iiL8R_M_y1UcduUt3-QajS-ezEd8W1kW0dF0BynxLFd7MwqA4Yb2QJHzY&_nc_zt=24&_nc_ht=scontent-bom5-1.xx&_nc_gid=Qg3zWo0wCeweEaT3RGjWPQ&oh=00_AfhUf0jtFyxLRhY9XEq23uf24A29YTtk6dTLLI3oC5rX-g&oe=691E498D",
+            "thumbSrc": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=cp0_dst-png_s60x60&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_ohc=dcQJzN7K8wEQ7kNvwEA0rc8&_nc_oc=AdkZKozKWVI3YjT1k49hqOnXp7mZy-aqYBjxqB_5atFelrX7WTIGKEG41CCvIP6RToY&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhhIbg0Yubfb8fyoTRArWA_p-OvQGGF_QOGzBA1CDUnkA&oe=694004FA",
+            "profileUrl": "https://scontent-bom2-3.xx.fbcdn.net/v/t1.30497-1/453178253_471506465671661_2781666950760530985_n.png?stp=cp0_dst-png_s60x60&_nc_cat=1&ccb=1-7&_nc_sid=136b72&_nc_ohc=dcQJzN7K8wEQ7kNvwEA0rc8&_nc_oc=AdkZKozKWVI3YjT1k49hqOnXp7mZy-aqYBjxqB_5atFelrX7WTIGKEG41CCvIP6RToY&_nc_zt=24&_nc_ht=scontent-bom2-3.xx&oh=00_AfhhIbg0Yubfb8fyoTRArWA_p-OvQGGF_QOGzBA1CDUnkA&oe=694004FA",
             "gender": "MALE",
             "type": "User",
             "isFriend": false,
@@ -200,8 +59,8 @@
           }
         ],
         "unreadCount": 0,
-        "messageCount": 699,
-        "timestamp": "1763217254549",
+        "messageCount": 1,
+        "timestamp": "1763219979319",
         "muteUntil": null,
         "isGroup": true,
         "isSubscribed": true,
@@ -209,28 +68,12 @@
         "folder": "INBOX",
         "cannotReplyReason": null,
         "eventReminders": [],
-        "emoji": "👍",
-        "color": "5B00B1",
-        "threadTheme": {
-          "id": "715026904230568",
-          "fallback_color": "FF5B00B1",
-          "accessibility_label": "KPop Demon Hunters",
-          "reverse_gradients_for_radial": false,
-          "gradient_colors": [
-            "FF8A009C",
-            "FF7300A7",
-            "FF5B00B1"
-          ],
-          "reaction_pack": null
-        },
-        "nicknames": {
-          "61577632319942": "গেসুকে 🦥",
-          "61580973722694": "গেসুকে 🦥"
-        },
+        "emoji": null,
+        "color": null,
+        "threadTheme": null,
+        "nicknames": {},
         "adminIDs": [
-          "61583873159587",
-          "100083039411474",
-          "100086493947812"
+          "61583873159587"
         ],
         "approvalMode": false,
         "approvalQueue": [],
@@ -238,12 +81,12 @@
         "mentionsMuteMode": "mentions_not_muted",
         "isPinProtected": false,
         "relatedPageThread": null,
-        "name": "BOT TEST NXXO",
-        "snippet": "You deleted a message",
+        "name": "[Test Group]",
+        "snippet": "You named the group [Test Group].",
         "snippetSender": "61583873159587",
         "snippetAttachments": [],
-        "serverTimestamp": "1763217254549",
-        "imageSrc": "https://scontent-bom5-1.xx.fbcdn.net/v/t1.15752-9/563093803_1987916025382480_5072274917705282066_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=935a9d&_nc_ohc=S9WgSE0I4bcQ7kNvwFKRexW&_nc_oc=AdlJvVZ3YW8ee9KQ9dbfhrJd3paeO6_ZlxRnYS__JiSye6weHFHpp5Zsc17KLR7UyCQ&_nc_zt=23&_nc_ht=scontent-bom5-1.xx&oh=03_Q7cD3wFpEIF1PWE5RtGvg0FGJIsBoFPKCtetBAHH5IdjQMwqCQ&oe=693FEEDA",
+        "serverTimestamp": "1763219979319",
+        "imageSrc": null,
         "isCanonicalUser": false,
         "isCanonical": false,
         "recipientsLoadable": true,
@@ -251,7 +94,7 @@
         "readOnly": false,
         "canReply": true,
         "lastMessageType": "message",
-        "lastReadTimestamp": "1763217254549",
+        "lastReadTimestamp": "1763219979319",
         "threadType": 2,
         "inviteLink": {
           "enable": false,
@@ -259,452 +102,451 @@
         }
       }
     ],
-    "threadID": "1452334112548569",
+    "threadID": "1934417034086206",
     "friendsList": [],
-    "messageID": "mid.$gAAUo4-LfptmguRHjTGah8yaaNM5Q"
+    "messageID": "mid.$gAAbfV5AqBz6guV8EN2aiBm4ryE-M"
   },
   "results": [
     {
       "function": "getCurrentUserID",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:51.304Z",
+      "timestamp": "2025-11-15T15:21:08.382Z",
       "output": "61583873159587"
+    },
+    {
+      "function": "listenMqtt (setup)",
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:10.385Z",
+      "message": "MQTT initialized"
     },
     {
       "function": "getThreadList (setup)",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:51.743Z",
+      "timestamp": "2025-11-15T15:21:10.784Z",
       "count": 1
     },
     {
       "function": "getFriendsList (setup)",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:52.075Z",
+      "timestamp": "2025-11-15T15:21:11.125Z",
       "count": 0
     },
     {
       "function": "getThreadHistory (setup)",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:52.491Z",
-      "count": 5
+      "timestamp": "2025-11-15T15:21:11.507Z",
+      "count": 1
     },
     {
       "function": "getAppState",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:52.493Z",
+      "timestamp": "2025-11-15T15:21:11.509Z",
       "count": 12
     },
     {
       "function": "getCurrentUserID",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:52.494Z",
+      "timestamp": "2025-11-15T15:21:11.509Z",
       "output": "61583873159587"
     },
     {
       "function": "sendMessage",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:52.933Z",
-      "messageID": "mid.$gAAUo4-LfptmguTmvQWah_RmTxV0c"
+      "timestamp": "2025-11-15T15:21:11.955Z",
+      "messageID": "mid.$gAAbfV5AqBz6guWBtemaiBskVmA2U"
     },
     {
       "function": "editMessage",
-      "status": "FAIL",
-      "timestamp": "2025-11-15T14:38:52.937Z",
-      "error": "Not connected to MQTT"
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:11.955Z",
+      "messageID": "mid.$gAAbfV5AqBz6guWBtemaiBskVmA2U"
     },
     {
       "function": "setMessageReaction",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:53.357Z",
-      "messageID": "mid.$gAAUo4-LfptmguTmvQWah_RmTxV0c"
+      "timestamp": "2025-11-15T15:21:12.614Z",
+      "messageID": "mid.$gAAbfV5AqBz6guWBtemaiBskVmA2U"
     },
     {
       "function": "setMessageReaction",
       "status": "FAIL",
-      "timestamp": "2025-11-15T14:38:53.858Z",
+      "timestamp": "2025-11-15T15:21:13.116Z",
       "error": "Please enter a valid emoji."
     },
     {
       "function": "unsendMessage",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:54.721Z",
-      "messageID": "mid.$gAAUo4-LfptmguTmvQWah_RmTxV0c"
+      "timestamp": "2025-11-15T15:21:13.524Z",
+      "messageID": "mid.$gAAbfV5AqBz6guWBtemaiBskVmA2U"
     },
     {
       "function": "markAsRead",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:54.721Z",
-      "threadID": "1452334112548569"
+      "timestamp": "2025-11-15T15:21:13.741Z",
+      "threadID": "1934417034086206"
     },
     {
       "function": "markAsSeen",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:55.297Z"
+      "timestamp": "2025-11-15T15:21:14.180Z"
     },
     {
       "function": "markAsReadAll",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:55.644Z"
+      "timestamp": "2025-11-15T15:21:14.535Z"
     },
     {
       "function": "markAsDelivered",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:56.376Z"
+      "timestamp": "2025-11-15T15:21:14.896Z"
     },
     {
       "function": "deleteMessage",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:56.793Z"
+      "timestamp": "2025-11-15T15:21:15.255Z"
     },
     {
       "function": "forwardMessage",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:38:56.793Z",
+      "timestamp": "2025-11-15T15:21:15.255Z",
       "message": "Insufficient data"
     },
     {
       "function": "sendMessageMqtt",
-      "status": "FAIL",
-      "timestamp": "2025-11-15T14:38:56.795Z",
-      "error": "Cannot read properties of undefined (reading 'publish')"
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:15.473Z"
     },
     {
       "function": "setMessageReactionMqtt",
-      "status": "FAIL",
-      "timestamp": "2025-11-15T14:38:56.795Z",
-      "error": "Not connected to MQTT"
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:15.473Z"
     },
     {
       "function": "pinMessage",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:59.336Z",
+      "timestamp": "2025-11-15T15:21:17.381Z",
       "pinnedCount": 0
     },
     {
       "function": "getThreadList",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:38:59.766Z",
+      "timestamp": "2025-11-15T15:21:17.747Z",
       "count": 1
     },
     {
       "function": "getThreadInfo",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:00.237Z",
-      "threadName": "BOT TEST NXXO"
+      "timestamp": "2025-11-15T15:21:18.126Z",
+      "threadName": "[Test Group]"
     },
     {
       "function": "getThreadHistory",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:00.670Z",
-      "count": 5
+      "timestamp": "2025-11-15T15:21:18.520Z",
+      "count": 3
     },
     {
       "function": "getThreadPictures",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:00.967Z",
+      "timestamp": "2025-11-15T15:21:18.832Z",
       "count": 0
     },
     {
       "function": "muteThread",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:01.343Z"
+      "timestamp": "2025-11-15T15:21:19.106Z"
     },
     {
       "function": "changeArchivedStatus",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:01.770Z"
+      "timestamp": "2025-11-15T15:21:19.437Z"
     },
     {
       "function": "searchForThread",
       "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:02.090Z"
+      "timestamp": "2025-11-15T15:21:19.775Z",
+      "error": "{\"error\":\"Account checkpoint required - searchForThread is restricted until verification\",\"details\":\"Please verify your account on facebook.com. This function requires additional permissions.\"}"
     },
     {
       "function": "handleMessageRequest",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:02.526Z"
+      "timestamp": "2025-11-15T15:21:20.093Z"
     },
     {
       "function": "deleteThread",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:04.067Z"
+      "timestamp": "2025-11-15T15:21:21.474Z"
     },
     {
       "function": "getFriendsList",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:04.435Z",
+      "timestamp": "2025-11-15T15:21:21.808Z",
       "count": 0
     },
     {
       "function": "getUserInfo",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:04.750Z",
+      "timestamp": "2025-11-15T15:21:22.126Z",
       "name": "Vinsmoke Neokex"
     },
     {
       "function": "getUserInfoV2",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:06.501Z"
+      "timestamp": "2025-11-15T15:21:23.415Z"
     },
     {
       "function": "getUserID",
       "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:06.814Z",
+      "timestamp": "2025-11-15T15:21:23.910Z",
       "error": "Account checkpoint required - Please verify your account on facebook.com"
     },
     {
       "function": "unfriend",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:06.814Z",
+      "timestamp": "2025-11-15T15:21:23.910Z",
       "message": "No friend ID"
     },
     {
       "function": "follow",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:06.814Z",
+      "timestamp": "2025-11-15T15:21:23.910Z",
       "message": "No friend ID"
     },
     {
       "function": "nickname",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:06.815Z",
+      "timestamp": "2025-11-15T15:21:23.910Z",
       "message": "Missing IDs"
     },
     {
       "function": "shareContact",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:06.815Z",
+      "timestamp": "2025-11-15T15:21:23.910Z",
       "message": "Missing IDs"
     },
     {
       "function": "changeBio",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:08.729Z"
+      "timestamp": "2025-11-15T15:21:24.403Z"
     },
     {
       "function": "changeAvatar",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:08.729Z",
+      "timestamp": "2025-11-15T15:21:24.404Z",
       "message": "No image provided"
     },
     {
       "function": "emoji",
-      "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:08.730Z",
-      "message": "MQTT not connected"
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:24.623Z"
     },
     {
       "function": "comment",
       "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:09.348Z"
+      "timestamp": "2025-11-15T15:21:25.698Z"
     },
     {
       "function": "share",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:09.767Z"
+      "timestamp": "2025-11-15T15:21:26.125Z"
     },
     {
       "function": "UNHANDLED_REJECTION",
       "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:09.771Z",
-      "error": "{\"message\":\"The GraphQL document with ID 28939050904374351 was not found.\",\"severity\":\"CRITICAL\"}"
+      "timestamp": "2025-11-15T15:21:26.128Z",
+      "error": "{\"error\":\"Facebook GraphQL doc_id expired. Please update ctx.options.sharePreviewDocId\",\"details\":\"Capture the current doc_id from Messenger web traffic (inspect CometXMAProxyShareablePreviewQuery request)\",\"currentDocId\":\"28939050904374351\",\"fbError\":\"The GraphQL document with ID 28939050904374351 was not found.\"}"
     },
     {
       "function": "getTheme",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:10.434Z",
+      "timestamp": "2025-11-15T15:21:26.597Z",
       "count": 92
     },
     {
       "function": "getThemeInfo",
-      "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:11.279Z",
-      "error": "Could not retrieve thread info"
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:27.063Z"
     },
     {
       "function": "changeThreadColor",
-      "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:11.280Z",
-      "error": "Not connected to MQTT. Please use listenMqtt first."
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:27.327Z"
     },
     {
       "function": "setThreadThemeMqtt",
-      "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:11.281Z",
-      "error": "Not connected to MQTT"
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:27.554Z"
     },
     {
       "function": "story",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:11.281Z",
+      "timestamp": "2025-11-15T15:21:27.554Z",
       "message": "No media provided"
     },
     {
       "function": "notes",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:11.281Z"
+      "timestamp": "2025-11-15T15:21:27.555Z"
     },
     {
       "function": "resolvePhotoUrl",
       "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:11.617Z",
+      "timestamp": "2025-11-15T15:21:27.859Z",
       "error": "Account checkpoint required - Please verify your account on facebook.com"
     },
     {
       "function": "stickers.search",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:12.993Z",
+      "timestamp": "2025-11-15T15:21:29.100Z",
       "count": 40
     },
     {
       "function": "stickers.listPacks",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:13.445Z",
+      "timestamp": "2025-11-15T15:21:29.530Z",
       "count": 0
     },
     {
       "function": "stickers.getStorePacks",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:14.594Z",
+      "timestamp": "2025-11-15T15:21:30.401Z",
       "count": 0
     },
     {
       "function": "stickers.listAllPacks",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:15.302Z",
+      "timestamp": "2025-11-15T15:21:31.112Z",
       "count": 0
     },
     {
       "function": "stickers.getAiStickers",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:15.630Z",
+      "timestamp": "2025-11-15T15:21:31.507Z",
       "count": 5
     },
     {
       "function": "stickers.addPack",
       "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:15.944Z",
+      "timestamp": "2025-11-15T15:21:31.813Z",
       "error": "A server error missing_required_variable_value occured. Check server logs for details."
     },
     {
       "function": "stickers.getStickersInPack",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:16.303Z",
+      "timestamp": "2025-11-15T15:21:32.122Z",
       "count": 0
     },
     {
       "function": "createNewGroup",
-      "status": "FAIL",
-      "timestamp": "2025-11-15T14:39:16.305Z",
-      "error": "createNewGroup: participantIDs should have at least 2 IDs."
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:33.438Z"
     },
     {
       "function": "gcname",
-      "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:16.305Z",
-      "message": "MQTT not connected"
+      "status": "PASS",
+      "timestamp": "2025-11-15T15:21:33.658Z"
     },
     {
       "function": "gcmember",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:16.306Z"
+      "timestamp": "2025-11-15T15:21:34.053Z"
     },
     {
       "function": "gcrule",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:16.307Z"
+      "timestamp": "2025-11-15T15:21:34.054Z"
     },
     {
       "function": "changeGroupImage",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:16.308Z",
+      "timestamp": "2025-11-15T15:21:34.054Z",
       "message": "No image provided"
     },
     {
       "function": "getBotInfo",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:16.310Z"
+      "timestamp": "2025-11-15T15:21:34.055Z"
     },
     {
       "function": "getBotInitialData",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:18.155Z"
+      "timestamp": "2025-11-15T15:21:35.756Z"
     },
     {
       "function": "getAccess",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:18.156Z"
+      "timestamp": "2025-11-15T15:21:35.757Z"
     },
     {
       "function": "httpGet",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:18.444Z",
+      "timestamp": "2025-11-15T15:21:36.040Z",
       "size": 249
     },
     {
       "function": "httpPost",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:18.744Z",
+      "timestamp": "2025-11-15T15:21:36.366Z",
       "size": 94
     },
     {
       "function": "httpPostFormData",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:19.006Z"
+      "timestamp": "2025-11-15T15:21:36.706Z"
     },
     {
       "function": "listenMqtt",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.006Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "Listener function - requires callback setup"
     },
     {
       "function": "listenSpeed",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.007Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "Listener function - requires callback setup"
     },
     {
       "function": "realtime",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.007Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "Advanced MQTT function - requires setup"
     },
     {
       "function": "addExternalModule",
       "status": "PASS",
-      "timestamp": "2025-11-15T14:39:19.007Z"
+      "timestamp": "2025-11-15T15:21:36.707Z"
     },
     {
       "function": "changeBlockedStatus",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.007Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "Destructive - not tested"
     },
     {
       "function": "friend",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.007Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "Requires specific friend request ID"
     },
     {
       "function": "addUserToGroup",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.007Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "Tested via gcmember"
     },
     {
       "function": "createPoll",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.007Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "Requires poll data structure"
     },
     {
       "function": "createAITheme",
       "status": "SKIP",
-      "timestamp": "2025-11-15T14:39:19.008Z",
+      "timestamp": "2025-11-15T15:21:36.707Z",
       "message": "AI feature - requires special parameters"
     }
   ],
-  "timestamp": "2025-11-15T14:39:19.010Z"
+  "timestamp": "2025-11-15T15:21:36.708Z"
 }

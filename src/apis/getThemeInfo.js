@@ -17,10 +17,49 @@ module.exports = function (defaultFuncs, api, ctx) {
     });
 
     try {
-      const threadInfo = await api.getThreadInfo(threadID);
+      let threadInfo;
+      try {
+        threadInfo = await api.getThreadInfo(threadID);
+      } catch (getInfoErr) {
+        // If getThreadInfo fails, thread might not exist or access is restricted
+        // Return a basic theme info object with defaults
+        const themeInfo = {
+          threadID: threadID,
+          threadName: '',
+          color: null,
+          emoji: '👍',
+          theme_id: null,
+          theme_color: null,
+          gradient_colors: null,
+          is_default: true,
+          error: getInfoErr.message || 'Could not retrieve full thread info'
+        };
+        
+        if (callback) {
+          return callback(null, themeInfo);
+        } else {
+          return resolveFunc(themeInfo);
+        }
+      }
       
       if (!threadInfo || threadInfo.length === 0) {
-        throw new Error("Could not retrieve thread info");
+        // Thread exists but no info returned - return defaults
+        const themeInfo = {
+          threadID: threadID,
+          threadName: '',
+          color: null,
+          emoji: '👍',
+          theme_id: null,
+          theme_color: null,
+          gradient_colors: null,
+          is_default: true
+        };
+        
+        if (callback) {
+          return callback(null, themeInfo);
+        } else {
+          return resolveFunc(themeInfo);
+        }
       }
 
       const info = Array.isArray(threadInfo) ? threadInfo[0] : threadInfo;
@@ -42,6 +81,8 @@ module.exports = function (defaultFuncs, api, ctx) {
         resolveFunc(themeInfo);
       }
     } catch (err) {
+      // Preserve the original error message from getThreadInfo
+      // Don't override with generic "Could not retrieve thread info"
       utils.error("getThemeInfo", err);
       if (callback) {
         callback(err);

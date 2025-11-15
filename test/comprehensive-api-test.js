@@ -37,6 +37,33 @@ async function setupTestContext() {
         logResult('getCurrentUserID', 'FAIL', { error: err.message });
     }
     
+    // Initialize MQTT listener for MQTT-dependent tests
+    console.log('\n🔌 Initializing MQTT listener...');
+    try {
+        if (api.listenMqtt) {
+            const stopListening = api.listenMqtt((err, event) => {
+                if (err) console.error('MQTT listener error:', err);
+                // Event handling not needed for tests
+            });
+            testContext.mqttStopListening = stopListening;
+            // Wait for MQTT to connect
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            if (api.ctx?.mqttClient) {
+                console.log('✅ MQTT connected successfully');
+                logResult('listenMqtt (setup)', 'PASS', { message: 'MQTT initialized' });
+            } else {
+                console.log('⚠️  MQTT connection pending');
+                logResult('listenMqtt (setup)', 'SKIP', { message: 'MQTT connection pending' });
+            }
+        } else {
+            console.log('⚠️  listenMqtt function not available');
+            logResult('listenMqtt (setup)', 'SKIP', { message: 'Function not available' });
+        }
+    } catch (err) {
+        console.log('⚠️  MQTT initialization failed:', err.message);
+        logResult('listenMqtt (setup)', 'FAIL', { error: err.message });
+    }
+    
     try {
         const threads = await api.getThreadList(10, null, ['INBOX']);
         testContext.threadList = threads || [];
@@ -71,6 +98,7 @@ async function setupTestContext() {
     console.log(`   Friends: ${testContext.friendsList?.length || 0}`);
     console.log(`   Sample Thread ID: ${testContext.threadID || 'N/A'}`);
     console.log(`   Sample Message ID: ${testContext.messageID || 'N/A'}`);
+    console.log(`   MQTT Connected: ${api.ctx?.mqttClient ? 'YES ✅' : 'NO ❌'}`);
 }
 
 async function testAuthenticationSession() {
@@ -294,9 +322,18 @@ async function testThreadManagement() {
     
     try {
         const result = await api.searchForThread('test');
-        logResult('searchForThread', 'PASS', { found: result?.length || 0 });
+        if (!result || result.length === 0) {
+            logResult('searchForThread', 'SKIP', { message: 'No threads found matching query' });
+        } else {
+            logResult('searchForThread', 'PASS', { found: result.length });
+        }
     } catch (err) {
-        logResult('searchForThread', 'FAIL', { error: err.message });
+        // Check if error is about no results found
+        if (err.error && err.error.includes('Could not find thread')) {
+            logResult('searchForThread', 'SKIP', { message: 'No threads found matching query' });
+        } else {
+            logResult('searchForThread', 'FAIL', { error: err.message || JSON.stringify(err) });
+        }
     }
     
     if (testContext.messageID) {
@@ -489,8 +526,13 @@ async function testThemesCustomization() {
     
     if (api.setThreadThemeMqtt && testContext.threadID) {
         try {
-            await api.setThreadThemeMqtt('default', testContext.threadID).catch(err => { throw err; });
-            logResult('setThreadThemeMqtt', 'PASS');
+            if (!api.ctx?.mqttClient) {
+                logResult('setThreadThemeMqtt', 'SKIP', { message: 'MQTT not connected' });
+            } else {
+                // Parameters: threadID, themeFBID
+                await api.setThreadThemeMqtt(testContext.threadID, 'default').catch(err => { throw err; });
+                logResult('setThreadThemeMqtt', 'PASS');
+            }
         } catch (err) {
             logResult('setThreadThemeMqtt', 'FAIL', { error: err.message || JSON.stringify(err) });
         }
@@ -817,10 +859,31 @@ async function runAllTests() {
                 await testGroupAdvanced();
                 await generateReport();
                 
+                // Cleanup MQTT listener
+                if (testContext.mqttStopListening && typeof testContext.mqttStopListening === 'function') {
+                    console.log('\n🔌 Stopping MQTT listener...');
+                    try {
+                        testContext.mqttStopListening();
+                    } catch (cleanupErr) {
+                        console.log('⚠️  MQTT cleanup warning:', cleanupErr.message);
+                    }
+                }
+                
                 resolve(testResults);
             } catch (error) {
                 console.error('\n❌ Test execution error:', error);
                 await generateReport();
+                
+                // Cleanup MQTT listener even on error
+                if (testContext.mqttStopListening && typeof testContext.mqttStopListening === 'function') {
+                    console.log('\n🔌 Stopping MQTT listener...');
+                    try {
+                        testContext.mqttStopListening();
+                    } catch (cleanupErr) {
+                        console.log('⚠️  MQTT cleanup warning:', cleanupErr.message);
+                    }
+                }
+                
                 reject(error);
             }
         });

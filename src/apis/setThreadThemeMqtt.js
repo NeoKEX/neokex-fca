@@ -56,18 +56,39 @@ module.exports = function (defaultFuncs, api, ctx) {
       };
     });
 
+    // Return promise if no callback provided
+    if (!callback) {
+      return new Promise((resolve, reject) => {
+        try {
+          messages.forEach((msg, idx) => {
+            ctx.mqttClient.publish(
+              '/ls_req',
+              JSON.stringify(msg),
+              { qos: 1, retain: false },
+              idx === messages.length - 1 ? (err) => {
+                if (err) reject(err);
+                else resolve();
+              } : undefined
+            );
+          });
+        } catch (err) {
+          reject(err);
+        }
+      });
+    }
+
+    // Callback mode
     try {
       messages.forEach((msg, idx) => {
         ctx.mqttClient.publish(
           '/ls_req',
           JSON.stringify(msg),
           { qos: 1, retain: false },
-          idx === messages.length - 1 && callback ? callback : undefined
+          idx === messages.length - 1 ? callback : undefined
         );
       });
     } catch (err) {
-      if (callback) callback(err);
-      else throw err;
+      callback(err);
     }
   };
 };
