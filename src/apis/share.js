@@ -23,14 +23,20 @@ function formatPreviewResult(data) {
 
 module.exports = function(defaultFuncs, api, ctx) {
     return async function getPostPreview(postID, callback) {
-        let cb;
+        let resolveFunc, rejectFunc;
         const returnPromise = new Promise((resolve, reject) => {
-            cb = (err, data) => err ? reject(err) : resolve(data);
+            resolveFunc = resolve;
+            rejectFunc = reject;
         });
         
-        if (typeof callback === 'function') cb = callback;
+        const cb = (err, data) => {
+            if (callback) callback(err, data);
+            if (err) return rejectFunc(err);
+            resolveFunc(data);
+        };
         if (!postID) {
-            return cb({ error: "A postID is required to generate a preview." });
+            cb({ error: "A postID is required to generate a preview." });
+            return returnPromise;
         }
 
         const variables = {
@@ -39,8 +45,17 @@ module.exports = function(defaultFuncs, api, ctx) {
         };
 
         // Use configurable doc_id or default (may be outdated)
-        // To update: Capture from live Messenger GraphQL traffic when sharing a post
-        // Set ctx.options.sharePreviewDocId to override
+        // To update: 
+        // 1. Open Facebook Messenger in browser
+        // 2. Open DevTools (F12) → Network tab → Filter by "graphql"
+        // 3. Trigger a share/preview action
+        // 4. Look for CometXMAProxyShareablePreviewQuery request
+        // 5. Copy the doc_id value from the request payload
+        // 6. Set ctx.options.sharePreviewDocId = 'NEW_DOC_ID' when logging in
+        //
+        // Known doc_ids (may expire):
+        // - 28939050904374351 (expired as of Nov 2024)
+        // - Check ws3-fca or @dongdev packages for potential updates
         const docId = ctx.options?.sharePreviewDocId || '28939050904374351';
 
         const form = {
@@ -71,21 +86,22 @@ module.exports = function(defaultFuncs, api, ctx) {
                         fbError: persistedQueryError.message
                     };
                     utils.error("getPostPreview", error);
-                    return cb(error);
+                    cb(error);
+                    return returnPromise;
                 }
             }
             
             const result = formatPreviewResult(resData);
-            return cb(null, result);
+            cb(null, result);
+            return returnPromise;
         } catch (err) {
             // Add helpful context for common failure modes
             if (err.message?.includes('UNHANDLED_REJECTION') || err.message?.includes('not found')) {
                 err.hint = "The GraphQL doc_id may be outdated. Set ctx.options.sharePreviewDocId with current value from Messenger traffic.";
             }
             utils.error("getPostPreview", err);
-            return cb(err);
+            cb(err);
+            return returnPromise;
         }
-
-        return returnPromise;
     };
 };
