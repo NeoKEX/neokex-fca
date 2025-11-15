@@ -109,9 +109,27 @@ function parseAndCheckLogin(ctx, http, retryCount = 0) {
       }
     }
 
-    if (res.error === 1357001) {
+    const ACCOUNT_ERROR_CODES = {
+      1357001: "Account blocked - Facebook detected automated behavior",
+      1357004: "Account checkpoint required - Please verify your account on facebook.com",
+      1357031: "Account temporarily locked - Too many login attempts",
+      1357033: "Account suspended - Violation of terms of service",
+      2056003: "Account restricted - Suspicious activity detected"
+    };
+
+    if (res.error && ACCOUNT_ERROR_CODES[res.error]) {
+      const err = new Error(ACCOUNT_ERROR_CODES[res.error]);
+      err.error = "Account security issue";
+      err.errorCode = res.error;
+      err.errorType = res.error === 1357004 ? "CHECKPOINT" : res.error === 1357031 ? "LOCKED" : "BLOCKED";
+      warn("Account Status", `${ACCOUNT_ERROR_CODES[res.error]} (Code: ${res.error})`);
+      throw err;
+    }
+
+    if (res.error === 1357001 || (res.errorSummary && res.errorSummary.includes("blocked"))) {
       const err = new Error("Facebook blocked the login");
       err.error = "Not logged in.";
+      err.errorType = "BLOCKED";
       throw err;
     }
 

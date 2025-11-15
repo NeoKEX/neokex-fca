@@ -14,21 +14,55 @@ const allowedProperties = {
 };
 
 module.exports = (defaultFuncs, api, ctx) => {
-  async function uploadAttachment(attachments) {
-    var uploads = [];
-    for (var i = 0; i < attachments.length; i++) {
-     if (!utils.isReadableStream(attachments[i])) {
-        throw new Error("Attachment should be a readable stream and not " + utils.getType(attachments[i]) + ".");
-     }
-     const oksir = await defaultFuncs.postFormData("https://upload.facebook.com/ajax/mercury/upload.php", ctx.jar,{
-       upload_1024: attachments[i],
-       voice_clip: "true"
-     }, {}).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
-     if (oksir.error) {
-       throw new Error(JSON.stringify(oksir));
-     }
-     uploads.push(oksir.payload.metadata[0]);
+  function detectAttachmentType(attachment) {
+    const path = attachment.path || '';
+    const ext = path.toLowerCase().split('.').pop();
+    
+    const audioTypes = ['mp3', 'wav', 'aac', 'm4a', 'ogg', 'opus', 'flac'];
+    const videoTypes = ['mp4', 'mov', 'avi', 'mkv', 'webm', 'wmv', 'flv'];
+    const imageTypes = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'];
+    
+    if (audioTypes.includes(ext)) {
+      return { voice_clip: "true" };
+    } else if (videoTypes.includes(ext)) {
+      return { video: "true" };
+    } else if (imageTypes.includes(ext)) {
+      return { image: "true" };
     }
+    
+    return { file: "true" };
+  }
+
+  async function uploadSingleAttachment(attachment) {
+    if (!utils.isReadableStream(attachment)) {
+      throw new Error("Attachment should be a readable stream and not " + utils.getType(attachment) + ".");
+    }
+    
+    const uploadType = detectAttachmentType(attachment);
+    const oksir = await defaultFuncs.postFormData("https://upload.facebook.com/ajax/mercury/upload.php", ctx.jar, {
+      upload_1024: attachment,
+      ...uploadType
+    }, {}).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
+    
+    if (oksir.error) {
+      throw new Error(JSON.stringify(oksir));
+    }
+    return oksir.payload.metadata[0];
+  }
+
+  async function uploadAttachment(attachments) {
+    const CONCURRENT_UPLOADS = 3;
+    
+    const uploadPromises = [];
+    const uploads = [];
+    
+    for (let i = 0; i < attachments.length; i += CONCURRENT_UPLOADS) {
+      const batch = attachments.slice(i, i + CONCURRENT_UPLOADS);
+      const batchPromises = batch.map(attachment => uploadSingleAttachment(attachment));
+      const batchResults = await Promise.all(batchPromises);
+      uploads.push(...batchResults);
+    }
+    
     return uploads;
   }
 

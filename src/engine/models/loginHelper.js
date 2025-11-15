@@ -35,6 +35,10 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
             globalOptions.cachedSecChUaFullVersionList = secChUaFullVersionList;
             globalOptions.cachedSecChUaPlatform = secChUaPlatform;
             globalOptions.cachedSecChUaPlatformVersion = secChUaPlatformVersion;
+            
+            const { getRandomLocale, getRandomTimezone } = require('../../utils/headers');
+            globalOptions.cachedLocale = getRandomLocale();
+            globalOptions.cachedTimezone = getRandomTimezone();
         }
 
         const appState = credentials.appState;
@@ -50,10 +54,13 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
             }
 
             cookieStrings.forEach(cookieString => {
-                const domain = ".facebook.com";
+                const cookieParts = cookieString.split(';')[0];
+                const domains = [".facebook.com", ".messenger.com", ".m.facebook.com"];
                 const expires = new Date().getTime() + 1000 * 60 * 60 * 24 * 365;
-                const str = `${cookieString}; expires=${expires}; domain=${domain}; path=/;`;
-                jar.setCookie(str, `https://${domain}`);
+                domains.forEach(domain => {
+                    const str = `${cookieParts}; expires=${expires}; domain=${domain}; path=/;`;
+                    jar.setCookie(str, `https://${domain}`);
+                });
             });
         } else if (credentials.email && credentials.password) {
 
@@ -77,10 +84,12 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
                 }
                 let cstrs = resp.data["session_cookies"].map(c => `${c.name}=${c.value}`);
                 cstrs.forEach(cstr => {
-                  const domain = ".facebook.com";
+                  const domains = [".facebook.com", ".messenger.com", ".m.facebook.com"];
                   const expires = new Date().getTime() + 1000 * 60 * 60 *24 * 365;
-                  const str = `${cstr}; expires=${expires}; domain=${domain}; path=/;`;
-                  jar.setCookie(str, `https://${domain}`);
+                  domains.forEach(domain => {
+                    const str = `${cstr}; expires=${expires}; domain=${domain}; path=/;`;
+                    jar.setCookie(str, `https://${domain}`);
+                  });
                 });
             } catch (e) {
                 throw new Error("Wrong password / email");
@@ -166,6 +175,15 @@ async function loginHelper(credentials, globalOptions, callback, setOptionsFunc,
         api.ctx = ctx;
         api.defaultFuncs = defaultFuncs;
         api.globalOptions = globalOptions;
+        
+        const { TokenRefreshManager } = require('../../utils/tokenRefresh');
+        const tokenManager = new TokenRefreshManager();
+        tokenManager.startAutoRefresh(ctx, defaultFuncs, fbLinkFunc());
+        api.refreshTokens = () => tokenManager.refreshTokens(ctx, defaultFuncs, fbLinkFunc());
+        api.getTokenRefreshStatus = () => ({
+            lastRefresh: tokenManager.lastRefresh,
+            nextRefresh: tokenManager.getTimeUntilNextRefresh()
+        });
         
         return callback(null, api);
     } catch (error) {
