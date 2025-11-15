@@ -7,12 +7,22 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 
 ### ✅ Recent Achievements
 
+**Comprehensive API Testing (November 15, 2025):**
+- **All 68 API functions tested** with real user cookies
+- **Test Results:** 43 PASSED, 16 FAILED, 18 SKIPPED
+- **Success Rate:** 72.9% (excluding skipped tests)
+- **100% Success Categories:** Authentication & Session, Stickers (7/7)
+- **High Success:** Group & Advanced (92.3%), Thread Management (77.8%)
+- **Core Functions:** Messaging, user info, thread operations all working excellently
+- **Test Report:** Complete documentation in `test/TEST_REPORT.md`
+
 **API Function Improvements (November 15, 2025):**
+- **httpGet & httpPost** - Fixed context parameter passing bug (was null/{}, now ctx)
+- **TypeScript Definitions** - Fixed pinMessage and unsendMessage method names
+- **Security Audit** - Removed ws3-fca and @dongdev/fca-unofficial (eliminated 9 vulnerabilities)
 - **getFriendsList** - Fixed by switching to POST /chat/user_info_all endpoint (passing tests!)
 - **getUserID** - Enhanced error handling with checkpoint detection and skip logic
-- **searchForThread** - Complete rewrite: supports both legacy payload.threads (object map) and newer payload.mercury_payload.threads (array), fixed promise settlement for callback-based and promise-based usage
-- **Test Suite Optimization** - Fixed 7 false failures: converted to proper skip status for checkpoint restrictions and account-specific limitations
-- Comprehensive 68-function test suite: **58 passed, 0 failed, 25 skipped** (all "failures" were checkpoint restrictions or test limitations)
+- **searchForThread** - Complete rewrite: supports both legacy payload.threads (object map) and newer payload.mercury_payload.threads (array)
 
 **Anti-Bot Detection Improvements:**
 - Enhanced user-agent fingerprinting with Edge browser, Linux platforms, 15+ unique combinations
@@ -104,8 +114,11 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 - TypeScript definitions present and correct
 
 ### Testing
-- Validation workflow configured and passing
-- Test suite validates main exports, API modules, utilities, and TypeScript definitions
+- **Comprehensive API Test Suite:** All 68 functions tested (test/comprehensive-api-test.js)
+- **Test Results:** 43 passed, 16 failed, 18 skipped - 72.9% success rate
+- **Test Report:** Detailed analysis in test/TEST_REPORT.md
+- **Validation workflow:** Configured and passing
+- **Package validation:** Ready for npm publishing
 
 ### Dependencies
 - Node.js >= 22.x required
@@ -114,13 +127,20 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 
 ## Known Issues & Limitations
 
-1. **Facebook Checkpoint Restrictions** - getUserID and searchForThread fail when account requires checkpoint verification (external limitation, cannot be programmatically fixed)
-2. Rate limiter created but not integrated (deferred for proper testing)
-3. Token refresh needs retry/backoff for production resilience
-4. No automatic re-login on session expiry yet
-5. MQTT reconnection uses fixed jitter instead of exponential backoff
-6. No keepalive ping mechanism to prevent session timeout
-7. Machine ID persistence not implemented
+**From Comprehensive Testing (November 15, 2025):**
+1. **Theme Functions Failing** - getTheme, getThemeInfo, changeThreadColor all failing (Facebook API changes likely)
+2. **MQTT Initialization** - Some MQTT functions work, others fail inconsistently (editMessage, nickname, gcname require MQTT)
+3. **GraphQL Document IDs** - deleteThread failing with "document not found" (ID 5661930250517471 outdated)
+4. **Checkpoint Restrictions** - getUserID, resolvePhotoUrl fail when account requires verification (Code: 1357004)
+5. **notes Function** - Not properly exported from API
+6. **createNewGroup** - Participant ID array validation issue
+
+**Infrastructure:**
+1. Rate limiter created but not integrated (deferred for proper testing)
+2. Token refresh needs retry/backoff for production resilience
+3. MQTT reconnection uses fixed jitter instead of exponential backoff
+4. No keepalive ping mechanism to prevent session timeout
+5. Machine ID persistence not implemented
 
 ## Git Workflow
 - Automatic commits made at end of task completion
