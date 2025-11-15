@@ -3,9 +3,32 @@
 ## Project Overview
 Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongdev/fca-unofficial in power, reliability, and anti-bot detection capabilities. Built for stable, undetected Facebook Messenger automation.
 
-## Current Status (v4.4.4 - November 15, 2025)
+## Current Status (v4.4.5 - November 15, 2025)
 
 ### ✅ Recent Achievements
+
+**Test Bot Comprehensive Enhancement (November 15, 2025):**
+- **Fixed critical bugs in examples/test-bot.js:**
+  - Event object now properly passed to handleCommand (fixes /nickname and future event-dependent commands)
+  - Removed non-existent api.searchUser call
+  - Fixed all variable name conflicts (threadInfo, threads duplicates)
+  - Corrected API signatures for all commands
+- **Added 25+ new test commands covering previously untested APIs:**
+  - Messaging: /edit, /forward, /pin, /unpin, /markread, /markreadall
+  - Thread management: /threads, /themeinfo, /mute (toggle), /archive (toggle), /deletethis
+  - Group management: /creategroup, /adduser, /removeuser, /groupimage (info)
+  - Social features: /block, /unblock, /addfriend, /removefriend, /follow, /unfollow, /sharecontact
+  - User info: /userv2, /bio
+  - Admin: /logout
+- **Command improvements:**
+  - Toggle functionality for /mute and /archive (checks current state)
+  - Proper API method calls: pin(action, threadID, messageID), shareContact(text, userID, threadID)
+  - Better error messages and input validation
+  - Updated help menu with all new commands organized by category
+- **Code quality:**
+  - All LSP diagnostics resolved
+  - Consistent error handling
+  - Clear user feedback for all operations
 
 **Comprehensive API Testing - FINAL (November 15, 2025):**
 - **All 77 API functions tested** with real user cookies
@@ -79,7 +102,16 @@ Enhanced Facebook Chat API (FCA) library designed to surpass ws3-fca and @dongde
 - `src/apis/sendMessage.js` - Message sending with parallel attachment uploads
 - `src/utils/clients.js` - Attachment type detection
 
-### Recent Changes (v4.4.3)
+### Recent Changes (v4.4.5)
+- **Test Bot Enhancement (Nov 15):**
+  - Fixed event object passing to handleCommand
+  - Added 25+ new commands for comprehensive API testing
+  - Implemented toggle logic for mute/archive commands
+  - Corrected all API method signatures
+  - Removed changeAvatar command (requires stream, not URL)
+  - Updated help menu with complete command reference
+
+### Previous Changes (v4.4.3)
 - **API Fixes (Nov 15):**
   - getFriendsList: Changed to postFormData with /chat/user_info_all endpoint
   - getUserID: Added input validation, checkpoint detection, and skip logic in tests
