@@ -3,7 +3,7 @@
 const utils = require('../utils');
 
 module.exports = (defaultFuncs, api, ctx) => {
-  return async function deleteThread(threadID, callback) {
+  return async function deleteThread(threadOrThreads, callback) {
     let resolveFunc = () => {};
     let rejectFunc = () => {};
     const returnPromise = new Promise((resolve, reject) => {
@@ -20,23 +20,24 @@ module.exports = (defaultFuncs, api, ctx) => {
 
     try {
       const form = {
-        fb_api_caller_class: "RelayModern",
-        fb_api_req_friendly_name: "MessengerThreadDeleteMutation",
-        av: ctx.i_userID || ctx.userID,
-        doc_id: "5661930250517471",
-        variables: JSON.stringify({
-          input: {
-            thread_fbid: threadID,
-            actor_id: ctx.i_userID || ctx.userID,
-            client_mutation_id: Math.round(Math.random() * 1024).toString()
-          }
-        })
+        client: "mercury"
       };
 
-      const res = await defaultFuncs.post("https://www.facebook.com/api/graphql/", ctx.jar, form)
-        .then(utils.parseAndCheckLogin(ctx, defaultFuncs));
+      if (utils.getType(threadOrThreads) !== "Array") {
+        threadOrThreads = [threadOrThreads];
+      }
 
-      if (res.errors) {
+      for (let i = 0; i < threadOrThreads.length; i++) {
+        form["ids[" + i + "]"] = threadOrThreads[i];
+      }
+
+      const res = await defaultFuncs.post(
+        "https://www.facebook.com/ajax/mercury/delete_thread.php",
+        ctx.jar,
+        form
+      ).then(utils.parseAndCheckLogin(ctx, defaultFuncs));
+
+      if (res && res.error) {
         throw res;
       }
 

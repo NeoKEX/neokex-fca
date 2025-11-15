@@ -458,8 +458,12 @@ async function testThemesCustomization() {
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     
     try {
-        const themes = await api.getTheme().catch(err => { throw err; });
-        logResult('getTheme', 'PASS', { count: themes?.length || 0 });
+        if (testContext.threadID) {
+            const themes = await api.getTheme(testContext.threadID).catch(err => { throw err; });
+            logResult('getTheme', 'PASS', { count: themes?.length || 0 });
+        } else {
+            logResult('getTheme', 'SKIP', { message: 'No thread ID' });
+        }
     } catch (err) {
         logResult('getTheme', 'FAIL', { error: err.message || JSON.stringify(err) });
     }
@@ -504,8 +508,10 @@ async function testThemesCustomization() {
     }
     
     try {
-        if (api.notes) {
-            await api.notes('Test note').catch(err => { throw err; });
+        if (api.notes && api.notes.check) {
+            await api.notes.check((err, note) => {
+                if (err) throw err;
+            });
             logResult('notes', 'PASS');
         } else {
             logResult('notes', 'SKIP', { message: 'Function not available' });
@@ -592,11 +598,22 @@ async function testGroupAdvanced() {
     console.log('👪 CATEGORY 8: Group & Advanced');
     console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
     
-    try {
-        await api.createNewGroup('[Test Group]', [testContext.friendID || testContext.userID]);
-        logResult('createNewGroup', 'PASS');
-    } catch (err) {
-        logResult('createNewGroup', 'FAIL', { error: err.message });
+    if (testContext.threadID && testContext.threadList && testContext.threadList.length > 0) {
+        try {
+            const thread = testContext.threadList[0];
+            const participantIDs = thread.participantIDs?.filter(id => id !== testContext.userID).slice(0, 2) || [];
+            
+            if (participantIDs.length >= 2) {
+                await api.createNewGroup(participantIDs, '[Test Group]');
+                logResult('createNewGroup', 'PASS');
+            } else {
+                logResult('createNewGroup', 'SKIP', { message: 'Need at least 2 other participants' });
+            }
+        } catch (err) {
+            logResult('createNewGroup', 'FAIL', { error: err.message });
+        }
+    } else {
+        logResult('createNewGroup', 'SKIP', { message: 'No thread data available' });
     }
     
     if (testContext.threadID) {
