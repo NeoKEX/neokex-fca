@@ -32,6 +32,12 @@ module.exports = (defaultFuncs, api, ctx) => {
       };
     }
 
+    if (!name || typeof name !== 'string') {
+      const error = { error: "getUserID: name parameter must be a non-empty string" };
+      utils.error("getUserID", error);
+      return callback(error);
+    }
+
     try {
       const form = {
         value: name.toLowerCase(),
@@ -49,9 +55,25 @@ module.exports = (defaultFuncs, api, ctx) => {
         throw res;
       }
 
+      if (!res.payload || !res.payload.entries) {
+        const error = { 
+          error: "getUserID: No results found. This may be due to Facebook security restrictions or account checkpoint.",
+          details: "Your account may require verification. Please visit facebook.com to verify."
+        };
+        throw error;
+      }
+
       const data = res.payload.entries;
+      
+      if (data.length === 0) {
+        utils.warn(`getUserID: No user found with name "${name}"`);
+      }
+
       callback(null, data.map(formatData));
     } catch (err) {
+      if (err.error && typeof err.error === 'string' && err.error.includes('checkpoint')) {
+        err.friendlyMessage = "Account checkpoint required - Please verify your account on facebook.com";
+      }
       utils.error("getUserID", err);
       callback(err);
     }
